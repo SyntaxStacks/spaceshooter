@@ -50,6 +50,7 @@ var ENEMYSCOREVALUE = 100;
 var MENUSCREEN = 0;
 var GAMESCREEN = 1;
 var GAMEOVER = 2;
+var GAMEFRAME = "gameframe";
 
 var status = MENUSCREEN;
 var level = 1;
@@ -74,6 +75,13 @@ function processInput(event){
 //	49 50 51 52
 
 };
+
+function getCanvas(){
+	var c=document.getElementById(GAMEFRAME);
+	var ctx=c.getContext("2d");
+
+	return ctx;
+}
 //space shooter functions
 /*	function move
 *	
@@ -87,25 +95,12 @@ function move(elementId, distance){
 	return true;
 }
 
-function elementWithId(id){
-	return document.getElementById(id);
-}
-
-function angleBetweenElements(element1, element2){
-	var e1x = parseInt(Math.abs(getElementMarginLeft(element1)));
-	var e2x = parseInt(Math.abs(getElementMarginLeft(element2)));
-	var e1y = parseInt(Math.abs(getElementMarginTop(element1)));
-	var e2y = parseInt(Math.abs(getElementMarginTop(element2)));
-
-	var rise = e1y - e2y;
-	var run = e1x - e2x;
-	var angle = -Math.atan(run/rise);
-	return angle;
-
-}
-
 function rotateElement(element, rad){
 	element.style.webkitTransform = "rotate("+rad+"rad)";
+}
+
+function elementWithId(id){
+	return document.getElementById(id);
 }
 
 function elementsOfClass(className){
@@ -133,6 +128,19 @@ function createElementWithText(tag, text){
 
 function removeElement(element){
 	element.parentNode.removeChild(element);
+}
+
+function angleBetweenElements(element1, element2){
+	var e1x = parseInt(Math.abs(getElementMarginLeft(element1)));
+	var e2x = parseInt(Math.abs(getElementMarginLeft(element2)));
+	var e1y = parseInt(Math.abs(getElementMarginTop(element1)));
+	var e2y = parseInt(Math.abs(getElementMarginTop(element2)));
+
+	var rise = e1y - e2y;
+	var run = e1x - e2x;
+	var angle = -Math.atan(run/rise);
+	return angle;
+
 }
 
 function shoot(){
@@ -214,6 +222,7 @@ function enemySpecs(enemyType){
 
 	if(enemyType == "MAVERICK")
 		return {
+			type: "MAVERICK",
 			sprite: {
 				ship: "&#9660;",
 				lasor: "*"
@@ -233,6 +242,7 @@ function enemySpecs(enemyType){
 		};
 	if(enemyType == "BLOCKADE")
 		return {
+			type: "BLOCKADE",
 			sprite: {
 				ship: "&#8734;",
 				lasor: null
@@ -252,6 +262,7 @@ function enemySpecs(enemyType){
 		};
 	if(enemyType == "GUARD")
 		return {
+			type: "GUARD",
 			sprite: {
 				ship: "U",
 				lasor: "."
@@ -438,14 +449,7 @@ function startGame(){
 	status = GAMESCREEN;
 
 	document.body.innerHTML = '<!-- Space Shooter --> '+
-	'<div class="widget" style="width: '+FRAMEWIDTH+'; height: '+FRAMEHEIGHT+'"> '+
-		'<div class="heading">Space Shooter</div>' +
-		'<div class="gameframe">'+
-			'<div id="score" style="margin-top: 15; position: absolute"> SCORE: 0 </div>' +
-			'<div id="level" style="margin-top: 0; position: absolute"> LEVEL: 1 </div>' +
-			'<div id="spaceship" style="margin-top: 280"> >&#9650;< </div>'+
-		'</div>'+
-	'</div>';
+	'<canvas id="'+GAMEFRAME+'"></canvas>';
 }
 
 function endGame(){
