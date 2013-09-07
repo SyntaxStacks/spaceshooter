@@ -82,12 +82,19 @@ function Enemy(type){
 
 	function enemySpecs(enemyType){
 		
+		var ENEMYSPRITEWIDTH = 16;
+		var ENEMYSPRITEHEIGHT = 16
+		var spriteXIndex = 0;
+		var spriteYIndex = 0;
+
 		function randomEnemy(){
 			var enemyIndex = Math.floor(Math.random()*enemyList.length);
 			return enemySpecs(enemyList[enemyIndex]);
 		}
 
 		if(enemyType == "MAVERICK")
+			spriteXIndex = 8;
+			spriteYIndex = 0;
 	 		return {
 				type: "MAVERICK",
 				angle: 0,
@@ -96,8 +103,10 @@ function Enemy(type){
 					y: 0
 				},
 				sprite: {
-					ship: "&#9660;",
-					lasor: "*"
+					x: SPRITEXINDEX * ENEMYSPRITEWIDTH,
+					y: SPRITEYINDEX * ENEMYSPRITEWIDTH,
+					width: ENEMYSPRITEWIDTH
+					height: ENEMYSPRITEHEIGHT
 				},
 				className: {
 					ship: ENEMYCLASS,
@@ -113,6 +122,8 @@ function Enemy(type){
 				}
 			};
 		else if(enemyType == "BLOCKADE")
+			spriteXIndex = 5;
+			spriteYIndex = 0;
 			return {
 				type: "BLOCKADE",
 				angle: 0,
@@ -121,8 +132,10 @@ function Enemy(type){
 					y: 0
 				},
 				sprite: {
-					ship: "&#8734;",
-					lasor: null
+					x: SPRITEXINDEX * ENEMYSPRITEWIDTH,
+					y: SPRITEYINDEX * ENEMYSPRITEWIDTH,
+					width: ENEMYSPRITEWIDTH
+					height: ENEMYSPRITEHEIGHT
 				},
 				className: {
 					ship: ENEMYCLASS,
@@ -138,6 +151,8 @@ function Enemy(type){
 				}
 			};
 		else if(enemyType == "GUARD")
+			spriteXIndex = 2;
+			spriteYIndex = 0;
 			return {
 				type: "GUARD",
 				angle: 0,
@@ -146,8 +161,10 @@ function Enemy(type){
 					y: 0
 				},
 				sprite: {
-					ship: "U",
-					lasor: "."
+					x: SPRITEXINDEX * ENEMYSPRITEWIDTH,
+					y: SPRITEYINDEX * ENEMYSPRITEWIDTH,
+					width: ENEMYSPRITEWIDTH
+					height: ENEMYSPRITEHEIGHT
 				},
 				className: {
 					ship: ENEMYCLASS,
