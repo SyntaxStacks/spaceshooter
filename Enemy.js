@@ -64,7 +64,7 @@ function Enemy(type){
 	function getEnemyYSpeed()	{ return enemyData.speed.y || 0; }
 	function getDirection()		{ return enemyData.dir; }
 	function setAngle(ang)		{ return enemyData.angle; }
-	function tostring()			{ return "ENEMY: "+getEnemyType(); }
+	function tostring()		{ return "ENEMY: "+getEnemyType(); }
 	function getEnemyClass()	{ return enemyData.className.ship; }
 	function getEnemyLasor()	{ return enemyData.sprite.lasor; }
 	
