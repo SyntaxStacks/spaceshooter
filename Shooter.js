@@ -43,6 +43,26 @@ var lastEnemyUpdateTime = Date.now();
 	}
 }*/
 function Shooter(){
+	var lastEnemyUpdateTime = Date.now();
+	var enemyList = null;
+	/*function updateEnemyLasorPosition(){
+
+		var nodeList = elementsOfClass(ENEMYLASORCLASS);
+		for(var i = 0; i < nodeList.length; i++) {
+			var lasor = nodeList[i];
+			var originY = parseInt(lasor.getAttribute("data-originY"));
+	    	var originX = parseInt(lasor.getAttribute("data-originX"));
+			var angle = lasor.getAttribute("data-angle");
+	    	
+			
+			if(getElementMarginTop(lasor) > FRAMEHEIGHT){
+				removeElement(lasor);
+				continue;
+			}
+	    	
+	    	
+	    	var lasorMoveY = getElementMarginTop(lasor) + 1;
+	    	lasor.style.marginTop = lasorMoveY;
 
 	var lastEnemyUpdateTime = Date.now();
 	var ENEMYSCOREVALUE = 100;
@@ -99,12 +119,21 @@ function Shooter(){
 	}
 
 
+	function getEnemies(){
+		return enemyList;
+	}
+
+	function getShip(){
+		return ship;
+	}
+
 	function updateEnemyPosition(){
 		var currentTime = Date.now();
 		
-		var enemies   = getEnemies();
+		var enemies = getEnemies();
 		var spaceship = getShip();
-		var shipX     = spaceship.locationX();
+		var shipX = spaceship.locationX();
+
 		for(var i = 0; i < enemies.length; i++){
 			var enemy        = enemies[i];
 			var enemyType    = enemy.type();
