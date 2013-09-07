@@ -1,5 +1,6 @@
-function Ship(data){
-	var data = data;
+function Ship(type){
+	
+	var data = shipSpecs(type);
 
 	this.setShipSprite  = setShipSprite;
 	this.setFloatXRange = setFloatXRange;
@@ -53,6 +54,35 @@ function Ship(data){
 	function getDirection()		{ return data.dir; }
 	function getAngle(ang)		{ return data.angle; }
 	//function tostring()		{ return "Ship: "+getShipType(); }
+
+	function shipSpecs(type){
+
+		if(type == "PLAYER")
+	 		return {
+				type: "PLAYER",
+				angle: 0,
+				location: {
+					x: 0,
+					y: 0
+				},
+				sprite: {
+					ship: ">O<",
+					lasor: "|"
+				},
+				className: {
+					ship: "class",
+					lasor: "lasorclass"
+				},
+				range:{
+					x: 50,
+					y: 50
+				},
+				speed: {
+					x: 1,
+					y: 0
+				}
+			};
+	}
 }
 
 module.exports = Ship

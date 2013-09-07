@@ -1,8 +1,9 @@
 var Shooter = require('./Shooter');
-var Enemy = require('./Enemy');
-var e1 = new Enemy("MAVERICK");
-var e2 = new Enemy("GUARD");
 
+var ShooterGame = new Shooter();
+console.log(ShooterGame.enemies());
+ShooterGame.run();
+console.log(ShooterGame.enemies());
 
 var Canvas = require('canvas')
   , canvas = new Canvas(150, 150)

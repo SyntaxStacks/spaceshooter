@@ -6,7 +6,7 @@ function Enemy(type){
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
 
-	var enemyData = enemySpecs(type.toUpperCase());
+	var enemyData = enemySpecs(type? type.toUpperCase() : "");
 	enemyData.xorigin = (Math.random()*(FRAMEWIDTH - 2 * getFloatXRange(enemyData))) + getFloatXRange(enemyData);
 	enemyData.yorigin = 40;
 	enemyData.dir = 0;
@@ -26,6 +26,7 @@ function Enemy(type){
 	this.setDir         = setDirection;
 	this.setAngle       = setAngle;
 	this.shipSprite     = getShipSprite;
+	this.lasorSprite	= getLasorSprite;
 	this.floatXRange    = getFloatXRange;
 	this.floatYRange    = getFloatYRange;
 	this.originX        = getOriginX;
@@ -38,8 +39,10 @@ function Enemy(type){
 	this.dir            = getDirection;
 	this.angle          = getAngle;
 	
+	this.move			= move;
 	this.toString = tostring();
 	
+	function move(moveDistance)		{ this.setLocationX(this.locationX + moveDistance); }
 	function setShipSprite(ship)	{ enemyData.sprite.ship = ship; }
 	function setFloatXRange(x)	{ enemyData.range.x = x; }
 	function setFloatYRange(y)	{ enemyData.range.y = y; }
@@ -52,6 +55,7 @@ function Enemy(type){
 	function setEnemyYSpeed(y)	{ enemyData.speed.y = y; }
 	function setDirection(dir)	{ enemyData.dir = dir; }
 	function setAngle(ang)		{ enemyData.angle = ang; }
+	function getLasorSprite()	{ return enemyData.sprite.lasor; }
 	function getShipSprite()	{ return enemyData.sprite.ship; }
 	function getFloatXRange()	{ return enemyData.range.x || 0; }
 	function getFloatYRange()	{ return enemyData.range.y || 0; }
@@ -63,12 +67,17 @@ function Enemy(type){
 	function getEnemyXSpeed()	{ return enemyData.speed.x || 0; }
 	function getEnemyYSpeed()	{ return enemyData.speed.y || 0; }
 	function getDirection()		{ return enemyData.dir; }
-	function setAngle(ang)		{ return enemyData.angle; }
+	function getAngle()		{ return enemyData.angle; }
 	function tostring()		{ return "ENEMY: "+getEnemyType(); }
 	function getEnemyClass()	{ return enemyData.className.ship; }
 	function getEnemyLasor()	{ return enemyData.sprite.lasor; }
 	
 	function enemySpecs(enemyType){
+		
+		function randomEnemy(){
+			var enemyIndex = Math.floor(Math.random()*enemyList.length);
+			return enemySpecs(enemyList[enemyIndex]);
+		}
 
 		if(enemyType == "MAVERICK")
 	 		return {
@@ -95,7 +104,7 @@ function Enemy(type){
 					y: 0
 				}
 			};
-		if(enemyType == "BLOCKADE")
+		else if(enemyType == "BLOCKADE")
 			return {
 				type: "BLOCKADE",
 				angle: 0,
@@ -120,7 +129,7 @@ function Enemy(type){
 					y: 0
 				}
 			};
-		if(enemyType == "GUARD")
+		else if(enemyType == "GUARD")
 			return {
 				type: "GUARD",
 				angle: 0,
@@ -145,6 +154,8 @@ function Enemy(type){
 					y: 1
 				}
 			};
+		else
+			return randomEnemy();
 	}
 }
 
