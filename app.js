@@ -1,3 +1,9 @@
+var Shooter = require('./Shooter');
+var Enemy = require('./Enemy');
+var e1 = new Enemy("MAVERICK");
+var e2 = new Enemy("GUARD");
+
+
 var Canvas = require('canvas')
   , canvas = new Canvas(150, 150)
   , ctx = canvas.getContext('2d')
@@ -24,7 +30,6 @@ var out = fs.createWriteStream(__dirname + '/public/state.png')
   , stream = canvas.createPNGStream();
  
 stream.on('data', function(chunk){
-	console.log("here");
   out.write(chunk);
 });
 
