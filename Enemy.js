@@ -5,7 +5,7 @@ function Enemy(type){
 	var ENEMYCLASS = 'enemy';
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
-	
+
 	var enemyData = enemySpecs(type.toUpperCase());
 	enemyData.xorigin = (Math.random()*(FRAMEWIDTH - 2 * getFloatXRange(enemyData))) + getFloatXRange(enemyData);
 	enemyData.yorigin = 40;
