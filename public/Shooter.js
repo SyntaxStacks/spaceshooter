@@ -1,5 +1,4 @@
-var Enemy = require("./Enemy");
-var Ship = require('./Ship');/*
+/*
 ::key input::
 var RIGHT = 39;
 var LEFT = 37;
@@ -9,8 +8,7 @@ var SHIPID = 'spaceship';
 var LASORCLASS = 'lasor';
 var LASOR = '|';
 
-var FRAMEHEIGHT = 300;
-var FRAMEWIDTH = 600;
+
 var ENEMY_MOVEX = 1;
 
 var ENEMYSCOREVALUE = 100;
@@ -42,29 +40,15 @@ var lastEnemyUpdateTime = Date.now();
 
 	}
 }*/
-function Shooter(){
-	var lastEnemyUpdateTime = Date.now();
-	var enemyList = null;
-	/*function updateEnemyLasorPosition(){
-
-		var nodeList = elementsOfClass(ENEMYLASORCLASS);
-		for(var i = 0; i < nodeList.length; i++) {
-			var lasor = nodeList[i];
-			var originY = parseInt(lasor.getAttribute("data-originY"));
-	    	var originX = parseInt(lasor.getAttribute("data-originX"));
-			var angle = lasor.getAttribute("data-angle");
-	    	
-			
-			if(getElementMarginTop(lasor) > FRAMEHEIGHT){
-				removeElement(lasor);
-				continue;
-			}
-	    	
-	    	
-	    	var lasorMoveY = getElementMarginTop(lasor) + 1;
-	    	lasor.style.marginTop = lasorMoveY;
+function Shooter(canvas){
+	var canvas = new GameCanvas(canvas);
+	var frame = 0;
 
 	var lastEnemyUpdateTime = Date.now();
+	var enemyList = [];
+
+	var FRAMEHEIGHT = 300;
+	var FRAMEWIDTH = 600;
 	var ENEMYSCOREVALUE = 100;
 	var MENUSCREEN = 0;
 	var GAMESCREEN = 1;
@@ -80,6 +64,7 @@ function Shooter(){
 
 	this.enemies = getEnemies;
 	this.run = run;
+	this.draw = draw;
 
 	function getEnemies(){
 		return enemyList;
@@ -151,10 +136,10 @@ function Shooter(){
 				var enemyX = enemy.locationX();
 				var enemyXOrigin = enemy.originX();
 
-				if(enemyX < enemyXOrigin - enemy.getFloatXRange()){
+				if(enemyX < enemyXOrigin - enemy.floatXRange()){
 					enemy.setDir(1);
 				} else 
-				if(enemyX > enemyXOrigin + enemy.getFloatXRange()){
+				if(enemyX > enemyXOrigin + enemy.floatXRange()){
 					enemy.setDir(-1);
 				}
 
@@ -229,6 +214,22 @@ function Shooter(){
 		}*/
 	}
 
+	function draw(canvas){
+
+		
+		var ctx = canvas;
+		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);   // Draw a rectangle with default settings
+		ctx.save();
+
+		var enemies = getEnemies();
+		for(var i = 0; i < enemies.length; i++){
+			enemy = enemyList[i];
+			enemy.draw(ctx);
+		}
+		ctx.restore();
+		return ctx;
+	}
+
 	function updateLasorPosition(){
 		var lasors = getShipLasors();
 		for(var i = 0; i < lasors.length; i++) {
@@ -287,6 +288,7 @@ function Shooter(){
 
 	function run(){
 		
+		
 		if (status == GAMESCREEN){
 			//updateLasorPosition();
 			//updateEnemyLasorPosition()
@@ -300,7 +302,9 @@ function Shooter(){
 		else if(status == GAMEOVER){
 
 		}
-	}
-}
 
-module.exports = Shooter;
+		canvas.draw(draw);
+	}
+};
+
+define(['GameCanvas', 'Enemy', 'Ship'], function(){ return Shooter; });

@@ -85,4 +85,4 @@ function Ship(type){
 	}
 }
 
-module.exports = Ship
+define(function(){ return Ship; });

@@ -38,11 +38,11 @@ function Enemy(type){
 	this.ySpeed         = getEnemyYSpeed;
 	this.dir            = getDirection;
 	this.angle          = getAngle;
-	
+	this.draw 			= draw;
 	this.move			= move;
 	this.toString = tostring();
 	
-	function move(moveDistance)		{ this.setLocationX(this.locationX + moveDistance); }
+	function move(moveDistance)		{ this.setLocationX(this.locationX() + moveDistance); }
 	function setShipSprite(ship)	{ enemyData.sprite.ship = ship; }
 	function setFloatXRange(x)	{ enemyData.range.x = x; }
 	function setFloatYRange(y)	{ enemyData.range.y = y; }
@@ -72,6 +72,14 @@ function Enemy(type){
 	function getEnemyClass()	{ return enemyData.className.ship; }
 	function getEnemyLasor()	{ return enemyData.sprite.lasor; }
 	
+	function draw(canvas){
+
+		var ctx = canvas;
+		ctx.fillStyle = '#09F'     
+		ctx.fillRect(this.locationX(), this.locationY(), 10, 10);
+		return ctx;
+	}
+
 	function enemySpecs(enemyType){
 		
 		function randomEnemy(){
@@ -159,4 +167,4 @@ function Enemy(type){
 	}
 }
 
-module.exports = Enemy;
+define(function(){ return Enemy; });
