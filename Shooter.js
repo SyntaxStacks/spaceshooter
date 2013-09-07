@@ -28,8 +28,8 @@ var lastEnemyUpdateTime = Date.now();
 
 */
 function Shooter(){
-var lastEnemyUpdateTime = Date.now();
-	
+	var lastEnemyUpdateTime = Date.now();
+	var enemyList = null;
 	/*function updateEnemyLasorPosition(){
 
 		var nodeList = elementsOfClass(ENEMYLASORCLASS);
@@ -55,12 +55,20 @@ var lastEnemyUpdateTime = Date.now();
 		}
 	}*/
 
+	function getEnemies(){
+		return enemyList;
+	}
+
+	function getShip(){
+		return ship;
+	}
+
 	function updateEnemyPosition(){
 		var currentTime = Date.now();
 		
-		var enemies = elementsOfClass(ENEMYCLASS);
-		var spaceship = elementWithId(SHIPID);
-		var shipX = getElementMarginLeft(spaceship);
+		var enemies = getEnemies();
+		var spaceship = getShip();
+		var shipX = spaceship.locationX();
 		for(var i = 0; i < enemies.length; i++){
 			var enemy = enemies[i];
 			var enemyType = getElementType(enemy);
