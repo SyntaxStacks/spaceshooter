@@ -5,7 +5,7 @@ function Enemy(type){
 	var ENEMYCLASS = 'enemy';
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
-	
+
 	var enemyData = enemySpecs(type.toUpperCase());
 	enemyData.xorigin = (Math.random()*(FRAMEWIDTH - 2 * getFloatXRange(enemyData))) + getFloatXRange(enemyData);
 	enemyData.yorigin = 40;
@@ -40,7 +40,7 @@ function Enemy(type){
 	
 	this.toString = tostring();
 	
-	function setShipSprite(ship){ enemyData.sprite.ship = ship; }
+	function setShipSprite(ship)	{ enemyData.sprite.ship = ship; }
 	function setFloatXRange(x)	{ enemyData.range.x = x; }
 	function setFloatYRange(y)	{ enemyData.range.y = y; }
 	function setOriginX(x)		{ enemyData.range.x = x; }
