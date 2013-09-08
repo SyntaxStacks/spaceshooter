@@ -52,20 +52,17 @@ function Shooter(canvas){
 	function updatePlayer(){ getShip().update(); }
 
 	function draw(canvas){
-
-		
 		var ctx = canvas;
-		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);   // Draw a rectangle with default settings
 		ctx.save();
 
+		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);   // Draw a rectangle with default settings
 		getShip().draw(ctx);
+
 		ctx.restore();
 		ctx.save();
+
 		var enemies = getEnemies();
-		for(var i = 0; i < enemies.length || 0; i++){
-			enemy = enemyList[i];
-			enemy.draw(ctx);
-		}
+		for(var i = 0, enemy = enemyList[i]; i < enemies.length || 0; enemy = enemyList[++i]) { enemy.draw(ctx); }
 		ctx.restore();
 		return ctx;
 	}
@@ -215,21 +212,13 @@ function Shooter(canvas){
 	}
 
 	function run(){
-		
-		
 		if (status == GAMESCREEN){
 			updateEnemies();
 			updatePlayer();
 			checkForHit();
 		}
-		else if(status == MENUSCREEN){
-			
-		}
-
-		else if(status == GAMEOVER){
-
-		}
-
+		else if(status == MENUSCREEN){}
+		else if(status == GAMEOVER){}
 		canvas.draw(draw);
 	}
 };

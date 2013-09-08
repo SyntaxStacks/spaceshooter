@@ -87,6 +87,7 @@ function Ship(type){
 		
 		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
 					(-this.locationX()), (-this.locationY()), this.width(), this.height());
+		ctx.rotate(0);
 		ctx.restore();
 
 		ctx.save()
@@ -98,7 +99,6 @@ function Ship(type){
 
 				ctx.fillRect(lasor.x,lasor.y,3,3);
 			}
-
 		ctx.restore();
 
 		return ctx;
@@ -118,8 +118,8 @@ function Ship(type){
 	}
 
 	function shoot(ship){
-		//if(data.lasor.length >= 2)
-		//	return false;
+		if(data.lasor.length >= 2)
+			return false;
 		
 		var ship = ship;
 		var lasor = {

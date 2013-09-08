@@ -48,6 +48,7 @@ function Enemy(type){
 	this.move			= move;
 	this.shoot			= shoot;
 	this.lasors 		= getLasors;
+	this.getCenter 		= getCenter;
 	this.toString = tostring();
 
 	this.setOriginX((Math.random()*(FRAMEWIDTH - 2 * getFloatXRange())) + getFloatXRange());
@@ -90,16 +91,20 @@ function Enemy(type){
 	function getSpriteWidth()	{ return enemyData.sprite.width; }
 	function getSpriteHeight()	{ return enemyData.sprite.height; }
 	function getLasors()		{ return enemyData.lasor; }
+	function getCenter()		{ return {x: this.locationX() + (this.width()/2), y: this.locationY() + (this.height()/2) }};//{ return {x: this.locationX() + (this.width()/2), y: this.locationY() + (this.height()/2) }; }
 
 	function draw(canvas){
 
 		var ctx = canvas;
 		ctx.save();
-		ctx.translate(this.locationX()+this.width()/2, this.locationY()+this.height()/2);
+		var translateX = this.getCenter().x,
+		    translateY = this.getCenter().y;
+		
+		ctx.translate( translateX, translateY);
 		ctx.rotate(this.angle());
-		ctx.translate(-this.width()/2, -this.height()/2);
+		ctx.translate(-(translateX), -(translateY));
 		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
-					0, 0, this.width(), this.height()); //this.locationX(), this.locationY(), 10, 10);
+					this.locationX(), this.locationY(), this.width(), this.height()); //this.locationX(), this.locationY(), 10, 10);
 		ctx.rotate(0);
 		ctx.restore();
 
@@ -128,11 +133,11 @@ function Enemy(type){
 			type: this.type(),
 			angle: angle,
 			origin:{
-				x: this.locationX(),
-				y: this.locationY()
+				x: this.locationX() + (this.width()/2),
+				y: this.locationY() + this.height()
 			},
-			x: this.locationX(),
-			y: this.locationY()
+			x: this.locationX() + (this.width()/2),
+			y: this.locationY() + this.height()
 		};
 		addLasor(lasor);
 	}
@@ -233,7 +238,7 @@ function Enemy(type){
 				angle: 0,
 				location: {
 					x: 0,
-					y: 0
+					y: 40
 				},
 				origin: {
 					x: 0,
@@ -254,7 +259,7 @@ function Enemy(type){
 					y: 50
 				},
 				speed: {
-					x: 1,
+					x: 3,
 					y: 0
 				},
 				lasor: []
@@ -303,7 +308,7 @@ function Enemy(type){
 				angle: 0,
 				location: {
 					x: 0,
-					y: 0
+					y: 60
 				},
 				origin: {
 					x: 0,
