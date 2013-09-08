@@ -1,6 +1,15 @@
 function Ship(type){
 	
 	var data = shipSpecs(type);
+	var loadImage = document.createElement('img');
+	var sprites = null;
+	var FRAMEHEIGHT = 300;
+	var FRAMEWIDTH = 600;
+	
+	loadImage.src = 'sprites.png';
+	loadImage.onload = function(){
+		sprites = loadImage;
+	}
 
 	this.setShipSprite  = setShipSprite;
 	this.setFloatXRange = setFloatXRange;
@@ -26,9 +35,16 @@ function Ship(type){
 	this.ySpeed         = getShipYSpeed;
 	this.dir            = getDirection;
 	this.angle          = getAngle;
+	this.width 			= getSpriteWidth;
+	this.height 		= getSpriteHeight;
+	this.draw 			= draw;
+	this.move			= move;
+	this.shoot 			= shoot;
+	this.update			= update;
 	
 	//this.toString = tostring();
 	
+	function move(moveDistance)		{ this.setLocationX(this.locationX() + moveDistance); }
 	function setShipSprite(ship)	{ data.sprite.ship = ship; }
 	function setFloatXRange(x)	{ data.range.x = x; }
 	function setFloatYRange(y)	{ data.range.y = y; }
@@ -53,35 +69,102 @@ function Ship(type){
 	function getShipYSpeed()	{ return data.speed.y || 0; }
 	function getDirection()		{ return data.dir; }
 	function getAngle(ang)		{ return data.angle; }
+	function getSpriteOriginX()	{ return data.sprite.x; }
+	function getSpriteOriginY()	{ return data.sprite.y; }
+	function getSpriteWidth()	{ return data.sprite.width; }
+	function getSpriteHeight()	{ return data.sprite.height; }
+	function getLasors()		{ return data.lasor; }
+	function addLasor(lasor)	{ data.lasor.push(lasor); }
 	//function tostring()		{ return "Ship: "+getShipType(); }
+
+	function draw(canvas){
+
+		var ctx = canvas;
+		ctx.save();
+		ctx.translate(this.width(), this.height());
+		ctx.rotate(Math.PI);
+		//ctx.translate(-this.width()/2, -this.height()/2);
+		
+		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
+					(-this.locationX()), (-this.locationY()), this.width(), this.height());
+		ctx.restore();
+
+		ctx.save()
+		var lasors = getLasors();
+		ctx.fillStyle = "#F00";
+		for(var i = 0; i < lasors.length; i++){
+			var lasor = lasors[i];
+
+			ctx.fillRect(lasor.x,lasor.y,3,3);
+		}
+		ctx.restore();
+
+		return ctx;
+	}
+
+	function update(){
+		var lasors = getLasors();
+		console.log(lasors);
+		for(var i = 0; i < lasors.length; i++) {
+			var lasor = lasors[i];
+			if(lasor.y < 0){
+				getLasors().splice(i, 1);
+				continue;
+			}
+	    	
+	    	lasor.y = lasor.y - 5;
+		}																							
+	}
+
+	function shoot(ship){
+		if(data.lasor.length >= 2)
+			return false;
+		
+		var ship = ship;
+		var lasor = {
+			type: this.type(),
+			angle: 0,
+			x: this.locationX()+(this.width()/2),
+			y: this.locationY()
+		};
+		addLasor(lasor);
+	}
 
 	function shipSpecs(type){
 
+		var ENEMYSPRITEWIDTH = 16;
+		var ENEMYSPRITEHEIGHT = 16
+
 		if(type == "PLAYER")
-	 		return {
+	 		spriteXIndex = 1;
+			spriteYIndex = 3;
+			return {
 				type: "PLAYER",
 				angle: 0,
 				location: {
 					x: 0,
-					y: 0
+					y: 250
+				},
+				origin: {
+					x: 0,
+					y: 0 
 				},
 				sprite: {
-					ship: ">O<",
-					lasor: "|"
+					x: spriteXIndex * ENEMYSPRITEWIDTH,
+					y: spriteYIndex * ENEMYSPRITEWIDTH,
+					width: ENEMYSPRITEWIDTH,
+					height: ENEMYSPRITEHEIGHT
 				},
 				className: {
 					ship: "class",
 					lasor: "lasorclass"
 				},
-				range:{
-					x: 50,
-					y: 50
+				speed:{
+					x: 10,
+					y: 1
 				},
-				speed: {
-					x: 1,
-					y: 0
-				}
-			};
+				lasor: []
+			}
 	}
 }
 

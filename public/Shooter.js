@@ -1,8 +1,5 @@
 /*
-::key input::
-var RIGHT = 39;
-var LEFT = 37;
-var SPACE = 32;
+
 
 var SHIPID = 'spaceship';
 var LASORCLASS = 'lasor';
@@ -16,37 +13,17 @@ v
 var lastEnemyUpdateTime = Date.now();
 
 */
-/*function updateEnemyLasorPosition(){
 
-	var nodeList = elementsOfClass(ENEMYLASORCLASS);
-	for(var i = 0; i < nodeList.length; i++) {
-		var lasor = nodeList[i];
-		var originY = parseInt(lasor.getAttribute("data-originY"));
-    	var originX = parseInt(lasor.getAttribute("data-originX"));
-		var angle = lasor.getAttribute("data-angle");
-    	
-		
-		if(getElementMarginTop(lasor) > FRAMEHEIGHT){
-			removeElement(lasor);
-			continue;
-		}
-    	
-    	
-    	var lasorMoveY = getElementMarginTop(lasor) + 1;
-    	lasor.style.marginTop = lasorMoveY;
-
-    	var lasorMoveX = originX + ((originY - lasorMoveY)*Math.tan(angle));
-    	lasor.style.marginLeft = lasorMoveX;
-
-	}
-}*/
 function Shooter(canvas){
 	var canvas = new GameCanvas(canvas);
 	var frame = 0;
 
-	var lastEnemyUpdateTime = Date.now();
 	var enemyList = [];
 
+	//::key input::
+	var RIGHT = 39;
+	var LEFT = 37;
+	var SPACE = 32;
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
 	var ENEMYSCOREVALUE = 100;
@@ -58,13 +35,32 @@ function Shooter(canvas){
 	var level = 1;
 	var score = 0;
 	var delay = 10;
-	var ENEMY_UPDATE_DELAY = 30;
 	var enemyList = [];
 	var ship = new Ship("PLAYER");
 
 	this.enemies = getEnemies;
 	this.run = run;
 	this.draw = draw;
+	document.addEventListener('keydown', processInput, false);
+
+	function processInput(event){
+	//console.log(event);
+	event.preventDefault();
+	if(event.keyCode == RIGHT){
+		ship.move(10);
+	} else 
+	if (event.keyCode == LEFT){
+		ship.move(-10);
+	} 
+	else if (event.keyCode == SPACE){
+		ship.shoot();
+	}
+	else if (event.keyCode == 80){
+		//createEnemy();
+	}
+//	49 50 51 52
+
+};
 
 	function getEnemies(){
 		return enemyList;
@@ -90,20 +86,6 @@ function Shooter(canvas){
 		level++;
 	}
 
-	function angleBetweenObjects(obj1, obj2){
-		var e1x = parseInt(Math.abs(obj1.locationX()));
-		var e2x = parseInt(Math.abs(obj2.locationX()));
-		var e1y = parseInt(Math.abs(obj1.locationY()));
-		var e2y = parseInt(Math.abs(obj2.locationY()));
-
-		var rise = e1y - e2y;
-		var run = e1x - e2x;
-		var angle = -Math.atan(run/rise);
-		return angle;
-
-	}
-
-
 	function getEnemies(){
 		return enemyList;
 	}
@@ -112,59 +94,15 @@ function Shooter(canvas){
 		return ship;
 	}
 
-	function updateEnemyPosition(){
-		var currentTime = Date.now();
-		
+	function updateEnemies(){
 		var enemies = getEnemies();
-		var spaceship = getShip();
-		var shipX = spaceship.locationX();
-
 		for(var i = 0; i < enemies.length; i++){
-			var enemy        = enemies[i];
-			var enemyType    = enemy.type();
-			var enemyMoveDir = enemy.dir();
-
-			if(enemyMoveDir != 1 && enemyMoveDir != -1){
-				var dir = (Math.random() <= 0.5)? -1 : 1;
-				enemy.setDir(dir);
-			}
-
-			var deg = (angleBetweenObjects(enemy, spaceship));
-			enemy.setAngle(deg);
-
-			if(currentTime - lastEnemyUpdateTime > ENEMY_UPDATE_DELAY ){
-				var enemyX = enemy.locationX();
-				var enemyXOrigin = enemy.originX();
-
-				if(enemyX < enemyXOrigin - enemy.floatXRange()){
-					enemy.setDir(1);
-				} else 
-				if(enemyX > enemyXOrigin + enemy.floatXRange()){
-					enemy.setDir(-1);
-				}
-
-				var enemyNextMove =  enemy.xSpeed() * enemyMoveDir;
-				enemy.move(enemyNextMove);
-
-				//blockade specific
-				if(enemy.type() == "BLOCKADE" || enemy.type() == "GUARD") {
-					if(Math.abs(enemyX - enemyXOrigin) <= enemy.xSpeed() )
-						enemy.setLocationX(enemyXOrigin);
-				}
-				
-					
-			}	
-
-			var enemyLasorSprite = enemy.lasorSprite();
-			if(enemyLasorSprite)
-				if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 50)
-					;//enemyShoot(enemy);
-				else if(Math.random() >= 0.9 && getLasors().length < getEnemies().length)
-					;//enemyShoot(enemy);
+			enemies[i].update(getShip());
 		}
-		
-		if(currentTime - lastEnemyUpdateTime > ENEMY_UPDATE_DELAY )
-			lastEnemyUpdateTime = Date.now();
+	}
+
+	function updatePlayer(){
+		getShip().update();
 	}
 
 	function checkForHit(){
@@ -221,6 +159,7 @@ function Shooter(canvas){
 		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);   // Draw a rectangle with default settings
 		ctx.save();
 
+		getShip().draw(ctx);
 		var enemies = getEnemies();
 		for(var i = 0; i < enemies.length; i++){
 			enemy = enemyList[i];
@@ -290,10 +229,9 @@ function Shooter(canvas){
 		
 		
 		if (status == GAMESCREEN){
-			//updateLasorPosition();
-			//updateEnemyLasorPosition()
+			updateEnemies();
+			updatePlayer();
 			checkForHit();
-			updateEnemyPosition();
 		}
 		else if(status == MENUSCREEN){
 			
