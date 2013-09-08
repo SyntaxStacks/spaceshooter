@@ -16,14 +16,13 @@ var lastEnemyUpdateTime = Date.now();
 
 function Shooter(canvas){
 	var canvas = new GameCanvas(canvas);
-	var frame = 0;
-
 	var enemyList = [];
 
 	//::key input::
 	var RIGHT = 39;
 	var LEFT = 37;
 	var SPACE = 32;
+
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
 	var ENEMYSCOREVALUE = 100;
@@ -43,114 +42,14 @@ function Shooter(canvas){
 	this.draw = draw;
 	document.addEventListener('keydown', processInput, false);
 
-	function processInput(event){
-	//console.log(event);
-	event.preventDefault();
-	if(event.keyCode == RIGHT){
-		ship.move(10);
-	} else 
-	if (event.keyCode == LEFT){
-		ship.move(-10);
-	} 
-	else if (event.keyCode == SPACE){
-		ship.shoot();
-	}
-	else if (event.keyCode == 80){
-		//createEnemy();
-	}
-//	49 50 51 52
-
-};
-
-	function getEnemies(){
-		return enemyList;
-	}
-
-	function getShip(){
-		return ship;
-	}
-
-	function getLasors(){
-		return null;
-	}
-
-	function getShipLasors(){
-		return null;
-	}
-
-	function getLevel(){
-		return level;
-	}
-
-	function addLevel(){
-		level++;
-	}
-
-	function getEnemies(){
-		return enemyList;
-	}
-
-	function getShip(){
-		return ship;
-	}
-
-	function updateEnemies(){
-		var enemies = getEnemies();
-		for(var i = 0; i < enemies.length; i++){
-			enemies[i].update(getShip());
-		}
-	}
-
-	function updatePlayer(){
-		getShip().update();
-	}
-
-	function checkForHit(){
-		var lasors = getShipLasors();
-		var enemyLasors = getLasors();
-		var enemies = getEnemies();
-
-		/*for(var i = 0; i < lasors.length; i++){
-			for(var j = 0; j < enemies.length; j++){
-				var currentLasor = lasors[i];
-				var currentEnemy = enemies[j];
-
-				var currentLasorX = currentLasor.locationX() || 0;
-				var currentLasorY = currentLasor.locationY() || 0;
-				var currentEnemyX = currentEnemy.locationX() || 0;
-				var currentEnemyY = currentEnemy.locationY() || 0;
-
-				if(currentLasorX > currentEnemyX - 5 && currentLasorX < currentEnemyX + 15){
-					if(currentLasorY < currentEnemyY && currentLasorY > currentEnemyY - 10){
-						addPoints();
-						removeElement(currentEnemy);
-					}
-				}	
-			}
-		}*/
-
-		if(getEnemies().length == 0){
-			createNewLevel();
-		}	
-
-		/*for(var i = 0; i < enemyLasors.length; i++){
-			var currentLasor = enemyLasors[i];
-			var ship = getShip();
-
-			var currentLasorX = currentLasor.locationX() || 0;
-			var currentLasorY = currentLasor.locationY() || 0;
-			var shipX         = ship.locationX() || 0;
-			var shipY         = ship.locationY() || 0;
-
-			if(currentLasorX > shipX - 5 && currentLasorX < shipX + 30){
-				if(currentLasorY > shipY && currentLasorY < shipY + 10){
-					//removeElement(currentEnemy);
-					endGame();
-					console.log("dedz");
-				}
-			}	
-		}*/
-	}
+	function getEnemies(){ return enemyList; }
+	function getShip(){ return ship; }
+	function getShipLasors(){ return getShip().lasors(); }
+	function getLevel(){ return level; }
+	function addLevel(){ level++; }
+	function getEnemies(){ return enemyList; }
+	function getShip(){ return ship; }
+	function updatePlayer(){ getShip().update(); }
 
 	function draw(canvas){
 
@@ -160,8 +59,10 @@ function Shooter(canvas){
 		ctx.save();
 
 		getShip().draw(ctx);
+		ctx.restore();
+		ctx.save();
 		var enemies = getEnemies();
-		for(var i = 0; i < enemies.length; i++){
+		for(var i = 0; i < enemies.length || 0; i++){
 			enemy = enemyList[i];
 			enemy.draw(ctx);
 		}
@@ -169,16 +70,82 @@ function Shooter(canvas){
 		return ctx;
 	}
 
-	function updateLasorPosition(){
+	function processInput(event){
+		//console.log(event);
+		event.preventDefault();
+		if(event.keyCode == RIGHT){
+			ship.move(10);
+		} else 
+		if (event.keyCode == LEFT){
+			ship.move(-10);
+		} 
+		else if (event.keyCode == SPACE){
+			ship.shoot();
+		}
+		else if (event.keyCode == 80){
+			//createEnemy();
+		}
+		//	49 50 51 52
+	};
+
+
+
+	function getEnemyLasors(enemy){
+		var lasors = [];
+		var enemies = getEnemies();
+		for(var i = 0; i < enemies.length; i++){
+			var enemyLasors = enemies[i].lasors();
+			if(enemyLasors == null) continue;
+			for(var j = 0; j < enemyLasors.length; j++)
+				lasors.push(enemyLasors[j]);
+		}
+		return lasors;
+	}
+
+	function checkForHit(){
 		var lasors = getShipLasors();
-		for(var i = 0; i < lasors.length; i++) {
-			var lasor = lasors[i];
-			if(lasor.locationY < 0){
-				//TODO: REMOVE OFFSCREEN ELEMENT  removeElement(e);
-				continue;
+		var enemyLasors = getEnemyLasors();
+		var enemies = getEnemies();
+
+		for(var i = 0; i < lasors.length; i++){
+			for(var j = 0; j < enemies.length; j++){
+				var currentLasor = lasors[i];
+				var currentEnemy = enemies[j];
+
+				var currentLasorX = currentLasor.x || 0;
+				var currentEnemyX = currentEnemy.locationX() || 0;
+
+				if(currentLasorX > currentEnemyX - 5 && currentLasorX < currentEnemyX + 15){
+					var currentLasorY = currentLasor.y || 0;
+					var currentEnemyY = currentEnemy.locationY() || 0;
+					if(currentLasorY < currentEnemyY && currentLasorY > currentEnemyY - 10){
+						addPoints();
+						getEnemies().splice(j, 1);
+					}
+				}	
 			}
-	    	
-	    	lasor.setLocationY(lasor.locationY - 5);
+		}
+
+		if(getEnemies().length == 0){
+			createNewLevel();
+		}	
+
+		for(var i = 0; i < enemyLasors.length; i++){
+			var currentLasor = enemyLasors[i];
+			var ship = getShip();
+
+			var currentLasorX = currentLasor.x || 0;
+			var shipX         = ship.locationX() || 0;
+
+			if(currentLasorX > shipX - 5 && currentLasorX < shipX + 30){
+				var currentLasorY = currentLasor.y || 0;
+				var shipY         = ship.locationY() || 0;
+				if(currentLasorY > shipY && currentLasorY < shipY + 10){
+					//removeElement(currentEnemy);
+					endGame();
+					console.log("dedz");
+				}
+			}	
 		}
 	}
 
@@ -223,6 +190,28 @@ function Shooter(canvas){
 		var scoreboard = getLevel("level");
 
 		scoreboard.innerHTML = "LEVEL: " + level;
+	}
+
+
+
+	function updateLasorPosition(){
+		var lasors = getShipLasors();
+		for(var i = 0; i < lasors.length; i++) {
+			var lasor = lasors[i];
+			if(lasor.locationY < 0){
+				//TODO: REMOVE OFFSCREEN ELEMENT  removeElement(e);
+				continue;
+			}
+	    	
+	    	lasor.setLocationY(lasor.locationY - 5);
+		}
+	}
+
+	function updateEnemies(){
+		var enemies = getEnemies();
+		for(var i = 0; i < enemies.length; i++){
+			enemies[i].update(getShip());
+		}
 	}
 
 	function run(){

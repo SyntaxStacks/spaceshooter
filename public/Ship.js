@@ -41,6 +41,7 @@ function Ship(type){
 	this.move			= move;
 	this.shoot 			= shoot;
 	this.update			= update;
+	this.lasors 		= getLasors;
 	
 	//this.toString = tostring();
 	
@@ -83,7 +84,6 @@ function Ship(type){
 		ctx.save();
 		ctx.translate(this.width(), this.height());
 		ctx.rotate(Math.PI);
-		//ctx.translate(-this.width()/2, -this.height()/2);
 		
 		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
 					(-this.locationX()), (-this.locationY()), this.width(), this.height());
@@ -92,11 +92,13 @@ function Ship(type){
 		ctx.save()
 		var lasors = getLasors();
 		ctx.fillStyle = "#F00";
-		for(var i = 0; i < lasors.length; i++){
-			var lasor = lasors[i];
+		if(lasors != null)
+			for(var i = 0; i < lasors.length; i++){
+				var lasor = lasors[i];
 
-			ctx.fillRect(lasor.x,lasor.y,3,3);
-		}
+				ctx.fillRect(lasor.x,lasor.y,3,3);
+			}
+
 		ctx.restore();
 
 		return ctx;
@@ -104,7 +106,6 @@ function Ship(type){
 
 	function update(){
 		var lasors = getLasors();
-		console.log(lasors);
 		for(var i = 0; i < lasors.length; i++) {
 			var lasor = lasors[i];
 			if(lasor.y < 0){
@@ -117,8 +118,8 @@ function Ship(type){
 	}
 
 	function shoot(ship){
-		if(data.lasor.length >= 2)
-			return false;
+		//if(data.lasor.length >= 2)
+		//	return false;
 		
 		var ship = ship;
 		var lasor = {

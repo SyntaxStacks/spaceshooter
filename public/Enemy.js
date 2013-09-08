@@ -14,9 +14,6 @@ function Enemy(type){
 		sprites = loadImage;
 	}
 
-	console.log(sprites);
-	
-
 	var enemyData = enemySpecs(type? type.toUpperCase() : "");
 
 	this.setShipSprite  = setShipSprite;
@@ -50,10 +47,11 @@ function Enemy(type){
 	this.update 		= update;
 	this.move			= move;
 	this.shoot			= shoot;
+	this.lasors 		= getLasors;
 	this.toString = tostring();
 
 	this.setOriginX((Math.random()*(FRAMEWIDTH - 2 * getFloatXRange())) + getFloatXRange());
-	this.setOriginY(40);
+	//enemyData.location.y = 100;
 	this.setDir(0);
 	
 	function move(moveDistance)		{ this.setLocationX(this.locationX() + moveDistance); }
@@ -85,7 +83,14 @@ function Enemy(type){
 	function tostring()		{ return "ENEMY: "+getEnemyType(); }
 	function getEnemyClass()	{ return enemyData.className.ship; }
 	function getEnemyLasor()	{ return enemyData.sprite.lasor; }
-	
+	function getLasors()		{ return enemyData.lasor; }
+	function addLasor(lasor)	{ enemyData.lasor.push(lasor); }
+	function getSpriteOriginX()	{ return enemyData.sprite.x; }
+	function getSpriteOriginY()	{ return enemyData.sprite.y; }
+	function getSpriteWidth()	{ return enemyData.sprite.width; }
+	function getSpriteHeight()	{ return enemyData.sprite.height; }
+	function getLasors()		{ return enemyData.lasor; }
+
 	function draw(canvas){
 
 		var ctx = canvas;
@@ -95,32 +100,51 @@ function Enemy(type){
 		ctx.translate(-this.width()/2, -this.height()/2);
 		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
 					0, 0, this.width(), this.height()); //this.locationX(), this.locationY(), 10, 10);
+		ctx.rotate(0);
 		ctx.restore();
+
+		ctx.save()
+		var lasors = getLasors();
+		ctx.fillStyle = "#F00";
+		if(lasors != null){
+			for(var i = 0; i < lasors.length; i++){
+				var lasor = lasors[i];
+
+				ctx.fillRect(lasor.x,lasor.y,3,3);
+			}
+		}
+		ctx.restore();
+
 		return ctx;
 	}
 
 	function shoot(ship){
-		if(enemyData.lasor.length >= 2)
+		if(getLasors().length >= 2 && this.type() != "GUARD")
 			return false;
 
 		var ship = ship;
-		var angle = angleBetweenElements(this, ship);
+		var angle = angleBetweenObjects(this, ship);
 		var lasor = {
 			type: this.type(),
 			angle: angle,
+			origin:{
+				x: this.locationX(),
+				y: this.locationY()
+			},
 			x: this.locationX(),
 			y: this.locationY()
 		};
-		enemyData.lasor.push(lasor);
+		addLasor(lasor);
 	}
 
 	function update(ship){
 		var currentTime = Date.now();
 		
 		var spaceship = ship;
-		var shipX = spaceship.locationX();
-
 		var enemy        = this;
+		var shipX = spaceship.locationX();
+		var enemyX = enemy.locationX();
+
 		var enemyType    = enemy.type();
 		var enemyMoveDir = enemy.dir();
 
@@ -133,7 +157,6 @@ function Enemy(type){
 		enemy.setAngle(deg);
 
 		if(currentTime - lastEnemyUpdateTime > ENEMY_UPDATE_DELAY ){
-			var enemyX = enemy.locationX();
 			var enemyXOrigin = enemy.originX();
 
 			if(enemyX < enemyXOrigin - enemy.floatXRange()){
@@ -153,61 +176,42 @@ function Enemy(type){
 			}	
 		}	
 
-		var enemyLasorSprite = enemy.lasorSprite();
-		if(enemyLasorSprite)
-			if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 50)
+		if(this.type() != "BLOCKADE"){
+			if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 16)
 				this.shoot(spaceship);
-			else if(Math.random() >= 0.9)
+			else if(enemyType != "GUARD" && Math.random() >= 0.9)
 				this.shoot(spaceship);
-		
+		}
+
 		if(currentTime - lastEnemyUpdateTime > ENEMY_UPDATE_DELAY )
 			lastEnemyUpdateTime = Date.now();
+
+		updateEnemyLasorPosition();
 	}
 
 	function updateEnemyLasorPosition(){
 
-		var nodeList = elementsOfClass(ENEMYLASORCLASS);
-		for(var i = 0; i < nodeList.length; i++) {
-			var lasor = nodeList[i];
-			var originY = parseInt(lasor.getAttribute("data-originY"));
-	    	var originX = parseInt(lasor.getAttribute("data-originX"));
-			var angle = lasor.getAttribute("data-angle");
-	    	
-			
-			if(getElementMarginTop(lasor) > FRAMEHEIGHT){
-				removeElement(lasor);
+		var lasors = getLasors();
+		if(lasors == null) return;
+		for(var i = 0; i < lasors.length; i++) {
+			var lasor = lasors[i];
+			if(lasor.y > FRAMEHEIGHT){
+				getLasors().splice(i, 1);
 				continue;
 			}
-	    	
-	    	
-	    	var lasorMoveY = getElementMarginTop(lasor) + 1;
-	    	lasor.style.marginTop = lasorMoveY;
+
+			var originY = lasor.origin.y;
+	    	var originX = lasor.origin.x;
+			var angle = lasor.angle;
+	    	var lasorMoveY = lasor.y + 1;
+	    	lasor.y = lasorMoveY;
 
 	    	var lasorMoveX = originX + ((originY - lasorMoveY)*Math.tan(angle));
-	    	lasor.style.marginLeft = lasorMoveX;
+	    	lasor.x = lasorMoveX;
 
 		}
 	}
-
-	function getSpriteOriginX(){
-		 return enemyData.sprite.x;
-	}
-
-	function getSpriteOriginY(){
-		 return enemyData.sprite.y;
-	}
-
-	function getSpriteWidth(){
-		 return enemyData.sprite.width;
-	}
-
-	function getSpriteHeight(){
-		 return enemyData.sprite.height;
-	}
-
-	function getLasors(){
-		return enemyData.lasor;
-	}
+	
 
 	function enemySpecs(enemyType){
 		
@@ -288,7 +292,7 @@ function Enemy(type){
 					x: 10,
 					y: 0
 				},
-				lasor: []
+				lasor: null
 			}
 		}
 		else if(enemyType == "GUARD"){
