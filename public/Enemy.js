@@ -97,6 +97,17 @@ function Enemy(type){
 
 		var ctx = canvas;
 		ctx.save();
+		drawLasors(ctx);
+		drawEnemy(ctx);
+		ctx.restore();
+
+		return ctx;
+	}
+
+	function drawEnemy(canvas){
+
+		var ctx = canvas;
+		ctx.save();
 		var translateX = this.getCenter().x,
 		    translateY = this.getCenter().y;
 		
@@ -107,7 +118,12 @@ function Enemy(type){
 					this.locationX(), this.locationY(), this.width(), this.height()); //this.locationX(), this.locationY(), 10, 10);
 		ctx.rotate(0);
 		ctx.restore();
+	}
 
+	function drawLasors(canvas){
+		
+		var ctx = canvas;
+		
 		ctx.save()
 		var lasors = getLasors();
 		ctx.fillStyle = "#F00";
@@ -119,9 +135,8 @@ function Enemy(type){
 			}
 		}
 		ctx.restore();
-
-		return ctx;
 	}
+
 
 	function shoot(ship){
 		if(getLasors().length >= 2 && this.type() != "GUARD")

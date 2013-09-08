@@ -53,6 +53,8 @@ function Shooter(canvas){
 
 	function draw(canvas){
 		var ctx = canvas;
+		ctx.rotate(0);
+		ctx.translate(0,0);
 		ctx.save();
 
 		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);   // Draw a rectangle with default settings
