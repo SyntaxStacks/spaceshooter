@@ -91,7 +91,7 @@ function Enemy(type){
 	function getSpriteWidth()	{ return enemyData.sprite.width; }
 	function getSpriteHeight()	{ return enemyData.sprite.height; }
 	function getLasors()		{ return enemyData.lasor; }
-	function getCenter()		{ return {x: this.locationX() + (this.width()/2), y: this.locationY() + (this.height()/2) }};//{ return {x: this.locationX() + (this.width()/2), y: this.locationY() + (this.height()/2) }; }
+	function getCenter()		{ return {x: getLocationX() + (getSpriteWidth()/2), y: getLocationY() + (getSpriteHeight()/2) }};//{ return {x: this.locationX() + (this.width()/2), y: this.locationY() + (this.height()/2) }; }
 
 	function draw(canvas){
 
@@ -108,14 +108,14 @@ function Enemy(type){
 
 		var ctx = canvas;
 		ctx.save();
-		var translateX = this.getCenter().x,
-		    translateY = this.getCenter().y;
+		var translateX = getCenter().x,
+		    translateY = getCenter().y;
 		
 		ctx.translate( translateX, translateY);
-		ctx.rotate(this.angle());
+		ctx.rotate(getAngle());
 		ctx.translate(-(translateX), -(translateY));
 		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
-					this.locationX(), this.locationY(), this.width(), this.height()); //this.locationX(), this.locationY(), 10, 10);
+					getLocationX(), getLocationY(), getSpriteWidth(), getSpriteHeight()); //this.locationX(), this.locationY(), 10, 10);
 		ctx.rotate(0);
 		ctx.restore();
 	}
