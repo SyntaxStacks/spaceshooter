@@ -49,7 +49,6 @@ function Shooter(canvas){
 	function addLevel(){ level++; }
 	function getEnemies(){ return enemyList; }
 	function getShip(){ return ship; }
-	function updatePlayer(){ getShip().update(); }
 
 	function draw(canvas){
 		var ctx = canvas;
@@ -119,11 +118,12 @@ function Shooter(canvas){
 					var currentEnemyY = currentEnemy.locationY() || 0;
 					if(currentLasorY < currentEnemyY && currentLasorY > currentEnemyY - 10){
 						addPoints();
-						getEnemies().splice(j, 1);
+						currentEnemy.destroy();
 					}
 				}	
 			}
 		}
+
 
 		if(getEnemies().length == 0){
 			createNewLevel();
@@ -191,8 +191,6 @@ function Shooter(canvas){
 		scoreboard.innerHTML = "LEVEL: " + level;
 	}
 
-
-
 	function updateLasorPosition(){
 		var lasors = getShipLasors();
 		for(var i = 0; i < lasors.length; i++) {
@@ -213,14 +211,25 @@ function Shooter(canvas){
 		}
 	}
 
+	function removeDestroyedObjects(){
+		return;
+		var enemies = getEnemies();
+		for(var i = 0; enemies.length; i++){
+			console.log(enemies[i]);
+			if(enemies[i].destroy == true)
+				enemies.splice(i, 1);
+		}
+	}
+
 	function run(){
 		if (status == GAMESCREEN){
 			updateEnemies();
-			updatePlayer();
 			checkForHit();
 		}
 		else if(status == MENUSCREEN){}
 		else if(status == GAMEOVER){}
+
+		removeDestroyedObjects();
 		canvas.draw(draw);
 	}
 };

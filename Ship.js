@@ -40,7 +40,6 @@ function Ship(type){
 	this.draw 			= draw;
 	this.move			= move;
 	this.shoot 			= shoot;
-	this.update			= update;
 	this.lasors 		= getLasors;
 	
 	//this.toString = tostring();
@@ -80,55 +79,36 @@ function Ship(type){
 
 	function draw(canvas){
 
-		var ctx = canvas;
-		ctx.save();
-		ctx.translate(this.width(), this.height());
-		ctx.rotate(Math.PI);
-		
-		ctx.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
-					(-this.locationX()), (-this.locationY()), this.width(), this.height());
-		ctx.rotate(0);
-		ctx.restore();
+		canvas.save();
+		drawShip(canvas);
+		drawLasors(canvas);
+		canvas.restore();
 
-		ctx.save()
-		var lasors = getLasors();
-		ctx.fillStyle = "#F00";
-		if(lasors != null)
-			for(var i = 0; i < lasors.length; i++){
-				var lasor = lasors[i];
-
-				ctx.fillRect(lasor.x,lasor.y,3,3);
-			}
-		ctx.restore();
-
-		return ctx;
+		return canvas;
 	}
 
-	function update(){
-		var lasors = getLasors();
-		for(var i = 0; i < lasors.length; i++) {
-			var lasor = lasors[i];
-			if(lasor.y < 0){
-				getLasors().splice(i, 1);
-				continue;
-			}
-	    	
-	    	lasor.y = lasor.y - 5;
-		}																							
+	function drawShip(canvas){
+		canvas.save()
+		canvas.translate(this.width(), this.height());
+		canvas.rotate(Math.PI);
+		
+		canvas.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
+					(-this.locationX()), (-this.locationY()), this.width(), this.height());
+		canvas.rotate(0);
+		canvas.restore();
+	}
+
+	function drawLasors(canvas){
+		canvas.save();
+		canvas.fillStyle = "#F00";
+		for(var i = 0, lasors = getLasors(); i < lasors.length; i++) { lasors[i].draw(canvas); }
+		canvas.restore();
 	}
 
 	function shoot(ship){
 		if(data.lasor.length >= 2)
 			return false;
-		
-		var ship = ship;
-		var lasor = {
-			type: this.type(),
-			angle: 0,
-			x: this.locationX()+(this.width()/2),
-			y: this.locationY()
-		};
-		addLasor(lasor);
+		addLasor(ship, null);
 	}
 
 	function shipSpecs(type){
