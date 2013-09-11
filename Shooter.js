@@ -21,16 +21,10 @@ function Shooter(canvas){
 	var enemyList = [];
 	var ship = new Ship("PLAYER");
 
-<<<<<<< HEAD
-=======
-
->>>>>>> gh-pages
 	this.enemies = getEnemies;
 	this.run = run;
 	this.draw = draw;
 	document.addEventListener('keydown', processInput, false);
-<<<<<<< HEAD
-=======
 	
 	var leftElement = document.getElementById('left');
 	var rightElement = document.getElementById('right');
@@ -42,7 +36,6 @@ function Shooter(canvas){
     var hammertime = Hammer(rightElement).on("hold", function(event) {
     	processTouch("RIGHT");
     });
->>>>>>> gh-pages
 
 	function getEnemies(){ return enemyList; }
 	function getShip(){ return ship; }
@@ -90,9 +83,6 @@ function Shooter(canvas){
 		//	49 50 51 52
 	};
 
-<<<<<<< HEAD
-
-=======
 	function processTouch(event){
 		if(event == "LEFT"){
 			ship.move(-10);
@@ -102,7 +92,6 @@ function Shooter(canvas){
 			ship.move(10);
 		}
 	}
->>>>>>> gh-pages
 
 	function getEnemyLasors(){
 		var lasors = [];
@@ -245,8 +234,4 @@ function Shooter(canvas){
 	}
 };
 
-<<<<<<< HEAD
-define(['GameCanvas', 'Enemy', 'Ship'], function(){ return Shooter; });
-=======
 define(['GameCanvas', 'Enemy', 'Ship', 'Hammer'], function(){ return Shooter; });
->>>>>>> gh-pages
