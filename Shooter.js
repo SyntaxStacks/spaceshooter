@@ -1,19 +1,3 @@
-/*
-
-
-var SHIPID = 'spaceship';
-var LASORCLASS = 'lasor';
-var LASOR = '|';
-
-
-var ENEMY_MOVEX = 1;
-
-var ENEMYSCOREVALUE = 100;
-v
-var lastEnemyUpdateTime = Date.now();
-
-*/
-
 function Shooter(canvas){
 	var canvas = new GameCanvas(canvas);
 	var enemyList = [];
@@ -47,8 +31,6 @@ function Shooter(canvas){
 	function getShipLasors(){ return getShip().lasors(); }
 	function getLevel(){ return level; }
 	function addLevel(){ level++; }
-	function getEnemies(){ return enemyList; }
-	function getShip(){ return ship; }
 
 	function draw(canvas){
 		var ctx = canvas;
@@ -56,16 +38,20 @@ function Shooter(canvas){
 		ctx.translate(0,0);
 		ctx.save();
 
-		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);   // Draw a rectangle with default settings
+		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
 		getShip().draw(ctx);
 
 		ctx.restore();
 		ctx.save();
-
-		var enemies = getEnemies();
-		for(var i = 0, enemy = enemyList[i]; i < enemies.length || 0; enemy = enemyList[++i]) { enemy.draw(ctx); }
+		drawEnemies(ctx);
 		ctx.restore();
+
 		return ctx;
+	}
+
+	function drawEnemies(canvas){
+		var enemies = getEnemies();
+		for(var i = 0, enemy = enemies[i]; i < enemies.length || 0; enemy = enemies[++i]) { enemy.draw(canvas); }
 	}
 
 	function processInput(event){
@@ -81,14 +67,14 @@ function Shooter(canvas){
 			ship.shoot();
 		}
 		else if (event.keyCode == 80){
-			//createEnemy();
+			;//createEnemy();
 		}
 		//	49 50 51 52
 	};
 
 
 
-	function getEnemyLasors(enemy){
+	function getEnemyLasors(){
 		var lasors = [];
 		var enemies = getEnemies();
 		for(var i = 0; i < enemies.length; i++){
@@ -110,15 +96,17 @@ function Shooter(canvas){
 				var currentLasor = lasors[i];
 				var currentEnemy = enemies[j];
 
-				var currentLasorX = currentLasor.x || 0;
+				if(currentEnemy.status() == 'alive')
+
+				var currentLasorX = currentLasor.x() || 0;
 				var currentEnemyX = currentEnemy.locationX() || 0;
 
 				if(currentLasorX > currentEnemyX - 5 && currentLasorX < currentEnemyX + 15){
-					var currentLasorY = currentLasor.y || 0;
+					var currentLasorY = currentLasor.y() || 0;
 					var currentEnemyY = currentEnemy.locationY() || 0;
 					if(currentLasorY < currentEnemyY && currentLasorY > currentEnemyY - 10){
 						addPoints();
-						currentEnemy.destroy();
+						currentEnemy.blowUp();
 					}
 				}	
 			}
@@ -133,11 +121,11 @@ function Shooter(canvas){
 			var currentLasor = enemyLasors[i];
 			var ship = getShip();
 
-			var currentLasorX = currentLasor.x || 0;
+			var currentLasorX = currentLasor.x() || 0;
 			var shipX         = ship.locationX() || 0;
 
 			if(currentLasorX > shipX - 5 && currentLasorX < shipX + 30){
-				var currentLasorY = currentLasor.y || 0;
+				var currentLasorY = currentLasor.y() || 0;
 				var shipY         = ship.locationY() || 0;
 				if(currentLasorY > shipY && currentLasorY < shipY + 10){
 					//removeElement(currentEnemy);
@@ -191,45 +179,38 @@ function Shooter(canvas){
 		scoreboard.innerHTML = "LEVEL: " + level;
 	}
 
-	function updateLasorPosition(){
-		var lasors = getShipLasors();
-		for(var i = 0; i < lasors.length; i++) {
-			var lasor = lasors[i];
-			if(lasor.locationY < 0){
-				//TODO: REMOVE OFFSCREEN ELEMENT  removeElement(e);
-				continue;
-			}
-	    	
-	    	lasor.setLocationY(lasor.locationY - 5);
-		}
-	}
+	function updateSprites(){
+		getShip().update();
 
-	function updateEnemies(){
 		var enemies = getEnemies();
 		for(var i = 0; i < enemies.length; i++){
+
 			enemies[i].update(getShip());
 		}
 	}
 
 	function removeDestroyedObjects(){
-		return;
 		var enemies = getEnemies();
-		for(var i = 0; enemies.length; i++){
-			console.log(enemies[i]);
-			if(enemies[i].destroy == true)
+		for(var i = 0; i < enemies.length; i++){
+			var enemy = enemies[i];
+			if(enemy == undefined)
+				continue;
+
+			if(enemy.isDestroyed() == true)
 				enemies.splice(i, 1);
 		}
 	}
 
 	function run(){
 		if (status == GAMESCREEN){
-			updateEnemies();
+			updateSprites();
 			checkForHit();
+			removeDestroyedObjects();
 		}
 		else if(status == MENUSCREEN){}
 		else if(status == GAMEOVER){}
 
-		removeDestroyedObjects();
+		
 		canvas.draw(draw);
 	}
 };

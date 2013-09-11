@@ -11,6 +11,18 @@ function Ship(type){
 		sprites = loadImage;
 	}
 
+	this.angle          = getAngle;
+	this.dir            = getDirection;
+	this.draw 			= draw;
+	this.floatXRange    = getFloatXRange;
+	this.floatYRange    = getFloatYRange;
+	this.height 		= getSpriteHeight;
+	this.lasors 		= getLasors;
+	this.locationX      = getLocationX;
+	this.locationY      = getLocationY;
+	this.move			= move;
+	this.originX        = getOriginX;
+	this.originY        = getOriginY;
 	this.setShipSprite  = setShipSprite;
 	this.setFloatXRange = setFloatXRange;
 	this.setFloatYRange = setFloatYRange;
@@ -24,39 +36,16 @@ function Ship(type){
 	this.setDir         = setDirection;
 	this.setAngle       = setAngle;
 	this.shipSprite     = getShipSprite;
-	this.floatXRange    = getFloatXRange;
-	this.floatYRange    = getFloatYRange;
-	this.originX        = getOriginX;
-	this.originY        = getOriginY;
-	this.locationX      = getLocationX;
-	this.locationY      = getLocationY;
+	this.shoot 			= shoot;
 	this.type           = getShipType;
+	this.update 		= update;
+	this.width 			= getSpriteWidth;
 	this.xSpeed         = getShipXSpeed;
 	this.ySpeed         = getShipYSpeed;
-	this.dir            = getDirection;
-	this.angle          = getAngle;
-	this.width 			= getSpriteWidth;
-	this.height 		= getSpriteHeight;
-	this.draw 			= draw;
-	this.move			= move;
-	this.shoot 			= shoot;
-	this.lasors 		= getLasors;
 	
 	//this.toString = tostring();
 	
-	function move(moveDistance)		{ this.setLocationX(this.locationX() + moveDistance); }
-	function setShipSprite(ship)	{ data.sprite.ship = ship; }
-	function setFloatXRange(x)	{ data.range.x = x; }
-	function setFloatYRange(y)	{ data.range.y = y; }
-	function setOriginX(x)		{ data.range.x = x; }
-	function setOriginY(y)		{ data.range.y = y; }
-	function setLocationX(x)	{ data.location.x = x; }
-	function setLocationY(y)	{ data.location.y = y; }
-	function setShipType(type)	{ data.type = type; }
-	function setShipXSpeed(x)	{ data.speed.x = x; }
-	function setShipYSpeed(y)	{ data.speed.y = y; }
-	function setDirection(dir)	{ data.dir = dir; }
-	function setAngle(ang)		{ data.angle = ang; }
+	function addLasor(lasor)	{ data.lasor.push(lasor); }
 	function getShipSprite()	{ return data.sprite.ship; }
 	function getFloatXRange()	{ return data.range.x || 0; }
 	function getFloatYRange()	{ return data.range.y || 0; }
@@ -73,8 +62,21 @@ function Ship(type){
 	function getSpriteOriginY()	{ return data.sprite.y; }
 	function getSpriteWidth()	{ return data.sprite.width; }
 	function getSpriteHeight()	{ return data.sprite.height; }
-	function getLasors()		{ return data.lasor; }
-	function addLasor(lasor)	{ data.lasor.push(lasor); }
+	function getLasors()	{ return data.lasor; }
+	function move(moveDistance)		{ this.setLocationX(this.locationX() + moveDistance); }
+	function setAngle(ang)		{ data.angle = ang; }
+	function setDirection(dir)	{ data.dir = dir; }
+	function setFloatXRange(x)	{ data.range.x = x; }
+	function setFloatYRange(y)	{ data.range.y = y; }
+	function setLocationX(x)	{ data.location.x = x; }
+	function setLocationY(y)	{ data.location.y = y; }
+	function setOriginX(x)		{ data.range.x = x; }
+	function setOriginY(y)		{ data.range.y = y; }
+	function setShipSprite(ship)	{ data.sprite.ship = ship; }
+	function setShipType(type)	{ data.type = type; }
+	function setShipXSpeed(x)	{ data.speed.x = x; }
+	function setShipYSpeed(y)	{ data.speed.y = y; }
+		
 	//function tostring()		{ return "Ship: "+getShipType(); }
 
 	function draw(canvas){
@@ -89,11 +91,11 @@ function Ship(type){
 
 	function drawShip(canvas){
 		canvas.save()
-		canvas.translate(this.width(), this.height());
+		canvas.translate(getSpriteWidth(), getSpriteHeight());
 		canvas.rotate(Math.PI);
 		
 		canvas.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
-					(-this.locationX()), (-this.locationY()), this.width(), this.height());
+					(-getLocationX()), (-getLocationY()), getSpriteWidth(), getSpriteHeight());
 		canvas.rotate(0);
 		canvas.restore();
 	}
@@ -108,7 +110,24 @@ function Ship(type){
 	function shoot(ship){
 		if(data.lasor.length >= 2)
 			return false;
-		addLasor(ship, null);
+		var lasor = new Lasor(this, null);
+
+		addLasor(lasor);
+	}
+
+	function update(){
+
+		var lasors = getLasors();
+
+		for (var i = 0; i < lasors.length; i++) {
+			var lasor = lasors[i];
+			if(lasor.y() < 0)
+				lasor.kill();
+    		lasor.setY(lasor.y() - 5);
+
+			if(lasor.isDestroyed())
+				lasors.splice(i, 1);
+		}	
 	}
 
 	function shipSpecs(type){
@@ -149,4 +168,4 @@ function Ship(type){
 	}
 }
 
-define(function(){ return Ship; });
+define(['Lasor'], function(){ return Ship; });
