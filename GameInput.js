@@ -66,6 +66,7 @@ function GameInput() {
 				removeInput({input: "SPACE"});
 		}
 		else if(event.type == 'touch') {
+			ev.gesture.preventDefault()
 			if(event.srcElement.id == inputCode.touch.right)
 				addInput({input: "RIGHT"});
 
