@@ -1,5 +1,8 @@
 function GameInput() {
 	var inputQueue = [];
+	var RIGHT = {input: "RIGHT"};
+	var LEFT = {input: "LEFT"};
+	var SPACE = {input: "SPACE"};
 	var inputCode = {
 		right: 	39,
 		left: 37,
@@ -53,38 +56,38 @@ function GameInput() {
 
 		if(event.type == 'keydown') {
 			if(event.keyCode == inputCode.right)
-				addInput({input: "RIGHT"});
+				addInput(RIGHT);
 
 			if(event.keyCode == inputCode.left)
-				addInput({input: "LEFT"});
+				addInput(LEFT);
 
 			if(event.keyCode == inputCode.space)
-				addInput({input: "SPACE"});
+				addInput(SPACE);
 		}
 		else if(event.type == 'keyup') {
 			if(event.keyCode == inputCode.right)
-				removeInput({input: "RIGHT"});
+				removeInput(RIGHT);
 			if(event.keyCode == inputCode.left)
-				removeInput({input: "LEFT"});
+				removeInput(LEFT);
 			if(event.keyCode == inputCode.space)
-				removeInput({input: "SPACE"});
+				removeInput(SPACE);
 		}
 		else if(event.type == 'touch') {
 			event.gesture.preventDefault();
 			if(event.srcElement.id == inputCode.touch.right)
-				addInput({input: "RIGHT"});
+				addInput(RIGHT);
 			if(event.srcElement.id == inputCode.touch.left)
-				addInput({input: "LEFT"});
+				addInput(LEFT);
 			if(event.srcElement.id == inputCode.touch.shoot)
-				addInput({input: "SPACE"});
+				addInput(SPACE);
 		}
 		else if(event.type == 'release') {
 			if(event.srcElement.id == inputCode.touch.right)				
-				removeInput({input: "RIGHT"});
+				removeInput(RIGHT);
 			if(event.srcElement.id == inputCode.touch.left)
-				removeInput({input: "LEFT"});
+				removeInput(LEFT);
 			if(event.srcElement.id == inputCode.touch.shoot)
-				removeInput({input: "SPACE"});
+				removeInput(SPACE);
 		}
 
 		console.log(inputQueue);

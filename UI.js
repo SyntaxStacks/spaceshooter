@@ -26,7 +26,7 @@ function UI() {
 		canvas.restore();
 	}
 	function reset() {
-		level = 1;
+		level = 0;
 		score = 0;
 	}
 }

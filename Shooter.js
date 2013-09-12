@@ -27,24 +27,41 @@ function Shooter(canvas){
 	function addLevel(){ level++; }
 
 	function draw(canvas){
-		var ctx = canvas;
-		ctx.rotate(0);
-		ctx.translate(0,0);
-		ctx.save();
+		canvas.rotate(0);
+		canvas.translate(0,0);
+		canvas.save();
 
-		ctx.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
-		getShip().draw(ctx);
+		canvas.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
+		
+		if (status == GAMESCREEN) {
+			drawGameScreen(canvas);
+		}
+		else if (status == GAMEOVER) {
+			drawGameOver(canvas);
+		}
 
-		ctx.restore();
-		ctx.save();
-		drawEnemies(ctx);
-		ctx.restore();
+	}
 
-		ctx.save();
-		scoreboard.draw(ctx);
-		ctx.restore();
+	function drawGameScreen(canvas) {
+		
+		getShip().draw(canvas);
+		canvas.restore();
+		canvas.save();
+		drawEnemies(canvas);
+		canvas.restore();
 
-		return ctx;
+		canvas.save();
+		scoreboard.draw(canvas);
+		canvas.restore();
+	}
+
+	function drawGameOver(canvas) {
+		canvas.save();
+		canvas.fillStyle = "#FFF";
+		canvas.fillText("GAME OVER!!!!!!1", 30, 30);
+		canvas.fillText("SCORE: " + scoreboard.score(), 30, 50);
+		canvas.fillText("PLEASE PRESS SHOOT", 30, 80);
+		canvas.restore();
 	}
 
 	function drawEnemies(canvas){
@@ -121,13 +138,13 @@ function Shooter(canvas){
 
 	function endGame(){
 		status = GAMEOVER;
-
+		enemyList = [];
 		//document.body.innerHTML = "DEDZ <input type='button' onClick='startGame();' value='replay'>";
 	}
 
 	function createNewLevel(){
 		scoreboard.addLevel();
-		for(var i = 0; i < scoreboard.level(); i++){
+		for(var i = 0; i < scoreboard.level()*2; i++){
 			newEnemy = new Enemy()
 			newEnemy.setLocationX(-50*i);
 			enemyList.push(newEnemy);
@@ -157,6 +174,15 @@ function Shooter(canvas){
 		}
 	}
 
+	function checkForRestart(){
+		events = input.get();
+		for(var i = 0; i < events.length; i++){
+			event = events[i];
+			if(event.input == "SPACE" || (event.input == "LEFT" && event.input == "RIGHT"))
+				startGame();
+		}
+	}
+
 	function run(){
 		if (status == GAMESCREEN){
 			updateSprites();
@@ -164,7 +190,9 @@ function Shooter(canvas){
 			removeDestroyedObjects();
 		}
 		else if(status == MENUSCREEN){}
-		else if(status == GAMEOVER){}
+		else if(status == GAMEOVER){
+			checkForRestart();
+		}
 
 		
 		canvas.draw(draw);
