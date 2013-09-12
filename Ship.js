@@ -5,6 +5,8 @@ function Ship(type){
 	var sprites = null;
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
+	var FIREDELAY = 100;
+	var lastFire = Date.now();
 	
 	loadImage.src = 'sprites.png';
 	loadImage.onload = function(){
@@ -108,14 +110,14 @@ function Ship(type){
 	}
 
 	function shoot(ship){
-		if(data.lasor.length >= 2)
-			return false;
-		var lasor = new Lasor(this, null);
-
-		addLasor(lasor);
+		if(Date.now() - lastFire > FIREDELAY && data.lasor.length <= 2){
+			var lasor = new Lasor(ship, null);
+			addLasor(lasor);
+			lastFire = Date.now();
+		}
 	}
 
-	function update(){
+	function update(events){
 
 		var lasors = getLasors();
 
@@ -128,6 +130,17 @@ function Ship(type){
 			if(lasor.isDestroyed())
 				lasors.splice(i, 1);
 		}	
+
+		for(var i = 0; i < events.length; i++){
+			event = events[i];
+
+			if(event.input == "RIGHT")
+				this.move(3);
+			if(event.input == "LEFT")
+				this.move(-3);
+			if(event.input == "SPACE" || (event.input == "LEFT" && event.input == "RIGHT"))
+				shoot(this);
+		}
 	}
 
 	function shipSpecs(type){

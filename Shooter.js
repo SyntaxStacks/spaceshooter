@@ -1,11 +1,7 @@
 function Shooter(canvas){
 	var canvas = new GameCanvas(canvas);
+	var input = new GameInput();
 	var enemyList = [];
-
-	//::key input::
-	var RIGHT = 39;
-	var LEFT = 37;
-	var SPACE = 32;
 
 	var FRAMEHEIGHT = 300;
 	var FRAMEWIDTH = 600;
@@ -24,18 +20,6 @@ function Shooter(canvas){
 	this.enemies = getEnemies;
 	this.run = run;
 	this.draw = draw;
-	document.addEventListener('keydown', processInput, false);
-	
-	var leftElement = document.getElementById('left');
-	var rightElement = document.getElementById('right');
-
-    var hammertime = Hammer(leftElement).on("hold", function(event) {
-        processTouch("LEFT");
-    });
-
-    var hammertime = Hammer(rightElement).on("hold", function(event) {
-    	processTouch("RIGHT");
-    });
 
 	function getEnemies(){ return enemyList; }
 	function getShip(){ return ship; }
@@ -63,34 +47,6 @@ function Shooter(canvas){
 	function drawEnemies(canvas){
 		var enemies = getEnemies();
 		for(var i = 0, enemy = enemies[i]; i < enemies.length || 0; enemy = enemies[++i]) { enemy.draw(canvas); }
-	}
-
-	function processInput(event){
-		//console.log(event);
-		event.preventDefault();
-		if(event.keyCode == RIGHT){
-			ship.move(10);
-		} else 
-		if (event.keyCode == LEFT){
-			ship.move(-10);
-		} 
-		else if (event.keyCode == SPACE){
-			ship.shoot();
-		}
-		else if (event.keyCode == 80){
-			;//createEnemy();
-		}
-		//	49 50 51 52
-	};
-
-	function processTouch(event){
-		if(event == "LEFT"){
-			ship.move(-10);
-		}
-
-		if(event == "RIGHT"){
-			ship.move(10);
-		}
 	}
 
 	function getEnemyLasors(){
@@ -199,7 +155,7 @@ function Shooter(canvas){
 	}
 
 	function updateSprites(){
-		getShip().update();
+		getShip().update(input.get());
 
 		var enemies = getEnemies();
 		for(var i = 0; i < enemies.length; i++){
@@ -234,4 +190,4 @@ function Shooter(canvas){
 	}
 };
 
-define(['GameCanvas', 'Enemy', 'Ship', 'Hammer'], function(){ return Shooter; });
+define(['GameCanvas', 'GameInput', 'Enemy', 'Ship'], function(){ return Shooter; });
