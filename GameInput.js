@@ -6,7 +6,8 @@ function GameInput() {
 		space: 32,
 		touch: {
 			left:  'left',
-			right: 'right'
+			right: 'right',
+			shoot: 'shoot'
 		}
 	}
 	this.get = getInputs;
@@ -20,9 +21,12 @@ function GameInput() {
 	
 		var leftElement = document.getElementById('left');
 		var rightElement = document.getElementById('right');
+		var topElement = document.getElementById('shoot');
 
 	    var leftTouch = Hammer(leftElement).on("touch", processInput).on("release", processInput);
 	    var rightTouch = Hammer(rightElement).on("touch", processInput).on("release", processInput);
+	    var topTouch = Hammer(topElement).on("touch", processInput).on("release", processInput);
+
 	}
 
 	function getInputs() {
@@ -69,15 +73,18 @@ function GameInput() {
 			event.gesture.preventDefault();
 			if(event.srcElement.id == inputCode.touch.right)
 				addInput({input: "RIGHT"});
-
 			if(event.srcElement.id == inputCode.touch.left)
 				addInput({input: "LEFT"});
+			if(event.srcElement.id == inputCode.touch.shoot)
+				addInput({input: "SPACE"});
 		}
 		else if(event.type == 'release') {
 			if(event.srcElement.id == inputCode.touch.right)				
 				removeInput({input: "RIGHT"});
 			if(event.srcElement.id == inputCode.touch.left)
 				removeInput({input: "LEFT"});
+			if(event.srcElement.id == inputCode.touch.shoot)
+				removeInput({input: "SPACE"});
 		}
 
 		console.log(inputQueue);
