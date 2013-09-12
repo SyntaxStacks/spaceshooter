@@ -51,7 +51,6 @@ function GameInput() {
 	}
 
 	function processInput(event){
-		
 		event.preventDefault();
 
 		if(event.type == 'keydown') {
@@ -63,6 +62,8 @@ function GameInput() {
 
 			if(event.keyCode == inputCode.space)
 				addInput(SPACE);
+			if(event.keyCode == 69)
+				addInput({input: "e"});
 		}
 		else if(event.type == 'keyup') {
 			if(event.keyCode == inputCode.right)
@@ -71,6 +72,8 @@ function GameInput() {
 				removeInput(LEFT);
 			if(event.keyCode == inputCode.space)
 				removeInput(SPACE);
+			if(event.keyCode == 69)
+				removeInput({input: "e"});
 		}
 		else if(event.type == 'touch') {
 			event.gesture.preventDefault();
@@ -89,8 +92,6 @@ function GameInput() {
 			if(event.srcElement.id == inputCode.touch.shoot)
 				removeInput(SPACE);
 		}
-
-		console.log(inputQueue);
 	};
 }
 

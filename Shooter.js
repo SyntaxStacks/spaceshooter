@@ -180,6 +180,12 @@ function Shooter(canvas){
 			event = events[i];
 			if(event.input == "SPACE" || (event.input == "LEFT" && event.input == "RIGHT"))
 				startGame();
+			if(event.input == "e"){
+				startGame();
+				for(var i = 0; i <100; i++)
+					scoreboard.addLevel();
+				enemyList = [];
+			}
 		}
 	}
 
