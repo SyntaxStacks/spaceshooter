@@ -1,6 +1,7 @@
 function Shooter(canvas){
 	var canvas = new GameCanvas(canvas);
 	var input = new GameInput();
+	var scoreboard = new UI();
 	var enemyList = [];
 
 	var FRAMEHEIGHT = 300;
@@ -11,8 +12,6 @@ function Shooter(canvas){
 	var GAMEOVER = 2;
 	var GAMEFRAME = "gameframe";
 	var status = GAMESCREEN;
-	var level = 1;
-	var score = 0;
 	var delay = 10;
 	var enemyList = [];
 	var ship = new Ship("PLAYER");
@@ -39,6 +38,10 @@ function Shooter(canvas){
 		ctx.restore();
 		ctx.save();
 		drawEnemies(ctx);
+		ctx.restore();
+
+		ctx.save();
+		scoreboard.draw(ctx);
 		ctx.restore();
 
 		return ctx;
@@ -80,7 +83,7 @@ function Shooter(canvas){
 					var currentLasorY = currentLasor.y() || 0;
 					var currentEnemyY = currentEnemy.locationY() || 0;
 					if(currentLasorY < currentEnemyY && currentLasorY > currentEnemyY - 10){
-						addPoints();
+						scoreboard.addPoints(100);
 						currentEnemy.blowUp();
 					}
 				}	
@@ -99,7 +102,7 @@ function Shooter(canvas){
 			var currentLasorX = currentLasor.x() || 0;
 			var shipX         = ship.locationX() || 0;
 
-			if(currentLasorX > shipX - 5 && currentLasorX < shipX + 30){
+			if(currentLasorX > shipX - 5 && currentLasorX < shipX + 20){
 				var currentLasorY = currentLasor.y() || 0;
 				var shipY         = ship.locationY() || 0;
 				if(currentLasorY > shipY && currentLasorY < shipY + 10){
@@ -112,12 +115,8 @@ function Shooter(canvas){
 	}
 
 	function startGame(){
-		level = 0;
-		score = 0;
+		scoreboard.reset();
 		status = GAMESCREEN;
-
-		//document.body.innerHTML = '<!-- Space Shooter --> '+
-		//'<canvas id="'+GAMEFRAME+'"></canvas>';
 	}
 
 	function endGame(){
@@ -126,32 +125,13 @@ function Shooter(canvas){
 		//document.body.innerHTML = "DEDZ <input type='button' onClick='startGame();' value='replay'>";
 	}
 
-	function addPoints(){
-		score += ENEMYSCOREVALUE;
-		//updateScoreBoard();
-	}
-
 	function createNewLevel(){
-		addLevel();
-		//updateLevelBoard();
-		for(var i = 0; i < level; i++){
+		scoreboard.addLevel();
+		for(var i = 0; i < scoreboard.level(); i++){
 			newEnemy = new Enemy()
 			newEnemy.setLocationX(-50*i);
 			enemyList.push(newEnemy);
 		}
-	}
-
-	function updateScoreBoard(){
-		var scoreboard = elementWithId("score");
-
-		scoreboard.innerHTML = "SCORE: " + score;
-
-	}
-
-	function updateLevelBoard(){
-		var scoreboard = getLevel("level");
-
-		scoreboard.innerHTML = "LEVEL: " + level;
 	}
 
 	function updateSprites(){
@@ -171,8 +151,9 @@ function Shooter(canvas){
 			if(enemy == undefined)
 				continue;
 
-			if(enemy.isDestroyed() == true)
+			if(enemy.isDestroyed() == true){
 				enemies.splice(i, 1);
+			}
 		}
 	}
 
@@ -190,4 +171,4 @@ function Shooter(canvas){
 	}
 };
 
-define(['GameCanvas', 'GameInput', 'Enemy', 'Ship'], function(){ return Shooter; });
+define(['GameCanvas', 'GameInput', 'UI', 'Enemy', 'Ship'], function(){ return Shooter; });
