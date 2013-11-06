@@ -7,7 +7,7 @@ Javascript Space Game
 
 http://syntaxstacks.github.io/spaceshooter/
 
-If you like something, I'm glad. If you would like to see something fixed or added feel free to open up an issue, thanks!
+You might need to refresh the screen if things get buggy. And the files are not arranged nicely, but soon all will be nice, promise. If you like something, I'm glad. If you would like to see something fixed or added feel free to open up an issue, thanks!
 
 ###Controls
 
