@@ -1,20 +1,21 @@
 function UI() {
 	var FRAMEHEIGHT = 300;
-	var FRAMEWIDTH = 600;
-	var level = 0;
-	var score = 0;
+	var FRAMEWIDTH  = 600;
+	var level       = 0;
+	var score       = 0;
 
-	this.addLevel  = addLevel;
-	this.addPoints = addPoints;
-	this.draw      = draw
-	this.level     = getLevel;
-	this.score     = getScore;
-	this.reset		= reset;
+	this.addLevel   = addLevel;
+	this.addPoints  = addPoints;
+	this.draw       = draw
+	this.level      = getLevel;
+	this.score      = getScore;
+	this.reset      = reset;
 
-	function addLevel() { level++; }
+	function addLevel()        { level++; }
 	function addPoints(points) { score += Number(points); }
-	function getLevel() { return level; }
-	function getScore() { return score; }
+	function getLevel()        { return level; }
+	function getScore()        { return score; }
+
 	function draw(canvas) {
 
 		canvas.save();
@@ -25,6 +26,7 @@ function UI() {
 		canvas.fillText("LEVEL: " + level, FRAMEWIDTH-100, 300);
 		canvas.restore();
 	}
+
 	function reset() {
 		level = 0;
 		score = 0;
