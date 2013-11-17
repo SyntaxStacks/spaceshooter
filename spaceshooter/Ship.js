@@ -8,21 +8,21 @@ function Ship(type){
 	var FIREDELAY = 100;
 	var lastFire = Date.now();
 	
-	loadImage.src = 'sprites.png';
+	loadImage.src = './img/sprites.png';
 	loadImage.onload = function(){
 		sprites = loadImage;
 	}
 
-	this.angle          = getAngle;
-	this.dir            = getDirection;
-	this.draw 			= draw;
+	this.angle	= getAngle;
+	this.dir        = getDirection;
+	this.draw 	= draw;
 	this.floatXRange    = getFloatXRange;
 	this.floatYRange    = getFloatYRange;
-	this.height 		= getSpriteHeight;
-	this.lasors 		= getLasors;
-	this.locationX      = getLocationX;
-	this.locationY      = getLocationY;
-	this.move			= move;
+	this.height 	= getSpriteHeight;
+	this.lasors 	= getLasors;
+	this.locationX	= getLocationX;
+	this.locationY	= getLocationY;
+	this.move	= move;
 	this.originX        = getOriginX;
 	this.originY        = getOriginY;
 	this.setShipSprite  = setShipSprite;
@@ -38,12 +38,12 @@ function Ship(type){
 	this.setDir         = setDirection;
 	this.setAngle       = setAngle;
 	this.shipSprite     = getShipSprite;
-	this.shoot 			= shoot;
-	this.type           = getShipType;
-	this.update 		= update;
-	this.width 			= getSpriteWidth;
-	this.xSpeed         = getShipXSpeed;
-	this.ySpeed         = getShipYSpeed;
+	this.shoot 	= shoot;
+	this.type	= getShipType;
+	this.update 	= update;
+	this.width 	= getSpriteWidth;
+	this.xSpeed     = getShipXSpeed;
+	this.ySpeed     = getShipYSpeed;
 	
 	//this.toString = tostring();
 	

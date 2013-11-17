@@ -205,4 +205,5 @@ function Shooter(canvas){
 	}
 };
 
-define(['GameCanvas', 'GameInput', 'UI', 'Enemy', 'Ship'], function(){ return Shooter; });
+var reqs = ['GameCanvas', 'GameInput', 'UI', 'Enemy', 'Ship'];
+define(reqs, function(){ return Shooter; });

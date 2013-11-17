@@ -2,7 +2,14 @@
 require.config({
 	baseUrl: './',
 	paths: {
-		Hammer: 'Hammer'
+		Hammer: './vendor/Hammer',
+		Shooter: './spaceshooter/Shooter',
+		Enemy: './spaceshooter/Enemy',
+		Ship: './spaceshooter/Ship',
+		Lasor: './spaceshooter/Lasor',
+		UI: './spaceshooter/UI',
+		GameCanvas: './lib/GameCanvas',
+		GameInput: './lib/GameInput'
 	},
 	shim: {}
 });

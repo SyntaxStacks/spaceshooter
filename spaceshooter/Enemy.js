@@ -12,7 +12,7 @@ function Enemy(type){
 	var status = 'alive';
 	var sprites = null;
 	var explosionFrame = 0;
-	loadImage.src = 'sprites.png';
+	loadImage.src = './img/sprites.png';
 	loadImage.onload = function(){
 		sprites = loadImage;
 	}
