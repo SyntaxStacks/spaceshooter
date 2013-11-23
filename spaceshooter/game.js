@@ -8,7 +8,8 @@ require.config({
 		Lasor:       './spaceshooter/Lasor',
 		UI:          './spaceshooter/UI',
 		GameCanvas:  './lib/GameCanvas',
-		GameInput:   './lib/GameInput'
+		GameInput:   './lib/GameInput',
+		lodash:      './vendor/lodash'
 	},
 	shim: {}
 });

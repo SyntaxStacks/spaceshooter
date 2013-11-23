@@ -46,10 +46,10 @@ function Lasor(shooter, target) {
 	}
 
 	function angleBetweenObjects(obj1, obj2) {
-		var e1x = parseInt(Math.abs(obj1.locationX()));
-		var e2x = parseInt(Math.abs(obj2.locationX()));
-		var e1y = parseInt(Math.abs(obj1.locationY()));
-		var e2y = parseInt(Math.abs(obj2.locationY()));
+		var e1x = parseInt( Math.abs( obj1.locationX() ));
+		var e2x = parseInt( Math.abs( obj2.locationX() ));
+		var e1y = parseInt( Math.abs( obj1.locationY() ));
+		var e2y = parseInt( Math.abs( obj2.locationY() ));
 
 		var rise = e1y - e2y;
 		var run = e1x - e2x;
