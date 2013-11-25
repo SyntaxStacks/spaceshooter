@@ -1,4 +1,4 @@
-function Ship(type){
+function Ship(type) {
 
 	var data            = shipSpecs(type);
 	var loadImage       = document.createElement('img');
@@ -46,7 +46,7 @@ function Ship(type){
 	this.ySpeed         = getShipYSpeed;
 	//this.toString     = tostring();
 
-	function addLasor(lasor)     { data.lasor.push(lasor); }
+	function addLasor(lasor)     { data.addon.lasors.push(lasor); }
 	function getShipSprite()     { return data.sprite.ship; }
 	function getFloatXRange()    { return data.range.x || 0; }
 	function getFloatYRange()    { return data.range.y || 0; }
@@ -63,7 +63,8 @@ function Ship(type){
 	function getSpriteOriginY()  { return data.sprite.y; }
 	function getSpriteWidth()    { return data.sprite.width; }
 	function getSpriteHeight()   { return data.sprite.height; }
-	function getLasors()         { return data.lasor; }
+	function getLasors()         { return data.addon.lasors; }
+	function getBombs()					 { return data.addon.bombs; }
 	function move(moveDistance)  { this.setLocationX(this.locationX() + moveDistance); }
 	function setAngle(ang)       { data.angle = ang; }
 	function setDirection(dir)   { data.dir = dir; }
@@ -108,11 +109,15 @@ function Ship(type){
 	}
 
 	function shoot(ship) {
-		if(Date.now() - lastFire > FIREDELAY && data.lasor.length <= 2){
+		if(Date.now() - lastFire > FIREDELAY && getLasors().length <= 2){
 			var lasor = new Lasor(ship, null);
 			addLasor(lasor);
 			lastFire = Date.now();
 		}
+	}
+
+	function bomb(ship) {
+		
 	}
 
 	function update(events) {
@@ -174,7 +179,10 @@ function Ship(type){
 					x: 10,
 					y: 1
 				},
-				lasor: []
+				addon: {
+					lasors: [],
+					bombs: []
+				}
 			}
 	}
 }

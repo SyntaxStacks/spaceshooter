@@ -2,10 +2,9 @@ function Bomb(shooter, target) {
 	var bomb        = bombData(shooter);
 	var FRAMEHEIGHT  = 300;
 	var FRAMEWIDTH   = 600;
-	var destroy      = false
 
 	this.draw        = drawBomb;
-	this.isDestroyed = getDestroy;
+	this.status			 = getStatus;
 	this.x           = getLocationX;
 	this.y           = getLocationY;
 	this.originX     = getOriginX;
@@ -23,11 +22,12 @@ function Bomb(shooter, target) {
 	function setLocationY(y) { bomb.y = y; }
 	function getAngle()      { return bomb.angle; }
 	function kill()          { destroy = true; }
-	function getDestroy()    { return destroy;}
+	function getStatus()     { return bomb.status;}
+	function setStatus(status) { bomb.status = status; }
 
 	function drawBomb(canvas) {
 		canvas.save()
-		canvas.fillStyle = "#F00";
+		canvas.fillStyle = "#0F0";
 		if(bomb != null){ canvas.fillRect(bomb.x,bomb.y,10,10);}
 		canvas.restore();
 	}
@@ -35,6 +35,7 @@ function Bomb(shooter, target) {
 	function bombData(ship) {
 		return {
 			type: ship.type(),
+			status: 'LOADED',
 			angle: 0, 
 			origin: {
 				x: ship.locationX() + (ship.width()/2),
