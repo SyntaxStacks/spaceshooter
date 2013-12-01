@@ -5,6 +5,7 @@ function Bomb(shooter, target) {
 
 	this.draw        = drawBomb;
 	this.status			 = getStatus;
+	this.setStatus	 = setStatus;
 	this.x           = getLocationX;
 	this.y           = getLocationY;
 	this.originX     = getOriginX;
@@ -35,7 +36,7 @@ function Bomb(shooter, target) {
 	function bombData(ship) {
 		return {
 			type: ship.type(),
-			status: 'LOADED',
+			status: 'fired',
 			angle: 0, 
 			origin: {
 				x: ship.locationX() + (ship.width()/2),

@@ -47,6 +47,7 @@ function Ship(type) {
 	//this.toString     = tostring();
 
 	function addLasor(lasor)     { data.addon.lasors.push(lasor); }
+	function addBomb(bomb)			 { data.addon.bombs.fired.push(bomb); }
 	function getShipSprite()     { return data.sprite.ship; }
 	function getFloatXRange()    { return data.range.x || 0; }
 	function getFloatYRange()    { return data.range.y || 0; }
@@ -64,7 +65,8 @@ function Ship(type) {
 	function getSpriteWidth()    { return data.sprite.width; }
 	function getSpriteHeight()   { return data.sprite.height; }
 	function getLasors()         { return data.addon.lasors; }
-	function getBombs()					 { return data.addon.bombs; }
+	function firedBombs()				 { return data.addon.bombs.fired; }
+	function getBombCount()			 { return data.addon.bombs.inventory; }
 	function move(moveDistance)  { this.setLocationX(this.locationX() + moveDistance); }
 	function setAngle(ang)       { data.angle = ang; }
 	function setDirection(dir)   { data.dir = dir; }
@@ -105,6 +107,7 @@ function Ship(type) {
 		canvas.save();
 		canvas.fillStyle = "#F00";
 		for(var i = 0, lasors = getLasors(); i < lasors.length; i++) { lasors[i].draw(canvas); }
+		for(var i = 0, bombs = firedBombs(); i < bombs.length; i++) { bombs[i].draw(canvas); }
 		canvas.restore();
 	}
 
@@ -116,13 +119,18 @@ function Ship(type) {
 		}
 	}
 
-	function bomb(ship) {
-		
+	function fireBomb(ship) {
+		if(getBombCount() > 0 && firedBombs().length == 0) {
+			var bomb = new Bomb(ship, null);
+			console.log(bomb);
+			addBomb(bomb);
+		}
 	}
 
 	function update(events) {
 
 		var lasors = getLasors();
+		var bombs = firedBombs();
 
 		for (var i = 0; i < lasors.length; i++) {
 			var lasor = lasors[i];
@@ -134,6 +142,12 @@ function Ship(type) {
 				lasors.splice(i, 1);
 		}	
 
+		for (var i = 0; i < bombs.length; i++) {
+			var bomb = bombs[i];
+
+			bombEvents(bomb);
+		}
+
 		for(var i = 0; i < events.length; i++) {
 			event = events[i];
 
@@ -141,6 +155,8 @@ function Ship(type) {
 				this.move(3);
 			if(event.input == "LEFT")
 				this.move(-3);
+			if(event.input == "B")
+				fireBomb(this);
 			if(event.input == "SPACE" || (event.input == "LEFT" && event.input == "RIGHT"))
 				shoot(this);
 		}
@@ -181,10 +197,32 @@ function Ship(type) {
 				},
 				addon: {
 					lasors: [],
-					bombs: []
+					bombs: {
+						inventory: 3,
+						fired: []
+					}
 				}
 			}
 	}
+
+	function bombEvents(bomb) {
+		var events = {
+			fired: function() {
+    		bomb.setY(bomb.y() - 10);
+				if(bomb.y() <= 50)
+					bomb.setStatus('detonated');
+			},
+			detonated: function() {
+				bomb.kill();
+			},
+			destroyed: function() {
+				bombs.splice(i, 1);
+			}
+		}
+
+		var event = events[bomb.status()] || null;
+		if(event) event();
+	}
 }
 
-define(['Lasor'], function(){ return Ship; });
+define(['Lasor','Bomb'], function(){ return Ship; });

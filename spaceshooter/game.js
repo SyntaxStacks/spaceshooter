@@ -6,6 +6,7 @@ require.config({
 		Enemy:       './spaceshooter/Enemy',
 		Ship:        './spaceshooter/Ship',
 		Lasor:       './spaceshooter/Lasor',
+		Bomb:        './spaceshooter/Bomb',
 		UI:          './spaceshooter/UI',
 		GameCanvas:  './lib/GameCanvas',
 		GameInput:   './lib/GameInput',
