@@ -1,11 +1,14 @@
-function Lasor(shooter, target) {
-	var lasor        = lasorData(shooter);
+function Lasor(shooter, target, xVelocity, yVelocity) {
 	var FRAMEHEIGHT  = 300;
 	var FRAMEWIDTH   = 600;
-	var destroy      = false
+	var destroy      = false;
+	var lasor        = lasorData(shooter);
+	setVelocityX(xVelocity);
+	setVelocityY(yVelocity);
+
 
 	this.draw        = drawLasor;
-	this.isDestroyed = getDestroy;
+	this.isDestroyed = isDestroyed;
 	this.x           = getLocationX;
 	this.y           = getLocationY;
 	this.originX     = getOriginX;
@@ -13,17 +16,23 @@ function Lasor(shooter, target) {
 	this.setX        = setLocationX;
 	this.setY        = setLocationY;
 	this.angle       = getAngle;
+	this.update      = update;
 	this.kill        = kill;
 
 	function getLocationX()  { return lasor.x; }
 	function getLocationY()  { return lasor.y; }
+	function getVelocityX()  { return lasor.velocity.x; }
+	function getVelocityY()  { return lasor.velocity.y; }
 	function getOriginX()    { return lasor.origin.x; }
 	function getOriginY()    { return lasor.origin.y; }
 	function setLocationX(x) { lasor.x = x; }
 	function setLocationY(y) { lasor.y = y; }
+	function setVelocityX(x)  { lasor.velocity.x += x; }
+	function setVelocityY(y)  { lasor.velocity.y += y; }
 	function getAngle()      { return lasor.angle; }
-	function kill()          { destroy = true; }
-	function getDestroy()    { return destroy;}
+	function kill()          { lasor.status = 'destroyed'; }
+	function getStatus()     { return lasor.status;}
+	function isDestroyed()	 { return getStatus() == 'destroyed'; }
 
 	function drawLasor(canvas) {
 		canvas.save()
@@ -36,13 +45,29 @@ function Lasor(shooter, target) {
 		return {
 			type: ship.type(),
 			angle: (target == null)? 0 : angleBetweenObjects(shooter, target),
+			status: 'fired',
 			origin: {
 				x: ship.locationX() + (ship.width()/2),
 				y: ship.locationY() + ship.height()
 			},
+			velocity: {
+				x: 0,
+				y: 0
+			},
 			x: ship.locationX() + (ship.width()/2),
 			y: ship.locationY() + ship.height()
 		};
+	}
+
+	function update() {
+		var withinXBounds = getLocationX() > 0 && getLocationX() < FRAMEWIDTH; 
+		var withinYBounds = getLocationY() > 0 && getLocationY() < FRAMEHEIGHT; 
+		console.log(getVelocityY(), getVelocityX());
+		if(!withinXBounds || !withinYBounds)
+			this.kill();
+
+		this.setY(getLocationY() + getVelocityY() );
+		this.setX(getLocationX() + getVelocityX() );
 	}
 
 	function angleBetweenObjects(obj1, obj2) {

@@ -113,7 +113,7 @@ function Ship(type) {
 
 	function shoot(ship) {
 		if(Date.now() - lastFire > FIREDELAY && getLasors().length <= 2){
-			var lasor = new Lasor(ship, null);
+			var lasor = new Lasor(ship, null, 0, -5);
 			addLasor(lasor);
 			lastFire = Date.now();
 		}
@@ -134,10 +134,7 @@ function Ship(type) {
 
 		for (var i = 0; i < lasors.length; i++) {
 			var lasor = lasors[i];
-			if(lasor.y() < 0)
-				lasor.kill();
-    		lasor.setY(lasor.y() - 5);
-
+			lasor.update();
 			if(lasor.isDestroyed())
 				lasors.splice(i, 1);
 		}	

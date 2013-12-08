@@ -7,11 +7,11 @@ function Enemy(type){
 	var FRAMEWIDTH          = 600;
 	var ENEMY_UPDATE_DELAY  = 30;
 	var lastEnemyUpdateTime = Date.now();
-	var loadImage           = document.createElement('img');
 	var destroy             = false;
 	var status              = 'alive';
 	var sprites             = null;
 	var explosionFrame      = 0;
+	var loadImage           = document.createElement('img');
 	loadImage.src           = './img/sprites.png';
 	loadImage.onload        = function(){
 		sprites               = loadImage;
@@ -114,26 +114,32 @@ function Enemy(type){
 	}
 
 	function drawEnemy(canvas) {
+
+		var events = {
+			alive: drawEnemyAlive,
+			dying: drawEnemyDying
+		};
+
+		events[getStatus()](canvas);
+	}
+
+	function drawEnemyAlive(canvas) {
 		var translateX = getCenter().x,
 		    translateY = getCenter().y;
-
 		canvas.save();
+		canvas.translate( translateX, translateY);
+		canvas.rotate(getAngle());
+		canvas.translate(-(translateX), -(translateY));
+		canvas.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
+					getLocationX(), getLocationY(), getSpriteWidth(), getSpriteHeight());
+		canvas.rotate(0);
+		canvas.restore();
+	}
 
-		if(status == 'alive') {
-			canvas.translate( translateX, translateY);
-			canvas.rotate(getAngle());
-			canvas.translate(-(translateX), -(translateY));
-			canvas.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
-						getLocationX(), getLocationY(), getSpriteWidth(), getSpriteHeight());
-			canvas.rotate(0);
-		}
-		else if (status == "dying") {
+	function drawEnemyDying(canvas) {
 			var exp = explosion();
 			canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
 						getCenter().x - (exp.sprite.width/2), getCenter().y - (exp.sprite.height/2), exp.sprite.width, exp.sprite.height); 
-		}
-			
-		canvas.restore();
 	}
 
 	function drawLasors(canvas) {
@@ -144,9 +150,16 @@ function Enemy(type){
 	}
 
 	function shoot(ship) {
+		
+		var originY = getOriginY();
+		var originX = getOriginX();
+		var angle = angleBetweenObjects(this, ship);
+		var velocityY = 1;
+		var velocityX = ((originY - 1)*Math.tan(angle));
+		
 		if(getLasors().length >= 2 && this.type() != "GUARD")
 			return false;
-		lasor = new Lasor(this, ship);
+		lasor = new Lasor(this, ship, velocityX, velocityY);
 		addLasor(lasor);
 	}
 
@@ -220,20 +233,7 @@ function Enemy(type){
 
 		for (var i = 0; i < lasors.length; i++) {
 			var lasor = lasors[i];
-			
-			if(lasor.y() > FRAMEHEIGHT) {
-				lasor.kill();
-			}
-			
-			var originY = lasor.originY();
-	    var originX = lasor.originX();
-			var angle = lasor.angle();
-	    var lasorMoveY = lasor.y() + 1;
-	    lasor.setY(lasorMoveY);
-
-	    var lasorMoveX = originX + ((originY - lasorMoveY)*Math.tan(angle));
-	    lasor.setX(lasorMoveX);
-			
+			lasor.update();	
 			if(lasor.isDestroyed())
 				lasors.splice(i, 1);
 		}
