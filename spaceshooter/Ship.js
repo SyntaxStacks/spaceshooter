@@ -159,7 +159,6 @@ function Ship(type) {
 		for(var i = 0; i < events.length; i++) {
 			event = events[i];
 
-			console.log(event.input);
 			if(event.input == "RIGHT")
 				this.move(3);
 			if(event.input == "LEFT")
