@@ -23,6 +23,7 @@ You might need to refresh the screen if things get buggy. And the files are not 
     Move Left --------- Left Arrow 
     Move Right -------- Right Arrow 
     Shoot ------------- Space
+		Bomb -------------- b
     
   
 No Mind Control at the Moment, sorry.
