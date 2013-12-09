@@ -55,6 +55,7 @@ function Enemy(type){
 	this.width              = getSpriteWidth;
 	this.xSpeed             = getEnemyXSpeed;
 	this.ySpeed             = getEnemyYSpeed;
+	this.getHitBox = getHitBox;
 	this.toString           = tostring();
 
 	this.setOriginX((Math.random()*(FRAMEWIDTH - 2 * getFloatXRange())) + getFloatXRange());
@@ -98,10 +99,19 @@ function Enemy(type){
 	function setOriginX(x)       { enemyData.origin.x = x; }
 	function setOriginY(y)       { enemyData.origin.y = y; }
 	function setShipSprite(ship) { enemyData.sprite.ship = ship; }
+	function kill(){ destroy = true; }
 
 	function tostring()          { return "ENEMY: "+getEnemyType(); }
 
 	
+	function getHitBox() { 
+		return {
+			x1: getLocationX(),
+			y1: getLocationY(),
+			x2: getLocationX() + getSpriteWidth(),
+			y2: getLocationY() + getSpriteHeight()
+		}
+	}
 
 	function draw(canvas) {
 
@@ -393,7 +403,6 @@ function Enemy(type){
 		status = 'dying';
 	}
 
-	function kill(){ destroy = true; }
 }
 
 define(['Lasor'], function(Lasor){ return Enemy; });

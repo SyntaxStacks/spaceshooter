@@ -20,6 +20,7 @@ function Ship(type) {
 	this.floatYRange    = getFloatYRange;
 	this.height         = getSpriteHeight;
 	this.lasors         = getLasors;
+	this.bombs = firedBombs; 
 	this.locationX      = getLocationX;
 	this.locationY      = getLocationY;
 	this.move           = move;
@@ -44,6 +45,7 @@ function Ship(type) {
 	this.width          = getSpriteWidth;
 	this.xSpeed         = getShipXSpeed;
 	this.ySpeed         = getShipYSpeed;
+	this.getHitBox = getHitBox;
 	//this.toString     = tostring();
 
 	function addLasor(lasor)     { data.addon.lasors.push(lasor); }
@@ -81,6 +83,15 @@ function Ship(type) {
 	function setShipXSpeed(x)    { data.speed.x = x; }
 	function setShipYSpeed(y)    { data.speed.y = y; }
 	//function tostring()        { return "Ship: "+getShipType(); }
+
+	function getHitBox() {
+		return {
+			x1: getLocationX(),
+			y1: getLocationY(),
+			x2: getLocationX() + getSpriteWidth(),
+			y2: getLocationY() + getSpriteHeight()
+		}
+	}
 
 	function draw(canvas) {
 
@@ -122,7 +133,6 @@ function Ship(type) {
 	function fireBomb(ship) {
 		if(getBombCount() > 0 && firedBombs().length == 0) {
 			var bomb = new Bomb(ship, null);
-			console.log(bomb);
 			addBomb(bomb);
 		}
 	}
@@ -141,18 +151,20 @@ function Ship(type) {
 
 		for (var i = 0; i < bombs.length; i++) {
 			var bomb = bombs[i];
-
-			bombEvents(bomb);
+			bomb.update();
+			if(bomb.isDestroyed())
+				bombs.splice(i, 1);
 		}
 
 		for(var i = 0; i < events.length; i++) {
 			event = events[i];
 
+			console.log(event.input);
 			if(event.input == "RIGHT")
 				this.move(3);
 			if(event.input == "LEFT")
 				this.move(-3);
-			if(event.input == "B")
+			if(event.input == "b")
 				fireBomb(this);
 			if(event.input == "SPACE" || (event.input == "LEFT" && event.input == "RIGHT"))
 				shoot(this);
@@ -202,24 +214,6 @@ function Ship(type) {
 			}
 	}
 
-	function bombEvents(bomb) {
-		var events = {
-			fired: function() {
-    		bomb.setY(bomb.y() - 10);
-				if(bomb.y() <= 50)
-					bomb.setStatus('detonated');
-			},
-			detonated: function() {
-				bomb.kill();
-			},
-			destroyed: function() {
-				bombs.splice(i, 1);
-			}
-		}
-
-		var event = events[bomb.status()] || null;
-		if(event) event();
-	}
 }
 
 define(['Lasor','Bomb'], function(){ return Ship; });

@@ -23,6 +23,7 @@ function Shooter(canvas) {
 	function getEnemies()    { return enemyList; }
 	function getShip()       { return ship; }
 	function getShipLasors() { return getShip().lasors(); }
+	function getShipBombs() { return getShip().bombs(); }
 	function getLevel()      { return level; }
 	function addLevel()      { level++; }
 
@@ -81,29 +82,45 @@ function Shooter(canvas) {
 		return lasors;
 	}
 
+	function collides(obj1, obj2) {
+		var obj1Hitbox = obj1.getHitBox();
+		var obj2Hitbox = obj2.getHitBox();
+
+		if(obj1Hitbox.y1 < obj2Hitbox.y2 && obj1Hitbox.y1 > obj2Hitbox.y1) {
+			if(obj1Hitbox.x1 > obj2Hitbox.x1 && obj1Hitbox.x1 < obj2Hitbox.x2) {
+				return true;
+			}
+		}	
+
+		return false;
+	}
+
 	function checkForHit() {
 		var lasors = getShipLasors();
+		var bombs = getShipBombs();
 		var enemyLasors = getEnemyLasors();
 		var enemies = getEnemies();
 
-		for(var i = 0; i < lasors.length; i++) {
-			for(var j = 0; j < enemies.length; j++) {
+		for(var j = 0; j < enemies.length; j++) {
+			var currentEnemy = enemies[j];
+			for(var i = 0; i < lasors.length; i++) {
 				var currentLasor = lasors[i];
-				var currentEnemy = enemies[j];
 
-				if(currentEnemy.status() == 'alive')
-
-				var currentLasorX = currentLasor.x() || 0;
-				var currentEnemyX = currentEnemy.locationX() || 0;
-
-				if(currentLasorX > currentEnemyX - 5 && currentLasorX < currentEnemyX + 15) {
-					var currentLasorY = currentLasor.y() || 0;
-					var currentEnemyY = currentEnemy.locationY() || 0;
-					if(currentLasorY < currentEnemyY && currentLasorY > currentEnemyY - 10) {
+				if(currentEnemy.status() == 'alive') {
+					if(collides(currentLasor, currentEnemy)) {
 						scoreboard.addPoints(100);
 						currentEnemy.blowUp();
 					}
-				}	
+				}
+			}
+			for(var k = 0; k < bombs.length; k++) {
+				var currentBomb = bombs[k];
+				if(currentEnemy.status() == 'alive') {
+					if(collides(currentEnemy, currentBomb)) {
+						scoreboard.addPoints(100);
+						currentEnemy.blowUp();
+					}
+				}
 			}
 		}
 

@@ -1,5 +1,6 @@
 function Bomb(shooter, target) {
 	var bomb        = bombData(shooter);
+
 	var FRAMEHEIGHT  = 300;
 	var FRAMEWIDTH   = 600;
 	var explosionFrame      = 0;
@@ -20,18 +21,74 @@ function Bomb(shooter, target) {
 	this.setX        = setLocationX;
 	this.setY        = setLocationY;
 	this.angle       = getAngle;
+	this.update			 = update; 
+	this.isDestroyed = isDestroyed;
 	this.kill        = kill;
+	this.getHitBox = getHitBox;
 
 	function getLocationX()  { return bomb.x; }
 	function getLocationY()  { return bomb.y; }
 	function getOriginX()    { return bomb.origin.x; }
 	function getOriginY()    { return bomb.origin.y; }
+	function getWidth() { return bomb.sprite.width; }
+	function getHeight() { return bomb.sprite.height; }
 	function setLocationX(x) { bomb.x = x; }
 	function setLocationY(y) { bomb.y = y; }
 	function getAngle()      { return bomb.angle; }
-	function kill()          { destroy = true; }
+	function kill()          { setStatus('destroyed');; }
 	function getStatus()     { return bomb.status;}
 	function setStatus(status) { bomb.status = status; }
+	function isDestroyed() { return getStatus() == 'destroyed';}
+	
+	function getHitBox() { 
+		function fired() {		
+			return {
+				x1: getLocationX(),
+				y1: getLocationY(),
+				x2: getLocationX() + getWidth(),
+				y2: getLocationY() + getHeight()
+			}
+		}
+		function detonated() {		
+			return {
+				x1: (getLocationX()-50),
+				y1: (getLocationY()-50),
+				x2: getLocationX() + 50,
+				y2: getLocationY() + 50
+			}
+		}
+
+		var hitbox = {
+			fired: fired(),
+			detonated: detonated()
+		}
+
+		return hitbox[getStatus()];
+	}
+
+	function update(bomb) {
+		var events = {
+			fired: function() {
+    		setLocationY(getLocationY() - 10);
+				if(getLocationY() <= 50) {
+					setStatus('detonated');
+					explosionFrame = 4;
+				}
+			},
+			detonated: function() {
+				if(explosionFrame < 0) 
+					return kill();
+
+				explosionFrame--;
+			},
+			destroyed: function() {
+				;//bombs.splice(i, 1);
+			}
+		}
+
+		var event = events[getStatus()] || null;
+		if(event) event();
+	}
 
 	function drawBomb(canvas) {
 		var events = {
@@ -45,7 +102,11 @@ function Bomb(shooter, target) {
 	function drawBombFired(canvas) {
 		canvas.save()
 		canvas.fillStyle = "#0F0";
-		if(bomb != null){ canvas.fillRect(bomb.x,bomb.y,10,10);}
+		var x1 = getLocationX();
+		var y1 = getLocationY();
+		var width = getWidth();
+		var height = getHeight();
+		if(bomb != null){ canvas.fillRect(x1, y1, width, height);}
 		canvas.restore();
 	}
 
@@ -68,6 +129,10 @@ function Bomb(shooter, target) {
 			origin: {
 				x: ship.locationX() + (ship.width()/2),
 				y: ship.locationY() + ship.height()
+			},
+			sprite: {
+				width: 10,
+				height: 10
 			},
 			x: ship.locationX() + (ship.width()/2),
 			y: ship.locationY() + ship.height()

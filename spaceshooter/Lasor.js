@@ -18,6 +18,7 @@ function Lasor(shooter, target, xVelocity, yVelocity) {
 	this.angle       = getAngle;
 	this.update      = update;
 	this.kill        = kill;
+	this.getHitBox = getHitBox;
 
 	function getLocationX()  { return lasor.x; }
 	function getLocationY()  { return lasor.y; }
@@ -25,6 +26,8 @@ function Lasor(shooter, target, xVelocity, yVelocity) {
 	function getVelocityY()  { return lasor.velocity.y; }
 	function getOriginX()    { return lasor.origin.x; }
 	function getOriginY()    { return lasor.origin.y; }
+	function getWidth()    { return lasor.sprite.width; }
+	function getHeight()    { return lasor.sprite.height; }
 	function setLocationX(x) { lasor.x = x; }
 	function setLocationY(y) { lasor.y = y; }
 	function setVelocityX(x)  { lasor.velocity.x += x; }
@@ -33,6 +36,15 @@ function Lasor(shooter, target, xVelocity, yVelocity) {
 	function kill()          { lasor.status = 'destroyed'; }
 	function getStatus()     { return lasor.status;}
 	function isDestroyed()	 { return getStatus() == 'destroyed'; }
+
+	function getHitBox() { 
+		return {
+			x1: getLocationX(),
+			y1: getLocationY(),
+			x2: getLocationX() + getWidth(),
+			y2: getLocationY() + getHeight()
+		}
+	}
 
 	function drawLasor(canvas) {
 		canvas.save()
@@ -50,6 +62,10 @@ function Lasor(shooter, target, xVelocity, yVelocity) {
 				x: ship.locationX() + (ship.width()/2),
 				y: ship.locationY() + ship.height()
 			},
+			sprite: {
+				width: 3,
+				height: 3
+			},
 			velocity: {
 				x: 0,
 				y: 0
@@ -62,7 +78,6 @@ function Lasor(shooter, target, xVelocity, yVelocity) {
 	function update() {
 		var withinXBounds = getLocationX() > 0 && getLocationX() < FRAMEWIDTH; 
 		var withinYBounds = getLocationY() > 0 && getLocationY() < FRAMEHEIGHT; 
-		console.log(getVelocityY(), getVelocityX());
 		if(!withinXBounds || !withinYBounds)
 			this.kill();
 
