@@ -51,9 +51,9 @@ function Bomb(shooter, target) {
 		}
 		function detonated() {		
 			return {
-				x1: (getLocationX()-50),
-				y1: (getLocationY()-50),
-				x2: getLocationX() + 50,
+				x1: getLocationX() - 50 - (getWidth()/2),
+				y1: getLocationY() - 50,
+				x2: getLocationX() + 50 + (getWidth()/2),
 				y2: getLocationY() + 50
 			}
 		}
@@ -116,7 +116,7 @@ function Bomb(shooter, target) {
 		canvas.fillStyle = "#0F0";
 		if(bomb != null){ 
 			canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
-						(getLocationX()-50) - (exp.sprite.width/2), (getLocationY()-50) - (exp.sprite.height/2), 100, 100); 
+						(getLocationX()-50) + (getWidth()/2), (getLocationY()-50) - (getHeight()/2), 100, 100); 
 		}
 		canvas.restore();
 	}
