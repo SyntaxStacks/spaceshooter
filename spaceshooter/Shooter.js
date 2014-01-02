@@ -11,7 +11,7 @@ function Shooter(canvas) {
 	var GAMESCREEN      = 'GAMESCREEN';
 	var GAMEOVER        = 'GAMEOVER';
 	var GAMEFRAME       = "gameframe";
-	var status          = GAMESCREEN;
+	var status          = MENUSCREEN;
 	var delay           = 10;
 	var enemyList       = [];
 	var ship            = new Ship("PLAYER");
@@ -40,6 +40,9 @@ function Shooter(canvas) {
 		else if (status == GAMEOVER) {
 			drawGameOver(canvas);
 		}
+		else if (status == MENUSCREEN) {
+			drawMenu(canvas);
+		}
 
 	}
 
@@ -61,7 +64,15 @@ function Shooter(canvas) {
 		canvas.fillStyle = "#FFF";
 		canvas.fillText("GAME OVER!!!!!!1", 30, 30);
 		canvas.fillText("SCORE: " + scoreboard.score(), 30, 50);
-		canvas.fillText("PLEASE PRESS SHOOT", 30, 80);
+		canvas.fillText("Press Enter To Continue", 30, 80);
+		canvas.restore();
+	}
+
+	function drawMenu(canvas) {
+		canvas.save();
+		canvas.fillStyle = "#FFF";
+		canvas.fillText("Space Shooter", 30, 30);
+		canvas.fillText("PRESS SHOOT", 30, 80);
 		canvas.restore();
 	}
 
@@ -153,6 +164,10 @@ function Shooter(canvas) {
 		status = GAMESCREEN;
 	}
 
+	function goToMenu() {
+		status = MENUSCREEN;
+	}
+
 	function endGame() {
 		status = GAMEOVER;
 		enemyList = [];
@@ -211,6 +226,17 @@ function Shooter(canvas) {
 		}
 	}
 
+	function checkForMenu() {
+		events = input.get();
+		//a utility like lodash should be used for this
+		for(var i = 0; i < events.length; i++) {
+			event = events[i];
+			if(event.input == "ENTER") {
+				goToMenu();
+			}
+		}
+	}
+
 	function run() {
 		var runState = {
 			GAMESCREEN: function GameScreen() {
@@ -219,9 +245,11 @@ function Shooter(canvas) {
 				removeDestroyedObjects();
 				updateUI();
 			},
-			MENUSCREEN: function MenuScreen() {},
-			GAMEOVER: function GameOver() {
+			MENUSCREEN: function MenuScreen() {
 				checkForRestart();
+			},
+			GAMEOVER: function GameOver() {
+				checkForMenu();
 			}
 		}
 		
