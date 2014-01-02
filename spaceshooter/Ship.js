@@ -21,6 +21,7 @@ function Ship(type) {
 	this.height         = getSpriteHeight;
 	this.lasors         = getLasors;
 	this.bombs = firedBombs; 
+	this.bombCount			= getBombCount;
 	this.locationX      = getLocationX;
 	this.locationY      = getLocationY;
 	this.move           = move;
@@ -46,10 +47,12 @@ function Ship(type) {
 	this.xSpeed         = getShipXSpeed;
 	this.ySpeed         = getShipYSpeed;
 	this.getHitBox = getHitBox;
+	this.replenishBombs = replenishBombs;
 	//this.toString     = tostring();
 
 	function addLasor(lasor)     { data.addon.lasors.push(lasor); }
 	function addBomb(bomb)			 { data.addon.bombs.fired.push(bomb); }
+	function replenishBombs()		 { data.addon.bombs.inventory = 3; }
 	function getShipSprite()     { return data.sprite.ship; }
 	function getFloatXRange()    { return data.range.x || 0; }
 	function getFloatYRange()    { return data.range.y || 0; }
@@ -134,6 +137,7 @@ function Ship(type) {
 		if(getBombCount() > 0 && firedBombs().length == 0) {
 			var bomb = new Bomb(ship, null);
 			addBomb(bomb);
+			data.addon.bombs.inventory--;	
 		}
 	}
 

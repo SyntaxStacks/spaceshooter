@@ -161,6 +161,7 @@ function Shooter(canvas) {
 
 	function createNewLevel() {
 		scoreboard.addLevel();
+		getShip().replenishBombs();
 		for(var i = 0; i < scoreboard.level()*2; i++) {
 			newEnemy = new Enemy()
 			newEnemy.setLocationX(-50*i);
@@ -191,6 +192,10 @@ function Shooter(canvas) {
 		}
 	}
 
+	function updateUI() {
+		scoreboard.setBombs(getShip().bombCount());
+	}
+
 	function checkForRestart() {
 		events = input.get();
 		for(var i = 0; i < events.length; i++) {
@@ -212,6 +217,7 @@ function Shooter(canvas) {
 				updateSprites();
 				checkForHit();
 				removeDestroyedObjects();
+				updateUI();
 			},
 			MENUSCREEN: function MenuScreen() {},
 			GAMEOVER: function GameOver() {

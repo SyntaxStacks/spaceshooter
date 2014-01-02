@@ -3,9 +3,11 @@ function UI() {
 	var FRAMEWIDTH  = 600;
 	var level       = 0;
 	var score       = 0;
+	var bombs				= 0;
 
 	this.addLevel   = addLevel;
 	this.addPoints  = addPoints;
+	this.setBombs		= setBombs;
 	this.draw       = draw
 	this.level      = getLevel;
 	this.score      = getScore;
@@ -13,8 +15,10 @@ function UI() {
 
 	function addLevel()        { level++; }
 	function addPoints(points) { score += Number(points); }
+	function setBombs(amount)	 { bombs = amount; }
 	function getLevel()        { return level; }
 	function getScore()        { return score; }
+	function getBombCount()    { return bombs; }
 
 	function draw(canvas) {
 
@@ -24,6 +28,7 @@ function UI() {
 		canvas.fillStyle = "#000";
 		canvas.fillText("SCORE: " + score, 50, 300);
 		canvas.fillText("LEVEL: " + level, FRAMEWIDTH-100, 300);
+		canvas.fillText("BOMBS: " + bombs, FRAMEWIDTH-100, 320);
 		canvas.restore();
 	}
 
