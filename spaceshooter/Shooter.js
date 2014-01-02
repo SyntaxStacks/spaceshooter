@@ -12,6 +12,7 @@ function Shooter(canvas) {
 	var GAMEOVER        = 'GAMEOVER';
 	var GAMEFRAME       = "gameframe";
 	var status          = MENUSCREEN;
+	var drawStyle				= 'text';
 	var delay           = 10;
 	var enemyList       = [];
 	var ship            = new Ship("PLAYER");
@@ -24,16 +25,13 @@ function Shooter(canvas) {
 	function getShip()       { return ship; }
 	function getShipLasors() { return getShip().lasors(); }
 	function getShipBombs() { return getShip().bombs(); }
-	function getLevel()      { return level; }
-	function addLevel()      { level++; }
+	function setDrawStyle(style)      { drawStyle = style; }
 
 	function draw(canvas) {
 		canvas.rotate(0);
 		canvas.translate(0,0);
 		canvas.save();
 
-		canvas.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
-		
 		if (status == GAMESCREEN) {
 			drawGameScreen(canvas);
 		}
@@ -43,25 +41,42 @@ function Shooter(canvas) {
 		else if (status == MENUSCREEN) {
 			drawMenu(canvas);
 		}
+		canvas.restore();
 
 	}
 
 	function drawGameScreen(canvas) {
+
+		canvas.save()
 		
-		getShip().draw(canvas);
+		if(drawStyle == '2D') {
+			canvas.fillSytle = '#000';
+			canvas.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
+		}
+
+		if(drawStyle == 'text') {
+			console.log(drawStyle);
+			canvas.fillSytle = "#FFF";
+			canvas.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
+		}
+
+		getShip().draw(canvas, drawStyle);
 		canvas.restore();
 		canvas.save();
-		drawEnemies(canvas);
+		drawEnemies(canvas, drawStyle);
 		canvas.restore();
 
 		canvas.save();
-		scoreboard.draw(canvas);
+		scoreboard.draw(canvas, drawStyle);
 		canvas.restore();
 	}
 
 	function drawGameOver(canvas) {
 		canvas.save();
-		canvas.fillStyle = "#FFF";
+		canvas.fillSytle = '#000000';
+		canvas.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
+		
+		canvas.fillStyle = "#FFFFFF";
 		canvas.fillText("GAME OVER!!!!!!1", 30, 30);
 		canvas.fillText("SCORE: " + scoreboard.score(), 30, 50);
 		canvas.fillText("Press Enter To Continue", 30, 80);
@@ -70,7 +85,10 @@ function Shooter(canvas) {
 
 	function drawMenu(canvas) {
 		canvas.save();
-		canvas.fillStyle = "#FFF";
+		canvas.fillSytle = '#000000';
+		canvas.fillRect(0,0,FRAMEWIDTH,FRAMEHEIGHT);
+		
+		canvas.fillStyle = "#FFFFFF";
 		canvas.fillText("Space Shooter", 30, 30);
 		canvas.fillText("PRESS SHOOT", 30, 80);
 		canvas.restore();
@@ -78,7 +96,7 @@ function Shooter(canvas) {
 
 	function drawEnemies(canvas) {
 		var enemies = getEnemies();
-		for(var i = 0, enemy = enemies[i]; i < enemies.length || 0; enemy = enemies[++i]) { enemy.draw(canvas); }
+		for(var i = 0, enemy = enemies[i]; i < enemies.length || 0; enemy = enemies[++i]) { enemy.draw(canvas, drawStyle); }
 	}
 
 	function getEnemyLasors() {
@@ -176,6 +194,7 @@ function Shooter(canvas) {
 
 	function createNewLevel() {
 		scoreboard.addLevel();
+		if(scoreboard.level() >= 5) drawStyle = '2D';
 		getShip().replenishBombs();
 		for(var i = 0; i < scoreboard.level()*2; i++) {
 			newEnemy = new Enemy()

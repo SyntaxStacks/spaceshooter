@@ -46,10 +46,29 @@ function Lasor(shooter, target, xVelocity, yVelocity) {
 		}
 	}
 
-	function drawLasor(canvas) {
+	function drawLasor(canvas,style) {
+
+		if(style == '2D') {
+			drawLasor2D(canvas);
+		}
+
+		if(style == 'text') {
+			drawLasorText(canvas);
+		}
+
+	}
+
+	function drawLasor2D(canvas) {
 		canvas.save()
 		canvas.fillStyle = "#F00";
 		if(lasor != null){ canvas.fillRect(lasor.x,lasor.y,3,3);}
+		canvas.restore();
+	}
+
+	function drawLasorText(canvas) {
+		canvas.save()
+		canvas.fillStyle = "#F00";
+		if(lasor != null){ canvas.fillText('*', lasor.x,lasor.y);}
 		canvas.restore();
 	}
 

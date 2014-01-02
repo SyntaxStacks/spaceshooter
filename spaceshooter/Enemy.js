@@ -113,27 +113,33 @@ function Enemy(type){
 		}
 	}
 
-	function draw(canvas) {
+	function draw(canvas, style) {
 
 		canvas.save();
-		drawLasors(canvas);
-		drawEnemy(canvas);
+		drawLasors(canvas, style);
+		drawEnemy(canvas, style);
 		canvas.restore();
 
 		return canvas;
 	}
 
-	function drawEnemy(canvas) {
+	function drawEnemy(canvas, style) {
 
 		var events = {
-			alive: drawEnemyAlive,
-			dying: drawEnemyDying
+			'text': {
+				alive: drawEnemyAliveText,
+				dying: drawEnemyDyingText
+			},
+			'2D': {
+				alive: drawEnemyAlive2D,
+				dying: drawEnemyDying2D
+			}
 		};
 
-		events[getStatus()](canvas);
+		events[style][getStatus()](canvas);
 	}
 
-	function drawEnemyAlive(canvas) {
+	function drawEnemyAlive2D(canvas) {
 		var translateX = getCenter().x,
 		    translateY = getCenter().y;
 		canvas.save();
@@ -146,16 +152,38 @@ function Enemy(type){
 		canvas.restore();
 	}
 
-	function drawEnemyDying(canvas) {
+	function drawEnemyDying2D(canvas) {
 			var exp = explosion();
 			canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
 						getCenter().x - (exp.sprite.width/2), getCenter().y - (exp.sprite.height/2), exp.sprite.width, exp.sprite.height); 
 	}
 
-	function drawLasors(canvas) {
+	function drawEnemyAliveText(canvas) {
+		var translateX = getCenter().x;
+		var translateY = getCenter().y;
+		var x = getLocationX() + getSpriteWidth()/2;
+		var y = getLocationY() + getSpriteHeight();
+		canvas.save();
+		canvas.translate( translateX, translateY);
+		canvas.rotate(getAngle());
+		canvas.translate(-(translateX), -(translateY));
+		canvas.fillStyle = '#F00';
+		canvas.font = "18pt Calibri";
+		canvas.fillText("v", x, y);
+		canvas.rotate(0);
+		canvas.restore();
+	}
+
+	function drawEnemyDyingText(canvas) {
+			var exp = explosion();
+			canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
+						getCenter().x - (exp.sprite.width/2), getCenter().y - (exp.sprite.height/2), exp.sprite.width, exp.sprite.height); 
+	}
+
+	function drawLasors(canvas, style) {
 		canvas.save();
 		if(getLasors() != null)
-			for(var i = 0, lasors = getLasors(); i < lasors.length ; i++) { lasors[i].draw(canvas); }
+			for(var i = 0, lasors = getLasors(); i < lasors.length ; i++) { lasors[i].draw(canvas, style); }
 		canvas.restore();
 	}
 

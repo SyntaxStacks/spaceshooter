@@ -96,32 +96,59 @@ function Ship(type) {
 		}
 	}
 
-	function draw(canvas) {
+	function draw(canvas, style) {
 
 		canvas.save();
-		drawShip(canvas);
-		drawLasors(canvas);
+		if(style == '2D') {
+			drawShip2D(canvas);
+			drawLasors2D(canvas);
+		}
+		if(style == 'text') {
+			drawShipText(canvas);
+			drawLasorsText(canvas);
+		}
+
 		canvas.restore();
 
 		return canvas;
 	}
 
-	function drawShip(canvas) {
+	function drawShip2D(canvas) {
 		canvas.save()
 		canvas.translate(getSpriteWidth(), getSpriteHeight());
 		canvas.rotate(Math.PI);
-		
 		canvas.drawImage(sprites, getSpriteOriginX(), getSpriteOriginY(), getSpriteWidth(), getSpriteHeight(),
 					(-getLocationX()), (-getLocationY()), getSpriteWidth(), getSpriteHeight());
 		canvas.rotate(0);
 		canvas.restore();
 	}
 
-	function drawLasors(canvas) {
+	function drawLasors2D(canvas) {
+		var style = '2D';
+
 		canvas.save();
 		canvas.fillStyle = "#F00";
-		for(var i = 0, lasors = getLasors(); i < lasors.length; i++) { lasors[i].draw(canvas); }
-		for(var i = 0, bombs = firedBombs(); i < bombs.length; i++) { bombs[i].draw(canvas); }
+		for(var i = 0, lasors = getLasors(); i < lasors.length; i++) { lasors[i].draw(canvas, style); }
+		for(var i = 0, bombs = firedBombs(); i < bombs.length; i++) { bombs[i].draw(canvas, style); }
+		canvas.restore();
+	}
+
+	function drawShipText(canvas) {
+		var x = getLocationX() + getSpriteWidth()/2;
+		var y = getLocationY() + getSpriteHeight();
+
+		canvas.save()
+		canvas.fillStyle = "#F00"; 
+		canvas.fillText('^', x, y );
+		canvas.restore();
+	}
+
+	function drawLasorsText(canvas) {
+		var style = 'text';
+
+		canvas.save();
+		for(var i = 0, lasors = getLasors(); i < lasors.length; i++) { lasors[i].draw(canvas, style); }
+		for(var i = 0, bombs = firedBombs(); i < bombs.length; i++) { bombs[i].draw(canvas, style); }
 		canvas.restore();
 	}
 
