@@ -1,23 +1,28 @@
 require.config({
-	baseUrl: './',
-	paths: {
-		Hammer:      './vendor/Hammer',
-		Shooter:     './spaceshooter/Shooter',
-		Enemy:       './spaceshooter/Enemy',
-		Ship:        './spaceshooter/Ship',
-		Lasor:       './spaceshooter/Lasor',
-		Bomb:        './spaceshooter/Bomb',
-		UI:          './spaceshooter/UI',
-		GameCanvas:  './lib/GameCanvas',
-		GameInput:   './lib/GameInput',
-		lodash:      './vendor/lodash'
-	},
-	shim: {}
+  baseUrl: './',
+  paths: {
+    Shooter:     './spaceshooter/Shooter',
+    Enemy:       './spaceshooter/Enemy',
+    Ship:        './spaceshooter/Ship',
+    Lasor:       './spaceshooter/Lasor',
+    Bomb:        './spaceshooter/Bomb',
+    UI:          './spaceshooter/UI',
+    Config:      './spaceshooter/Config',
+    Menu:        './spaceshooter/Menu',
+    Main:        './spaceshooter/Main',
+    GameCanvas:  './lib/GameCanvas',
+    GameInput:   './lib/GameInput',
+    Engine:      './lib/Engine',
+    Hammer:      './vendor/Hammer',
+    lodash:      './vendor/lodash'
+  },
+  shim: {}
 });
 
-require(['Shooter'], function(shooter){
-	var context = document.getElementById("frame").getContext('2d');
-	var Game = new Shooter(context);
+require(['Main'], function(shooter){
+  var canvas = document.getElementById("frame").getContext('2d');
+  var Game = new Main(canvas);
 
-	setInterval(Game.run , 10);
+  // setInterval(Game.init(), 10);
+  Game.play();
 });
