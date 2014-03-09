@@ -1,36 +1,40 @@
-function Main(canvas) {
-  var GameEngine = new Engine(canvas);
+var reqs = ['Engine', 'Menu', 'Shooter', 'Config'];
+define(reqs, function(Engine, Menu, Shooter, Config) { 
+  function Main(canvas) {
+    var GameEngine = new Engine(canvas);
+    var config = new Config();
 
-  this.play = play;
+    this.play = play;
 
-  var scenes = {
-    menu: newMenuScene,
-    game: newShooterScene
-  };
+    var scenes = {
+      menu: newMenuScene,
+      game: newShooterScene
+    };
 
-  function play() {
-    var menu = newMenuScene();
+    function play() {
+      var menu = newMenuScene();
 
+    }
+
+    function newMenuScene() {
+      var menu = new Menu(config);
+      GameEngine.run(menu, done);
+    }
+
+    function newShooterScene() {
+      var shooter = new Shooter(config);
+      GameEngine.run(shooter, done);
+    }
+
+    function done(scene) {
+      if(scene == 'running') return;
+      nextScene = scenes[scene] || newMenuScene;
+      nextScene();
+    }
+
+    return( this );
   }
 
-  function newMenuScene() {
-    var menu = new Menu();
-    GameEngine.run(menu, done);
-  }
+  return( Main ); 
+});
 
-  function newShooterScene() {
-    var shooter = new Shooter();
-    GameEngine.run(shooter, done);
-  }
-
-  function done(scene) {
-    if(scene == 'running') return;
-    nextScene = scenes[scene] || newMenuScene;
-    console.log(nextScene);
-    nextScene();
-  }
-
-}
-
-var reqs = ['Engine', 'Menu', 'Shooter'];
-define(reqs, function() { return Main; });

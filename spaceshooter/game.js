@@ -1,25 +1,26 @@
 require.config({
   baseUrl: './',
   paths: {
-    Shooter:     './spaceshooter/Shooter',
-    Enemy:       './spaceshooter/Enemy',
-    Ship:        './spaceshooter/Ship',
-    Lasor:       './spaceshooter/Lasor',
-    Bomb:        './spaceshooter/Bomb',
-    UI:          './spaceshooter/UI',
+    Menu:        './spaceshooter/scenes/Menu',
+    Shooter:     './spaceshooter/scenes/Shooter',
+    UI:          './spaceshooter/scenes/UI',
+    Ship:        './spaceshooter/sprites/Ship',
+    Hero:        './spaceshooter/sprites/Hero',
+    Enemy:       './spaceshooter/sprites/Enemy',
+    Lasor:       './spaceshooter/sprites/Lasor',
+    Bomb:        './spaceshooter/sprites/Bomb',
     Config:      './spaceshooter/Config',
-    Menu:        './spaceshooter/Menu',
     Main:        './spaceshooter/Main',
+    Engine:      './lib/Engine',
     GameCanvas:  './lib/GameCanvas',
     GameInput:   './lib/GameInput',
-    Engine:      './lib/Engine',
     Hammer:      './vendor/Hammer',
-    lodash:      './vendor/lodash'
+    LoDash:      './vendor/lodash'
   },
   shim: {}
 });
 
-require(['Main'], function(shooter){
+require(['Main'], function(Main){
   var canvas = document.getElementById("frame").getContext('2d');
   var Game = new Main(canvas);
 

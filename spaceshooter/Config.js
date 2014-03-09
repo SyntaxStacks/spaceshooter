@@ -1,14 +1,16 @@
-function Config() {
+define(function() { 
+  
+  function Config() {
+    var config = {
+      frameHeight: 300,
+      frameWidth: 600
+    };
 
-  var config = {
-    frameHeight: 300,
-    frameWidth: 600
-  };
+    this.frameHeight = config.frameHeight;
+    this.frameWidth = config.frameWidth;
+  }
 
-  this.frameHeight = config.frameHeight;
-  this.frameWidth = config.frameWidth;
+  return Config; 
+}); 
 
-}
-
-define(['Config'], function() { return Config; }); 
 
