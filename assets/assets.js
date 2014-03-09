@@ -1,0 +1,2 @@
+var assets = {"snd":{"bomb":["mp3","ogg"],"enemyExplode":["mp3","ogg"],"enemyLaser":["mp3","ogg"],"lasor":["mp3","ogg"],"npm-debug":["log"]},"img":{"catz":["jpg"],"font16x32":["png"],"sprites":["png"]}}
+module.exports = { snd: assets.snd, img: assets.img }

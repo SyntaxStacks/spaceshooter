@@ -27,3 +27,8 @@ You might need to refresh the screen if things get buggy. And the files are not 
     
   
 No Mind Control at the Moment, sorry.
+
+Sounds by 
+Fantozzi - Page: http://freesound.org/people/Fantozzi/
+NoiseCollector - http://freesound.org/people/NoiseCollector/
+BMacZero - http://freesound.org/people/BMacZero/
