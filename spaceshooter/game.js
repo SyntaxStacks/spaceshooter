@@ -15,6 +15,7 @@ require.config({
     GameCanvas:  './lib/GameCanvas',
     GameInput:   './lib/GameInput',
     Hammer:      './vendor/Hammer',
+    Buzz:        './vendor/buzz.min
     LoDash:      './vendor/lodash'
   },
   shim: {}
