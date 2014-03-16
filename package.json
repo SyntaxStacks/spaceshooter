@@ -4,11 +4,13 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "hammerjs": "*",
+    "node-buzz": "*",
+    "lodash": "*",
+    "async": "*"
   },
   "devDependencies": {
     "jshint": "",
-    "grunt": "0.4.4",
-    "lodash": "*",
-    "async": "*"
+    "grunt": "0.4.4"
   }
 }
