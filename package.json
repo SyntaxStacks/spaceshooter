@@ -1,11 +1,14 @@
 {
   "name": "spaceshooter",
-  "description": "A simple Space Shooter",
+  "description": "A Simple Space Shooter",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "3.x",
-    "canvas": "~1.1.0",
-    "jshint": "" 
+  },
+  "devDependencies": {
+    "jshint": "",
+    "grunt": "0.4.4",
+    "lodash": "*",
+    "async": "*"
   }
 }
