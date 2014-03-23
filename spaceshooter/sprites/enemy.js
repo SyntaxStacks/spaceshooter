@@ -5,12 +5,6 @@ var _ = require('lodash');
 var enemyList           = ['MAVERICK', 'BLOCKADE', 'GUARD'];
 var FRAMEHEIGHT;
 var FRAMEWIDTH;
-var sprites             = document.createElement('img');
-var loadImage           = document.createElement('img');
-loadImage.src           = './assets/img/sprites.png';
-loadImage.onload        = function(){
-  sprites               = loadImage;
-};
 
 function getDestroy()             { return this.data.destroy; }
 function getEnemyClass()          { return this.data.className.ship; }
@@ -66,7 +60,7 @@ function drawEnemyAlive2D(canvas) {
   canvas.translate( translateX, translateY);
   canvas.rotate(this.angle());
   canvas.translate(-(translateX), -(translateY));
-  canvas.drawImage(sprites, this.spriteOriginX(), this.spriteOriginY(), this.width(), this.height(),
+  canvas.drawImage(canvas.sprites.sprites, this.spriteOriginX(), this.spriteOriginY(), this.width(), this.height(),
         this.locationX(), this.locationY(), this.width(), this.height());
   canvas.rotate(0);
   canvas.restore();
@@ -74,7 +68,7 @@ function drawEnemyAlive2D(canvas) {
 
 function drawEnemyDying2D(canvas) {
     var exp = this.explosion();
-    canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
+    canvas.drawImage(canvas.sprites.sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
           this.getCenter().x - (exp.sprite.width/2), this.getCenter().y - (exp.sprite.height/2), exp.sprite.width, exp.sprite.height); 
 }
 
@@ -97,7 +91,7 @@ function drawEnemyAliveText(canvas) {
 function drawEnemyDyingText(canvas) {
     var exp = this.explosion();
     //todo: make image draw logic cleaner
-    canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
+    canvas.drawImage(canvas.sprites.sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
           this.getCenter().x - (exp.sprite.width/2), this.getCenter().y - (exp.sprite.height/2), exp.sprite.width, exp.sprite.height); 
 }
 
@@ -108,7 +102,7 @@ function drawLasors(canvas, style) {
   canvas.restore();
 }
 
-function shoot(target) {
+function shoot(deps, target) {
   
   var originY = this.originY();
   var originX = this.originX();
@@ -120,9 +114,10 @@ function shoot(target) {
     return false;
   var firedLasor = new lasor(this, target, velocityX, velocityY);
   this.addLasor(firedLasor);
+  deps.assets.sounds.enemyLaser.play();
 }
 
-function update(spaceship) {
+function update(deps, spaceship) {
   var currentTime = Date.now();
   var lastEnemyUpdateTime = this.lastUpdatedTime();
   var enemyUpdateDelay = this.enemyDelay();
@@ -165,10 +160,10 @@ function update(spaceship) {
 
     if(this.type() != "BLOCKADE") {
       if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 16) {
-        this.shoot(spaceship);
+        this.shoot(deps, spaceship);
       }
       else if(enemyType != "GUARD" && Math.random() >= 0.9) {
-        this.shoot(spaceship);
+        this.shoot(deps, spaceship);
       }
     }
 

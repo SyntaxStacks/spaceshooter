@@ -3,8 +3,8 @@ var menu = require('./scenes/menu');
 var shooter = require('./scenes/shooter');
 var config = require('./config');
 
-function Main(canvas) {
-  var gameEngine = new engine(canvas);
+function Main() {
+  var gameEngine = new engine(config);
 
   this.play = play;
 

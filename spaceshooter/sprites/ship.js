@@ -13,7 +13,6 @@ function getLocationY()      { return this.data.location.y; }
 function getOriginX()        { return this.data.origin.x || 0; }
 function getOriginY()        { return this.data.origin.y || 0; }
 function getShipSprite()     { return this.data.sprite.ship; }
-function getSprites()        { return this.sprites; }
 function getShipType()       { return this.data.type; }
 function getShipXSpeed()     { return this.data.speed.x || 0; }
 function getShipYSpeed()     { return this.data.speed.y || 0; }
@@ -64,11 +63,7 @@ function angleBetweenObjects(obj1, obj2) {
 }
 
 function Ship(config) {
-  var ship         = this;
-  loadImage.src    = './assets/img/sprites.png';
-  loadImage.onload = function(){
-    ship.sprites   = loadImage;
-  };
+  var ship = this;
   return( this );
 }
 
@@ -112,7 +107,6 @@ Ship.prototype = {
   addBomb        : addBomb,
   addLasor       : addLasor,
   angleBetweenObjects: angleBetweenObjects,
-  getSprites: getSprites,
   replenishBombs : replenishBombs
 };
 

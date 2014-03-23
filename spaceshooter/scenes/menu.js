@@ -52,6 +52,7 @@ function Menu(config) {
     canvas.fillStyle = "#FFFFFF";
     canvas.fillText("Space Shooter", 30, 30);
     canvas.fillText("PRESS SHOOT", 30, 80);
+    canvas.drawImage(canvas.sprites.catz, 100, 100);
     canvas.restore();
   }
 
@@ -59,9 +60,9 @@ function Menu(config) {
     status = "running";
   }
 
-  function run(canvas, input, assets, callback) {
-    processInput(input);
-    canvas.render(draw);
+  function run(deps, callback) {
+    processInput(deps.input);
+    deps.canvas.render(draw);
     callback(status);
   }
 
