@@ -166,11 +166,11 @@ function Shooter(config) {
     }
   }
 
-  function updateSprites(input, assets) {
-    getShip().update(input, assets);
+  function updateSprites(deps) {
+    getShip().update(deps);
 
     var enemies = getEnemies();
-    _.map( enemies, function( currentEnemy ) { currentEnemy.update(getShip()); });
+    _.map( enemies, function( currentEnemy ) { currentEnemy.update(deps, getShip()); });
   }
 
   function removeDestroyedObjects(){
@@ -204,14 +204,14 @@ function Shooter(config) {
     });
   }
 
-  function run(canvas, input, assets, callback) {
+  function run(deps, callback) {
 
-    updateSprites(input, assets);
-    checkForHit(assets);
+    updateSprites(deps);
+    checkForHit(deps.assets);
     removeDestroyedObjects();
     updateUI();
 
-    canvas.render(draw);
+    deps.canvas.render(draw);
     callback(status);
   }
 }

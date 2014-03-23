@@ -108,7 +108,7 @@ function drawLasors(canvas, style) {
   canvas.restore();
 }
 
-function shoot(target) {
+function shoot(deps, target) {
   
   var originY = this.originY();
   var originX = this.originX();
@@ -120,9 +120,10 @@ function shoot(target) {
     return false;
   var firedLasor = new lasor(this, target, velocityX, velocityY);
   this.addLasor(firedLasor);
+  deps.assets.sounds.enemyLaser.play();
 }
 
-function update(spaceship) {
+function update(deps, spaceship) {
   var currentTime = Date.now();
   var lastEnemyUpdateTime = this.lastUpdatedTime();
   var enemyUpdateDelay = this.enemyDelay();
@@ -165,10 +166,10 @@ function update(spaceship) {
 
     if(this.type() != "BLOCKADE") {
       if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 16) {
-        this.shoot(spaceship);
+        this.shoot(deps, spaceship);
       }
       else if(enemyType != "GUARD" && Math.random() >= 0.9) {
-        this.shoot(spaceship);
+        this.shoot(deps, spaceship);
       }
     }
 

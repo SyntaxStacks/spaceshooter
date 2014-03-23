@@ -7,12 +7,14 @@ var FIREDELAY = 100;
 
 function setLasors(lasors) { this.data.addon.lasors = lasors; }
 function setBombs(bombs) { this.data.addon.bombs.fired = bombs; }
-function shoot() {
+function shoot(deps) {
   var lastFire = this.lastFire();
   var fireDelayReached = Date.now() - lastFire > FIREDELAY;
   var withinMaxLasorRange = this.lasors().length <= 2;
 
   if( fireDelayReached && withinMaxLasorRange ) {
+    var sounds = deps.assets.sounds;
+    sounds.lasor.play();
     this.fireLasor();
   }
 }
@@ -23,16 +25,18 @@ function fireLasor() {
     this.setLastFire(Date.now());
 }
 
-function fireBomb() {
+function fireBomb(deps) {
   if(this.bombCount() > 0 && _.isEmpty( this.bombs() ) ) {
     var firedBomb = new bomb(this, null);
     this.addBomb(firedBomb);
     this.data.addon.bombs.inventory--;  
+    deps.assets.sounds.bomb.play();
   }
 }
 
-function update(input, assets) {
+function update(deps) {
   var spaceship = this;
+  var input = deps.input;
   var events = input.get()
   var lasors = spaceship.lasors();
   var bombs = spaceship.bombs();
@@ -43,11 +47,9 @@ function update(input, assets) {
     if(event == input.keycode.left)
       spaceship.move(-3);
     if(event == 'B')
-      spaceship.fireBomb();
+      spaceship.fireBomb(deps);
     if(event == input.keycode.space) {
-      spaceship.shoot();
-      console.log(assets.sounds.lasor);
-      assets.sounds.lasor.play();
+      spaceship.shoot(deps);
     }
   });
 
@@ -58,7 +60,7 @@ function update(input, assets) {
   });
 
   bombs = _.map( bombs, function( firedBomb ) {
-    firedBomb.update();
+    firedBomb.update(deps);
     if( firedBomb.isDestroyed() ) { return null; }
     return firedBomb;
   });

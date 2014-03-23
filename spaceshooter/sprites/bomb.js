@@ -68,12 +68,13 @@ function Bomb( shooter, target ) {
     return hitbox[getStatus()];
   }
 
-  function update(bomb) {
+  function update(deps) {
     var events = {
       fired: function() {
         setLocationY(getLocationY() - 10);
         if(getLocationY() <= 50) {
           setStatus('detonated');
+          deps.assets.sounds.bomb
           explosionFrame = 4;
         }
       },

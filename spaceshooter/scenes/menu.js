@@ -59,9 +59,9 @@ function Menu(config) {
     status = "running";
   }
 
-  function run(canvas, input, assets, callback) {
-    processInput(input);
-    canvas.render(draw);
+  function run(deps, callback) {
+    processInput(deps.input);
+    deps.canvas.render(draw);
     callback(status);
   }
 
