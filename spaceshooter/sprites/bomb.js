@@ -74,7 +74,7 @@ function Bomb( shooter, target ) {
         setLocationY(getLocationY() - 10);
         if(getLocationY() <= 50) {
           setStatus('detonated');
-          deps.assets.sounds.bomb
+          deps.assets.sounds.add('bomb');
           explosionFrame = 4;
         }
       },

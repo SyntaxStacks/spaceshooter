@@ -114,7 +114,7 @@ function shoot(deps, target) {
     return false;
   var firedLasor = new lasor(this, target, velocityX, velocityY);
   this.addLasor(firedLasor);
-  deps.assets.sounds.enemyLaser.play();
+  deps.assets.sounds.add('enemyLaser');
 }
 
 function update(deps, spaceship) {

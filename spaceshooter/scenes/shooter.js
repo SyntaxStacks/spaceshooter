@@ -106,7 +106,7 @@ function Shooter(config) {
           if(collides(lasor, enemy)) {
             scoreboard.addPoints(100);
             enemy.blowUp();
-            assets.sounds.enemyExplode.play();
+            assets.sounds.add('enemyExplode');
           }
         }
       });
@@ -210,6 +210,7 @@ function Shooter(config) {
     checkForHit(deps.assets);
     removeDestroyedObjects();
     updateUI();
+    
 
     deps.canvas.render(draw);
     callback(status);

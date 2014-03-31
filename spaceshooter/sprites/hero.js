@@ -14,7 +14,7 @@ function shoot(deps) {
 
   if( fireDelayReached && withinMaxLasorRange ) {
     var sounds = deps.assets.sounds;
-    sounds.lasor.play();
+    sounds.add('lasor');
     this.fireLasor();
   }
 }
@@ -30,7 +30,7 @@ function fireBomb(deps) {
     var firedBomb = new bomb(this, null);
     this.addBomb(firedBomb);
     this.data.addon.bombs.inventory--;  
-    deps.assets.sounds.bomb.play();
+    deps.assets.sounds.add('bomb');
   }
 }
 
