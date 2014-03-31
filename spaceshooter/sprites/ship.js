@@ -41,73 +41,72 @@ function lastFire()          { return this.data.lastFire; }
 function move(moveDistance)  { this.setLocationX(this.locationX() + moveDistance); }
 
 function getHitBox() {
-  return {
-    x1: this.locationX(),
-    y1: this.locationY(),
-    x2: this.locationX() + this.width(),
-    y2: this.locationY() + this.height()
-  };
+    return {
+        x1: this.locationX(),
+        y1: this.locationY(),
+        x2: this.locationX() + this.width(),
+        y2: this.locationY() + this.height()
+    };
 }
 
 function angleBetweenObjects(obj1, obj2) {
-  var e1x = parseInt(Math.abs(obj1.locationX()));
-  var e2x = parseInt(Math.abs(obj2.locationX()));
-  var e1y = parseInt(Math.abs(obj1.locationY()));
-  var e2y = parseInt(Math.abs(obj2.locationY()));
+    var e1x = parseInt(Math.abs(obj1.locationX()));
+    var e2x = parseInt(Math.abs(obj2.locationX()));
+    var e1y = parseInt(Math.abs(obj1.locationY()));
+    var e2y = parseInt(Math.abs(obj2.locationY()));
 
-  var rise = e1y - e2y;
-  var run = e1x - e2x;
-  var angle = -Math.atan(run/rise);
-  return angle;
-
+    var rise = e1y - e2y;
+    var run = e1x - e2x;
+    var angle = -Math.atan(run/rise);
+    return angle;
 }
 
 function Ship(config) {
-  var ship = this;
-  return( this );
+    var ship = this;
+    return( this );
 }
 
 Ship.prototype = {
-  angle          : getAngle,
-  dir            : getDirection,
-  getCenter      : getCenter,
-  floatXRange    : getFloatXRange,
-  floatYRange    : getFloatYRange,
-  height         : getSpriteHeight,
-  lasors         : getLasors,
-  bombs          : firedBombs, 
-  bombCount      : getBombCount,
-  locationX      : getLocationX,
-  locationY      : getLocationY,
-  move           : move,
-  originX        : getOriginX,
-  originY        : getOriginY,
-  setShipSprite  : setShipSprite,
-  setFloatXRange : setFloatXRange,
-  setFloatYRange : setFloatYRange,
-  setOriginX     : setOriginX,
-  setOriginY     : setOriginY,
-  setLocationX   : setLocationX,
-  setLocationY   : setLocationY,
-  setType        : setShipType,
-  setXSpeed      : setShipXSpeed,
-  setYSpeed      : setShipYSpeed,
-  setDir         : setDirection,
-  setAngle       : setAngle,
-  shipSprite     : getShipSprite,
-  type           : getShipType,
-  width          : getSpriteWidth,
-  xSpeed         : getShipXSpeed,
-  ySpeed         : getShipYSpeed,
-  getHitBox      : getHitBox,
-  lastFire       : lastFire,
-  setLastFire    : setLastFire,
-  spriteOriginX  : getSpriteOriginX,
-  spriteOriginY  : getSpriteOriginY,
-  addBomb        : addBomb,
-  addLasor       : addLasor,
-  angleBetweenObjects: angleBetweenObjects,
-  replenishBombs : replenishBombs
+    angle          : getAngle,
+    dir            : getDirection,
+    getCenter      : getCenter,
+    floatXRange    : getFloatXRange,
+    floatYRange    : getFloatYRange,
+    height         : getSpriteHeight,
+    lasors         : getLasors,
+    bombs          : firedBombs, 
+    bombCount      : getBombCount,
+    locationX      : getLocationX,
+    locationY      : getLocationY,
+    move           : move,
+    originX        : getOriginX,
+    originY        : getOriginY,
+    setShipSprite  : setShipSprite,
+    setFloatXRange : setFloatXRange,
+    setFloatYRange : setFloatYRange,
+    setOriginX     : setOriginX,
+    setOriginY     : setOriginY,
+    setLocationX   : setLocationX,
+    setLocationY   : setLocationY,
+    setType        : setShipType,
+    setXSpeed      : setShipXSpeed,
+    setYSpeed      : setShipYSpeed,
+    setDir         : setDirection,
+    setAngle       : setAngle,
+    shipSprite     : getShipSprite,
+    type           : getShipType,
+    width          : getSpriteWidth,
+    xSpeed         : getShipXSpeed,
+    ySpeed         : getShipYSpeed,
+    getHitBox      : getHitBox,
+    lastFire       : lastFire,
+    setLastFire    : setLastFire,
+    spriteOriginX  : getSpriteOriginX,
+    spriteOriginY  : getSpriteOriginY,
+    addBomb        : addBomb,
+    addLasor       : addLasor,
+    angleBetweenObjects: angleBetweenObjects,
+    replenishBombs : replenishBombs
 };
 
 module.exports = Ship;
