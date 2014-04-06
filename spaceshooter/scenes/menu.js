@@ -52,7 +52,7 @@ function Menu(config) {
     canvas.fillStyle = "#FFFFFF";
     canvas.fillText("Space Shooter", 30, 30);
     canvas.fillText("PRESS SHOOT", 30, 80);
-    canvas.drawImage(canvas.sprites.catz, 100, 100);
+    canvas.drawImage(canvas.sprites.catz, 250, 50);
     canvas.restore();
   }
 

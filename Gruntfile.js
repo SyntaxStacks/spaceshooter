@@ -4,8 +4,33 @@ var _ = require('lodash');
 
 module.exports = function (grunt) {
 
-  grunt.initConfig({
+  grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
+  grunt.initConfig({
+    browserify: {
+      libs: {
+        options: {
+          shim: {
+            soundjs: {
+              path: './vendor/soundjs.js',
+              exports: 'soundjs'
+            }
+          }
+        },
+        src: './spaceshooter/game.js',
+        dest: './bundle.js'
+      }
+    },
+    watch: {
+      scripts: {
+        files: ['./lib/**/*.js', './spaceshooter/**/*.js'],
+        tasks: ['browserify'],
+        options: {
+          interupt: true,
+        },
+      }
+    }
   });
 
   grunt.registerTask('assets', 'Configure Asset Files', function () {
