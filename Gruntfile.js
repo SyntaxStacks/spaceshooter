@@ -18,10 +18,10 @@ module.exports = function (grunt) {
                         }
                     }
                 },
-                src: './spaceshooter/game.js',
-                dest: './bundle.js'
+                src: './vendor/*.js',
+                dest: './libs..js'
             },
-            app: {
+            game: {
                 options: {
                     alias: [ './vendor/soundjs.min.js:soundjs' ],
                     external: [ './vendor/soundjs.min.js' ]

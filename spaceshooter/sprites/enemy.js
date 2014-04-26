@@ -98,7 +98,7 @@ function drawEnemyDyingText(canvas) {
 function drawLasors(canvas, style) {
     canvas.save();
     if( !_.isNull(this.lasors()) ) {
-        _forEach(lasor, function (lasor) {
+        _.forEach(this.lasors(), function (lasor) {
             lasor.draw(canvas, style);
         });
     }
@@ -197,11 +197,12 @@ function updateEnemyLasorPosition() {
 
     var lasors = this.lasors() || [];
 
-    _.map(lasors, function (lasor) {
+    lasors = _.remove(lasors, function (lasor) {
         lasor.update();  
         if(lasor.isDestroyed()) {
-          lasors.splice(i, 1);
+            return true;
         }
+        return false;
     })
 }
 

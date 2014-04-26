@@ -75,11 +75,14 @@ function Shooter(config) {
         var enemies = getEnemies();
         _.forEach (enemies, function (enemy) {
             var enemyLasors = enemy.lasors();
-            if (_.isEmpty(enemyLasors)) continue;
+            if (_.isEmpty(enemyLasors)) {
+                return;
+            }
             _.forEach (enemyLasors, function (lasor) {
-                lasors.push(enemyLasors[j]);
+                lasors.push(lasor);
             });
-        }
+        });
+
         return lasors;
     }
 
