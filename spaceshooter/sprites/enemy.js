@@ -28,42 +28,42 @@ function kill()                   { this.data.destroy = true; }
 
 function draw(canvas, style) {
 
-  canvas.save();
-  this.drawLasors(canvas, style);
-  this.drawEnemy(canvas, style);
-  canvas.restore();
+    canvas.save();
+    this.drawLasors(canvas, style);
+    this.drawEnemy(canvas, style);
+    canvas.restore();
 
-  return canvas;
+    return canvas;
 }
 
 function drawEnemy(canvas, style) {
-  var enemy = this;
+    var enemy = this;
 
-  var events = {
-    'text': {
-      alive: enemy.drawEnemyAliveText,
-      dying: enemy.drawEnemyDyingText
-    },
-    '2D': {
-      alive: enemy.drawEnemyAlive2D,
-      dying: enemy.drawEnemyDying2D
-    }
-  };
+    var events = {
+        'text': {
+            alive: enemy.drawEnemyAliveText,
+            dying: enemy.drawEnemyDyingText
+        },
+        '2D': {
+            alive: enemy.drawEnemyAlive2D,
+            dying: enemy.drawEnemyDying2D
+        }
+    };
 
-  events[style][this.status()].call(enemy, canvas);
+    events[style][this.status()].call(enemy, canvas);
 }
 
 function drawEnemyAlive2D(canvas) {
-  var translateX = this.getCenter().x,
-      translateY = this.getCenter().y;
-  canvas.save();
-  canvas.translate( translateX, translateY);
-  canvas.rotate(this.angle());
-  canvas.translate(-(translateX), -(translateY));
-  canvas.drawImage(canvas.sprites.sprites, this.spriteOriginX(), this.spriteOriginY(), this.width(), this.height(),
-        this.locationX(), this.locationY(), this.width(), this.height());
-  canvas.rotate(0);
-  canvas.restore();
+    var translateX = this.getCenter().x;
+    var translateY = this.getCenter().y;
+    canvas.save();
+    canvas.translate( translateX, translateY);
+    canvas.rotate(this.angle());
+    canvas.translate(-(translateX), -(translateY));
+    canvas.drawImage(canvas.sprites.sprites, this.spriteOriginX(), this.spriteOriginY(), this.width(), this.height(),
+          this.locationX(), this.locationY(), this.width(), this.height());
+    canvas.rotate(0);
+    canvas.restore();
 }
 
 function drawEnemyDying2D(canvas) {
@@ -73,19 +73,19 @@ function drawEnemyDying2D(canvas) {
 }
 
 function drawEnemyAliveText(canvas) {
-  var translateX = this.getCenter().x;
-  var translateY = this.getCenter().y;
-  var x = this.locationX() + this.width()/2;
-  var y = this.locationY() + this.height();
-  canvas.save();
-  canvas.translate( translateX, translateY);
-  canvas.rotate(this.angle());
-  canvas.translate(-(translateX), -(translateY));
-  canvas.fillStyle = '#F00';
-  canvas.font = "18pt Calibri";
-  canvas.fillText("v", x, y);
-  canvas.rotate(0);
-  canvas.restore();
+    var translateX = this.getCenter().x;
+    var translateY = this.getCenter().y;
+    var x = this.locationX() + this.width()/2;
+    var y = this.locationY() + this.height();
+    canvas.save();
+    canvas.translate( translateX, translateY);
+    canvas.rotate(this.angle());
+    canvas.translate(-(translateX), -(translateY));
+    canvas.fillStyle = '#F00';
+    canvas.font = "18pt Calibri";
+    canvas.fillText("v", x, y);
+    canvas.rotate(0);
+    canvas.restore();
 }
 
 function drawEnemyDyingText(canvas) {
@@ -96,284 +96,290 @@ function drawEnemyDyingText(canvas) {
 }
 
 function drawLasors(canvas, style) {
-  canvas.save();
-  if( !_.isNull( this.lasors() ) )
-    for(var i = 0, lasors = this.lasors(); i < lasors.length ; i++) { lasors[i].draw(canvas, style); }
-  canvas.restore();
+    canvas.save();
+    if( !_.isNull(this.lasors()) ) {
+        _forEach(lasor, function (lasor) {
+            lasor.draw(canvas, style);
+        });
+    }
+    canvas.restore();
 }
 
 function shoot(deps, target) {
   
-  var originY = this.originY();
-  var originX = this.originX();
-  var angle = this.angleBetweenObjects(this, target);
-  var velocityY = 1;
-  var velocityX = ((originY - 1)*Math.tan(angle));
-  
-  if(this.lasors().length >= 2 && this.type() != "GUARD")
-    return false;
-  var firedLasor = new lasor(this, target, velocityX, velocityY);
-  this.addLasor(firedLasor);
-  deps.assets.sounds.add('enemyLaser');
+    var originY = this.originY();
+    var originX = this.originX();
+    var angle = this.angleBetweenObjects(this, target);
+    var velocityY = 1;
+    var velocityX = ((originY - 1)*Math.tan(angle));
+    
+    if(this.lasors().length >= 2 && this.type() != "GUARD") {
+        return false;
+    }
+    var firedLasor = new lasor(this, target, velocityX, velocityY);
+    this.addLasor(firedLasor);
+    deps.assets.sounds.add('enemyLaser');
 }
 
 function update(deps, spaceship) {
-  var currentTime = Date.now();
-  var lastEnemyUpdateTime = this.lastUpdatedTime();
-  var enemyUpdateDelay = this.enemyDelay();
+    var currentTime = Date.now();
+    var lastEnemyUpdateTime = this.lastUpdatedTime();
+    var enemyUpdateDelay = this.enemyDelay();
 
-  if(this.status() == 'alive') {
-    var enemy        = this;
-    var shipX = spaceship.locationX();
-    var enemyX = enemy.locationX();
+    if(this.status() == 'alive') {
+        var enemy = this;
+        var shipX = spaceship.locationX();
+        var enemyX = enemy.locationX();
 
-    var enemyType    = enemy.type();
-    var enemyMoveDir = enemy.dir();
+        var enemyType    = enemy.type();
+        var enemyMoveDir = enemy.dir();
 
-    if(enemyMoveDir != 1 && enemyMoveDir != -1) {
-      var dir = (Math.random() <= 0.5)? -1 : 1;
-      enemy.setDir(dir);
+        if(enemyMoveDir != 1 && enemyMoveDir != -1) {
+          var dir = (Math.random() <= 0.5)? -1 : 1;
+          enemy.setDir(dir);
+        }
+
+        var deg = (this.angleBetweenObjects(enemy, spaceship));
+        enemy.setAngle(deg);
+
+        if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
+            var enemyXOrigin = enemy.originX();
+
+            if(enemyX < enemyXOrigin - enemy.floatXRange()) {
+                enemy.setDir(1);
+            }
+
+            if(enemyX > enemyXOrigin + enemy.floatXRange()) {
+                enemy.setDir(-1);
+            }
+
+            var enemyNextMove =  enemy.xSpeed() * enemyMoveDir;
+            enemy.move(enemyNextMove);
+
+            //blockade specific
+            if(enemy.type() == "BLOCKADE" || enemy.type() == "GUARD") {
+                if(Math.abs(enemyX - enemyXOrigin) <= enemy.xSpeed() ){
+                    enemy.setLocationX(enemyXOrigin);
+                }
+            }  
+        }  
+
+        if(this.type() != "BLOCKADE") {
+            if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 16) {
+                this.shoot(deps, spaceship);
+            }
+            else if(enemyType != "GUARD" && Math.random() >= 0.9) {
+                this.shoot(deps, spaceship);
+            }
+        }
+
+        if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
+            lastEnemyUpdateTime = Date.now();
+        }
     }
+    else if(this.status() == 'dying') {
+        var explosionFrame = this.explosionFrame();
+        if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
+            if(explosionFrame < 0 && _.isEmpty( this.lasors() ) ) {
+                this.kill();
+            }
+            else {
+                this.setExplosionFrame(explosionFrame-1);
+            }
 
-    var deg = (this.angleBetweenObjects(enemy, spaceship));
-    enemy.setAngle(deg);
-
-    if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
-      var enemyXOrigin = enemy.originX();
-
-      if(enemyX < enemyXOrigin - enemy.floatXRange()) {
-        enemy.setDir(1);
-      } else 
-      if(enemyX > enemyXOrigin + enemy.floatXRange()) {
-        enemy.setDir(-1);
-      }
-
-      var enemyNextMove =  enemy.xSpeed() * enemyMoveDir;
-      enemy.move(enemyNextMove);
-
-      //blockade specific
-      if(enemy.type() == "BLOCKADE" || enemy.type() == "GUARD") {
-        if(Math.abs(enemyX - enemyXOrigin) <= enemy.xSpeed() )
-          enemy.setLocationX(enemyXOrigin);
-      }  
-    }  
-
-    if(this.type() != "BLOCKADE") {
-      if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 16) {
-        this.shoot(deps, spaceship);
-      }
-      else if(enemyType != "GUARD" && Math.random() >= 0.9) {
-        this.shoot(deps, spaceship);
-      }
+            this.setUpdateTime(Date.now());
+        }
     }
-
-    if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay )
-      lastEnemyUpdateTime = Date.now();
-  }
-  else if(this.status() == 'dying') {
-    var explosionFrame = this.explosionFrame();
-    if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
-      if(explosionFrame < 0 && _.isEmpty( this.lasors() ) ) {
-        this.kill();
-      }
-      else {
-        this.setExplosionFrame(explosionFrame-1);
-      }
-
-      this.setUpdateTime(Date.now());
-    }
-
-  }
-  this.updateEnemyLasorPosition();
+    this.updateEnemyLasorPosition();
 }
 
 function updateEnemyLasorPosition() {
 
-  var lasors = this.lasors() || [];
+    var lasors = this.lasors() || [];
 
-  for (var i = 0; i < lasors.length; i++) {
-    var lasor = lasors[i];
-    lasor.update();  
-    if(lasor.isDestroyed())
-      lasors.splice(i, 1);
-  }
+    _.map(lasors, function (lasor) {
+        lasor.update();  
+        if(lasor.isDestroyed()) {
+          lasors.splice(i, 1);
+        }
+    })
 }
 
 function enemySpecs(enemyType) {
   
-  var ENEMYSPRITEWIDTH = 16;
-  var ENEMYSPRITEHEIGHT = 16;
-  var spriteXIndex = 0;
-  var spriteYIndex = 3;
+    var ENEMYSPRITEWIDTH = 16;
+    var ENEMYSPRITEHEIGHT = 16;
+    var spriteXIndex = 0;
+    var spriteYIndex = 3;
 
-  function randomEnemy() {
-    var enemyIndex = Math.floor(Math.random()*3);
-    return enemySpecs(enemyList[enemyIndex]);
-  }
+    function randomEnemy() {
+        var enemyIndex = Math.floor(Math.random()*3);
+        return enemySpecs(enemyList[enemyIndex]);
+    }
 
-  if(enemyType == "MAVERICK") {
-    spriteXIndex = 8;
-    spriteYIndex = 3;
-     return {
-      type: "MAVERICK",
-      angle: 0,
-      lastUpdate: Date.now(),
-      status: 'alive',
-      delay: 30,
-      destroy: false,
-      explosionFrame: 0,
-      location: {
-        x: 0,
-        y: 40
-      },
-      origin: {
-        x: 0,
-        y: 0 
-      },
-      sprite: {
-        x: spriteXIndex * ENEMYSPRITEWIDTH,
-        y: spriteYIndex * ENEMYSPRITEWIDTH,
-        width: ENEMYSPRITEWIDTH,
-        height: ENEMYSPRITEHEIGHT
-      },
-      className: {
-        ship: 'enemy',
-        lasor: 'enemyLasor'
-      },
-      range: {
-        x: 50,
-        y: 50
-      },
-      speed: {
-        x: 3,
-        y: 0
-      },
-      addon: {
-        lasors: []
-      }
-    };
-  }
-  else if(enemyType == "BLOCKADE") {
-    spriteXIndex = 5;
-    spriteYIndex = 3;
-    return {
-      type: "BLOCKADE",
-      angle: 0,
-      status: 'alive',
-      delay: 30,
-      destroy: false,
-      lastUpdate: Date.now(),
-      explosionFrame: 0,
-      location: {
-        x: 0,
-        y: 0
-      },
-      origin: {
-        x: 0,
-        y: 0 
-      },
-      sprite: {
-        x: spriteXIndex * ENEMYSPRITEWIDTH,
-        y: spriteYIndex * ENEMYSPRITEWIDTH,
-        width: ENEMYSPRITEWIDTH,
-        height: ENEMYSPRITEHEIGHT
-      },
-      className: {
-        ship: 'enemy',
-        lasor: 'enemyLasor'
-      },
-      range: {
-        x: 0,
-        y: 0 
-      },
-      speed: {
-        x: 10,
-        y: 0
-      },
-      addon: {
-        lasors: []
-      }
-    };
-  }
-  else if(enemyType == "GUARD") {
-    spriteXIndex = 2;
-    spriteYIndex = 3;
-    return {
-      type: "GUARD",
-      angle: 0,
-      status: 'alive',
-      delay: 30,
-      destroy: false,
-      lastUpdate: Date.now(),
-      explosionFrame: 0,
-      location: {
-        x: 0,
-        y: 60
-      },
-      origin: {
-        x: 0,
-        y: 0 
-      },
-      sprite: {
-        x: spriteXIndex * ENEMYSPRITEWIDTH,
-        y: spriteYIndex * ENEMYSPRITEWIDTH,
-        width: ENEMYSPRITEWIDTH,
-        height: ENEMYSPRITEHEIGHT
-      },
-      className: {
-        ship: 'enemy',
-        lasor: 'enemyLasor'
-      },
-      range: {
-        x: 0,
-        y: 5 
-      },
-      speed: {
-        x: 10,
-        y: 1
-      },
-      addon: {
-        lasors: []
-      }
-    };
-  }
-  else
-    return randomEnemy();
+    if(enemyType == "MAVERICK") {
+        spriteXIndex = 8;
+        spriteYIndex = 3;
+        return {
+            type: "MAVERICK",
+            angle: 0,
+            lastUpdate: Date.now(),
+            status: 'alive',
+            delay: 30,
+            destroy: false,
+            explosionFrame: 0,
+            location: {
+                x: 0,
+                y: 40
+            },
+            origin: {
+                x: 0,
+                y: 0 
+            },
+            sprite: {
+                x: spriteXIndex * ENEMYSPRITEWIDTH,
+                y: spriteYIndex * ENEMYSPRITEWIDTH,
+                width: ENEMYSPRITEWIDTH,
+                height: ENEMYSPRITEHEIGHT
+            },
+            className: {
+                ship: 'enemy',
+                lasor: 'enemyLasor'
+            },
+            range: {
+                x: 50,
+                y: 50
+            },
+            speed: {
+                x: 3,
+                y: 0
+            },
+            addon: {
+                lasors: []
+            }
+        };
+    }
+    else if(enemyType == "BLOCKADE") {
+        spriteXIndex = 5;
+        spriteYIndex = 3;
+        return {
+            type: "BLOCKADE",
+            angle: 0,
+            status: 'alive',
+            delay: 30,
+            destroy: false,
+            lastUpdate: Date.now(),
+            explosionFrame: 0,
+            location: {
+                x: 0,
+                y: 0
+            },
+            origin: {
+                x: 0,
+                y: 0 
+            },
+            sprite: {
+                x: spriteXIndex * ENEMYSPRITEWIDTH,
+                y: spriteYIndex * ENEMYSPRITEWIDTH,
+                width: ENEMYSPRITEWIDTH,
+                height: ENEMYSPRITEHEIGHT
+            },
+            className: {
+                ship: 'enemy',
+                lasor: 'enemyLasor'
+            },
+            range: {
+                x: 0,
+                y: 0 
+            },
+            speed: {
+                x: 10,
+                y: 0
+            },
+            addon: {
+                lasors: []
+            }
+        };
+    }
+    else if(enemyType == "GUARD") {
+        spriteXIndex = 2;
+        spriteYIndex = 3;
+        return {
+            type: "GUARD",
+            angle: 0,
+            status: 'alive',
+            delay: 30,
+            destroy: false,
+            lastUpdate: Date.now(),
+            explosionFrame: 0,
+            location: {
+                x: 0,
+                y: 60
+            },
+            origin: {
+                x: 0,
+                y: 0 
+            },
+            sprite: {
+                x: spriteXIndex * ENEMYSPRITEWIDTH,
+                y: spriteYIndex * ENEMYSPRITEWIDTH,
+                width: ENEMYSPRITEWIDTH,
+                height: ENEMYSPRITEHEIGHT
+            },
+            className: {
+                ship: 'enemy',
+                lasor: 'enemyLasor'
+            },
+            range: {
+                x: 0,
+                y: 5 
+            },
+            speed: {
+                x: 10,
+                y: 1
+            },
+            addon: {
+                lasors: []
+            }
+        };
+    }
+    else
+        return randomEnemy();
 }
 
 function explosion() {
-  var spriteXIndex = this.explosionFrame();
-  var spriteYIndex = 0;
-  var EXPLOSIONSPRITEWIDTH = 32;
-  var EXPLOSIONSPRITEHEIGHT = 32;
-  return {
-    sprite: {
-      x: spriteXIndex * EXPLOSIONSPRITEWIDTH,
-      y: spriteYIndex * EXPLOSIONSPRITEWIDTH,
-      width: EXPLOSIONSPRITEWIDTH,
-      height: EXPLOSIONSPRITEHEIGHT
-    },
-  };
+    var spriteXIndex = this.explosionFrame();
+    var spriteYIndex = 0;
+    var EXPLOSIONSPRITEWIDTH = 32;
+    var EXPLOSIONSPRITEHEIGHT = 32;
+    return {
+        sprite: {
+            x: spriteXIndex * EXPLOSIONSPRITEWIDTH,
+            y: spriteYIndex * EXPLOSIONSPRITEWIDTH,
+            width: EXPLOSIONSPRITEWIDTH,
+            height: EXPLOSIONSPRITEHEIGHT
+        },
+    };
 }
 
 
 function startDestroySequence() {
-  var startingFrame = 4;
-  this.setExplosionFrame(startingFrame);
-  this.setStatus('dying');
+    var startingFrame = 4;
+    this.setExplosionFrame(startingFrame);
+    this.setStatus('dying');
 }
 
 function Enemy(config) {
-  ship.call(this, '', config);
-  this.data  = enemySpecs("");
+    ship.call(this, '', config);
+    this.data  = enemySpecs("");
 
-  FRAMEHEIGHT         = config.frameHeight;
-  FRAMEWIDTH          = config.frameWidth;
-  var startingOriginX = (Math.random()*(FRAMEWIDTH - 2 * this.floatXRange())) + this.floatXRange();
-  this.setOriginX(startingOriginX);
-  this.setDir(0);
+    FRAMEHEIGHT         = config.frameHeight;
+    FRAMEWIDTH          = config.frameWidth;
+    var startingOriginX = (Math.random()*(FRAMEWIDTH - 2 * this.floatXRange())) + this.floatXRange();
+    this.setOriginX(startingOriginX);
+    this.setDir(0);
 
-  return( this );
+    return( this );
 }
 
 Enemy.prototype                          = Object.create( ship.prototype );

@@ -1,2 +1,2 @@
-var assets = {"snd":{"bomb":["mp3","ogg"],"enemyExplode":["mp3","ogg"],"enemyLaser":["mp3","ogg"],"lasor":["mp3","ogg"],"npm-debug":["log"]},"img":{"catz":["jpg"],"font16x32":["png"],"sprites":["png"]}}
+var assets = {"snd":{"bomb":["mp3","ogg"],"enemyExplode":["mp3","ogg"],"enemyLaser":["mp3","ogg"],"lasor":["mp3","ogg"],"npm-debug":["log"]},"img":{"":["DS_Store"],"catz":["jpg"],"font16x32":["png"],"js":["png"],"sprites":["png"],"stars":["jpg"]}}
 module.exports = { snd: assets.snd, img: assets.img }
