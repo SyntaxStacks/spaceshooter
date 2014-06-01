@@ -6,12 +6,6 @@ function Bomb( shooter, target ) {
     var FRAMEHEIGHT     = config.frameHeight;
     var FRAMEWIDTH      = config.frameWidth;
     var explosionFrame  = 0;
-    var sprites         = null;
-    var loadImage       = document.createElement('img');
-    loadImage.src       = './assets/img/sprites.png';
-    loadImage.onload    = function(){
-        sprites           = loadImage;
-    };
 
     this.draw        = drawBomb;
     this.status      = getStatus;
@@ -118,7 +112,7 @@ function Bomb( shooter, target ) {
         canvas.save();
         canvas.fillStyle = "#0F0";
         if( !_.isNull( bomb ) ) { 
-            canvas.drawImage(sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
+            canvas.drawImage(canvas.sprites.sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
             (getLocationX()-50) + (getWidth()/2), (getLocationY()-50) - (getHeight()/2), 100, 100); 
         }
         canvas.restore();
