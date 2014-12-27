@@ -3,38 +3,39 @@ var menu = require('./scenes/menu');
 var shooter = require('./scenes/shooter');
 var config = require('./config');
 
-function Main() {
-    var gameEngine = new engine(config);
+var main = {
+    initialize: function () {
+        engine.initialize(config);
+    },
 
-    this.play = play;
+    get scenes () {
+        return { 
+            menu: main.newMenuScene,
+            game: main.newShooterScene
+        }
+    },
 
-    var scenes = {
-        menu: newMenuScene,
-        game: newShooterScene
-    };
+    play: function play() {
+        var menu = main.newMenuScene();
+    },
 
-    function play() {
-        var menu = newMenuScene();
-    }
-
-    function newMenuScene() {
+    newMenuScene: function newMenuScene() {
         var menuScene = new menu(config);
-        gameEngine.run(menuScene, done);
-    }
+        engine.run(menuScene, main.done);
+    },
 
-    function newShooterScene() {
+    newShooterScene: function newShooterScene() {
         var shooterScene = new shooter(config);
-        gameEngine.run(shooterScene, done);
-    }
+        engine.run(shooterScene, main.done);
+    },
 
-    function done(scene) {
-        if(scene == 'running') return;
-        nextScene = scenes[scene] || newMenuScene;
+    done: function done(scene) {
+        if (scene == 'running') { return; }
+        nextScene = main.scenes[scene] || main.newMenuScene;
         nextScene();
     }
 
-    return( this );
 }
 
-module.exports = Main;
+module.exports = main;
 

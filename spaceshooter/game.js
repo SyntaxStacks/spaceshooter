@@ -1,5 +1,3 @@
 var main = require('./main');
-
-var Game = new main();
-
-Game.play();
+main.initialize();
+main.play();
