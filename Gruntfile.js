@@ -12,14 +12,14 @@ module.exports = function (grunt) {
             libs: {
                 options: {
                     shim: {
-                        soundjs: {
-                            path: './vendor/soundjs.min.js',
-                            exports: 'soundjs'
+                        createjs: {
+                            path: 'global:createjs',
+                            exports: 'createjs'
                         }
                     }
                 },
                 src: './vendor/*.js',
-                dest: './libs..js'
+                dest: './libs.js'
             },
             game: {
                 options: {

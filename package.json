@@ -1,20 +1,27 @@
 {
-    "name": "spaceshooter",
-    "description": "A Simple Space Shooter",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "hammerjs": "*",
-        "node-buzz": "*",
-        "lodash": "*",
-        "async": "*",
-        "createjs": "*"
-    },
-    "devDependencies": {
-        "jshint": "",
-        "grunt": "0.4.4",
-        "browserify": "~3.44",
-        "grunt-browserify": "~2.0.3",
-        "grunt-contrib-watch": "~0.6.1"
-    }
+  "name": "spaceshooter",
+  "description": "A Simple Space Shooter",
+  "version": "0.0.1",
+  "private": true,
+  "browserify-shim": {
+      "createjs": "global:createjs"
+  },
+  "browserify": {
+        "transform": [ "browserify-shim" ]
+  },
+  "dependencies": {
+    "hammerjs": "*",
+    "node-buzz": "*",
+    "lodash": "*",
+    "async": "*",
+    "createjs": "*",
+    "browserify-shim": "~3.8.1"
+  },
+  "devDependencies": {
+    "jshint": "",
+    "grunt": "0.4.4",
+    "browserify": "~3.44",
+    "grunt-browserify": "~2.0.3",
+    "grunt-contrib-watch": "~0.6.1"
+  }
 }

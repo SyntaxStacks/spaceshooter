@@ -2,7 +2,9 @@ var engine = require('../lib/engine');
 var menu = require('./scenes/menu');
 var shooter = require('./scenes/shooter');
 var config = require('./config');
+var createjs = require('createjs');
 
+console.log(createjs);
 var main = {
     initialize: function () {
         engine.initialize(config);
