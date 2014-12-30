@@ -22,8 +22,8 @@ var main = {
     },
 
     newMenuScene: function newMenuScene() {
-        var menuScene = new menu(config);
-        engine.run(menuScene, main.done);
+        menu.initialize(engine.dependencies(), config);
+        engine.run(menu, main.done);
     },
 
     newShooterScene: function newShooterScene() {
