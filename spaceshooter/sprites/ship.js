@@ -4,30 +4,28 @@ var sprites = document.createElement('img');
 
 var character = {
 
-    data: {},
-
     get status () {
-        return character.data.status;
+        return this.data.status;
     },
 
     set status (status) {
-        character.data.status = status;
+        this.data.status = status;
     },
     
     get angle () {
-        return character.data.angle;
+        return this.data.angle;
     },
 
     set angle (ang) {
-        character.data.angle = ang;
+        this.data.angle = ang;
     },
 
     get dir () {
-        return character.data.dir;
+        return this.data.dir;
     },
     
     set dir (dir) {
-        character.data.dir = dir;
+        this.data.dir = dir;
     },
 
     get getCenter () {
@@ -38,47 +36,47 @@ var character = {
     },
 
     get floatXRange () {
-        return character.data.range.x || 0;
+        return this.data.range.x || 0;
     },
 
     set floatXRange (x) {
-        character.data.range.x = x;
+        this.data.range.x = x;
     },
 
     get floatYRange () {
-        return character.data.range.y || 0;
+        return this.data.range.y || 0;
     },
 
     set floatYRange (y) {
-        character.data.range.y = y;
+        this.data.range.y = y;
     },
 
     get lasors () {
-        return character.data.addon.lasors;
+        return this.data.addon.lasors;
     },
 
     get bombs () {
-        return character.data.addon.bombs.fired;
+        return this.data.addon.bombs.fired;
     },
 
     get bombCount () {
-        return character.data.addon.bombs.inventory;
+        return this.data.addon.bombs.inventory;
     },
 
     get x () {
-        return character.data.location.x;
+        return this.data.location.x;
     },
 
     set x (x) {
-        character.data.location.x = x;
+        this.data.location.x = x;
     },
 
     get y () {
-        return character.data.location.y;
+        return this.data.location.y;
     },
 
     set y (y) {
-        character.data.location.y = y;
+        this.data.location.y = y;
     },
 
     move: function move (moveDistance) {
@@ -86,51 +84,51 @@ var character = {
     },
 
     get originX () {
-        return character.data.origin.x || 0;
+        return this.data.origin.x || 0;
     },
 
     set originX (x) {
-        character.data.origin.x = x;
+        this.data.origin.x = x;
     },
 
     get originY () {
-        return character.data.origin.y || 0;
+        return this.data.origin.y || 0;
     },
 
     set originY (y) {
-        character.data.origin.y = y;
+        this.data.origin.y = y;
     },
 
     setType: function setShipType (type) {
-        character.data.type = type;
+        this.data.type = type;
     },
 
     setXSpeed: function setShipXSpeed (x) {
-        character.data.speed.x = x;
+        this.data.speed.x = x;
     },
 
     setYSpeed: function setShipYSpeed (y) {
-        character.data.speed.y = y;
+        this.data.speed.y = y;
     },
 
     setDir: function setDirection (dir) {
-        character.data.dir = dir;
+        this.data.dir = dir;
     },
 
     setAngle: function setAngle (ang) {
-        character.data.angle = ang;
+        this.data.angle = ang;
     },
 
     get type () {
-        return character.data.type;
+        return this.data.type;
     },
 
     get xSpeed () {
-        return character.data.speed.x || 0;
+        return this.data.speed.x || 0;
     },
 
     get ySpeed () {
-        return character.data.speed.y || 0;
+        return this.data.speed.y || 0;
     },
 
     get hitBox () {
@@ -142,19 +140,19 @@ var character = {
         };
     },
     get lastFire () {
-        return character.data.lastFire;
+        return this.data.lastFire;
     },
 
     set lastFire (lastfire) {
-        character.data.lastFire = lastfire;
+        this.data.lastFire = lastfire;
     },
 
     addBomb: function addBomb (bomb) {
-        character.data.addon.bombs.fired.push(bomb);
+        this.data.addon.bombs.fired.push(bomb);
     },
 
     addLasor: function addLasor (lasor) {
-        character.data.addon.lasors.push(lasor);
+        this.data.addon.lasors.push(lasor);
     },
 
     angleBetweenObjects: function angleBetweenObjects (obj1, obj2) {
@@ -170,8 +168,13 @@ var character = {
     },
     
     replenishBombs: function replenishBombs () {
-        character.data.addon.bombs.inventory = 3;
+        this.data.addon.bombs.inventory = 3;
     }
 };
 
-module.exports = character;
+module.exports = {
+    extend: function (obj) {
+        obj['__proto__'] = character;
+        return Object.create(obj);
+    }
+};

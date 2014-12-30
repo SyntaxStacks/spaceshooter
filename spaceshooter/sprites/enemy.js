@@ -117,6 +117,9 @@ var enemy = {
     }
 };
 
-var eship = Object.create(ship);
-_.merge(eship, enemy);
-module.exports = eship;
+module.exports = {
+    extend: function (obj) {
+        obj['__proto__'] = enemy;
+        return Object.create(obj);
+    }
+};

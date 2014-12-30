@@ -1,29 +1,13 @@
 var ui = require('./ui');
-var enemy = require('../sprites/enemy');
+var enemy = require('../sprites/enemies/guard');
 var hero = require('../sprites/hero');
 var _ = require('lodash');
 
-function setEnemies (enemies) {
-    enemyList = enemies;
-}
-function getShip () {
-    return ship;
-}
-function getShipLasors () {
-    return getShip().lasors();
-}
-function getShipBombs () {
-    return getShip().bombs();
-}
-function setDrawStyle (style) {
-    drawStyle = style;
-}
-
 function getEnemyLasors() {
     var lasors = [];
-    var enemies = getEnemies();
+    var enemies = shooter.enemies;
     _.forEach (enemies, function (enemy) {
-        var enemyLasors = enemy.lasors();
+        var enemyLasors = enemy.lasors;
         if (_.isEmpty(enemyLasors)) {
             return;
         }
@@ -49,45 +33,45 @@ function collides(obj1, obj2) {
 }
 
 function checkForHit(assets) {
-    var lasors = getShipLasors();
-    var bombs = getShipBombs();
+    var lasors = shooter.ship.lasors;
+    var bombs = shooter.ship.bombs;
     var enemyLasors = getEnemyLasors();
-    var enemies = getEnemies();
+    var enemies = shooter.enemies;
 
-    _.map(enemies, function( enemy ) {
-        _.map(lasors, function( lasor ) {
-            if(enemy.status() == 'alive') {
-                if(collides(lasor, enemy)) {
-                  scoreboard.addPoints(100);
+    _.map(enemies, function (enemy) {
+        _.map(lasors, function (lasor) {
+            if (enemy.status() == 'alive') {
+                if (collides(lasor, enemy)) {
+                  shooter.scoreboard.addPoints(100);
                   enemy.blowUp();
                   assets.sounds.add('enemyExplode');
                 }
             }
         });
 
-        _.map(bombs, function( bomb ) {
-            if(enemy.status() == 'alive') {
-                if(collides(enemy, bomb)) {
-                    scoreboard.addPoints(100);
+        _.map(bombs, function (bomb) {
+            if (enemy.status() == 'alive') {
+                if (collides(enemy, bomb)) {
+                    shooter.scoreboard.addPoints(100);
                     enemy.blowUp();
                 }
             }
         });
     });
 
-    if( _.isEmpty( getEnemies() ) ) {
+    if (_.isEmpty(shooter.enemies)) {
         createNewLevel();
     }  
 
-    _.map(enemyLasors, function( lasor ) {
-        var ship = getShip();
-        var lasorX = lasor.x() || 0;
-        var shipX  = ship.locationX() || 0;
+    _.map(enemyLasors, function (lasor) {
+        var ship = shooter.ship;
+        var lasorX = lasor.x || 0;
+        var shipX  = ship.x || 0;
 
-        if(lasorX > shipX - 5 && lasorX < shipX + 20) {
-            var lasorY = lasor.y() || 0;
-            var shipY         = ship.locationY() || 0;
-            if(lasorY > shipY && lasorY < shipY + 10) {
+        if (lasorX > shipX - 5 && lasorX < shipX + 20) {
+            var lasorY = lasor.y || 0;
+            var shipY = ship.y || 0;
+            if (lasorY > shipY && lasorY < shipY + 10) {
                 endGame();
                 console.log("dedz");
             }
@@ -95,57 +79,47 @@ function checkForHit(assets) {
     });
 }
 
-function startGame() {
-    scoreboard.reset();
+function startGame () {
+    shooter.scoreboard.reset();
     status = 'running';
 }
 
-function goToMenu() {
-    status = 'menu';
+function goToMenu () {
+    shooter.status = 'menu';
 }
 
-function endGame() {
+function endGame () {
     goToMenu();
-    enemyList = [];
+    shooter.enemyList = [];
 }
 
-function createNewLevel() {
-    scoreboard.addLevel();
-    if(scoreboard.level() >= 5) drawStyle = '2D';
-    getShip().replenishBombs();
-    for(var i = 0; i < scoreboard.level()*2; i++) {
-        newEnemy = new enemy(config);
-        newEnemy.setLocationX(-50*i);
-        enemyList.push(newEnemy);
+function createNewLevel () {
+    shooter.scoreboard.addLevel();
+    shooter.ship.replenishBombs();
+    for(var i = 0; i < shooter.scoreboard.level()*2; i++) {
+        newEnemy = enemy.create();
+        newEnemy.x(-50*i);
+        shooter.enemies = shooter.enemies.push(newEnemy);
     }
 }
 
-function updateSprites(deps) {
-    getShip().update(deps);
-
-    var enemies = getEnemies();
-    _.map (enemies, function (currentEnemy) {
-        currentEnemy.update(deps, getShip());
+function updateSprites (deps) {
+    shooter.ship.update(deps);
+    _.map(shooter.enemies, function (currentEnemy) {
+        currentEnemy.update(deps, shooter.ship);
     });
 }
 
-function removeDestroyedObjects(){
-    var enemies = getEnemies();
-
-    enemies = _.map( enemies, function( currentEnemy ) {
-        if( _.isUndefined( currentEnemy ) || currentEnemy.isDestroyed() ) { return null; }
+function removeDestroyedObjects () {
+    shooter.enemies = _compact(_.map(shooter.enemies, function (currentEnemy) {
+        if (_.isUndefined(currentEnemy) || currentEnemy.isDestroyed()) {
+            return null;
+        }
         return currentEnemy;
-    });
-
-    enemies = _.compact(enemies);
-    setEnemies(enemies);
+    }));
 }
 
-function updateUI() {
-    scoreboard.setBombs(getShip().bombCount());
-}
-
-function checkForRestart() {
+function checkForRestart () {
     events = input.get();
 
     _.map( events, function( event ) {
@@ -154,34 +128,33 @@ function checkForRestart() {
         if(event.input == "e") {
             startGame();
             for(var i = 0; i <100; i++)
-                scoreboard.addLevel();
+                shooter.scoreboard.addLevel();
             enemyList = [];
         }
     });
 }
 
 var shooter = {
-    data: {
-        scoreboard: new ui(config),
-        enemyList: [],
-        FRAMEHEIGHT: config.frameHeight,
-        FRAMEWIDTH: config.frameWidth,
-        ENEMYSCOREVALUE: 100,
-        gameover: false,
-        drawStyle: '2D',
-        delay: 10,
-        ship: new hero(config),
-        status: 'running',
+    get enemies () {
+        return shooter.data.enemyList;
     },
-    enemies: function getEnemies () {
-        return enemyList;
+    set enemies (enemies) {
+        shooter.data.enemyList = enemies;
+    },
+    get ship () {
+        return shooter.data.ship;
+    },
+    get status () {
+        return shooter.data.status
+    },
+    set status (status) {
+        shooter.data.status = status;
     },
     run: function run (deps, callback) {
         updateSprites(deps);
         checkForHit(deps.assets);
         removeDestroyedObjects();
-        updateUI();
-        
+        shppter.scoreboard.setBombs(shooter.ship.bombCount);
 
         deps.canvas.render(draw);
         callback(status);
@@ -193,6 +166,23 @@ var shooter = {
 
         drawGameScreen(canvas);
         canvas.restore();
+    },
+    get scoreboard () {
+        return shooter.data.scoreboard;
+    },
+    initialize: function (config) {
+        shooter.data = {
+            scoreboard: new ui(config),
+            enemyList: [],
+            FRAMEHEIGHT: config.frameHeight,
+            FRAMEWIDTH: config.frameWidth,
+            ENEMYSCOREVALUE: 100,
+            gameover: false,
+            drawStyle: '2D',
+            delay: 10,
+            ship: hero.create(config),
+            status: 'running',
+        };
     }
 };
 

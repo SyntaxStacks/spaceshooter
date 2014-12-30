@@ -47,39 +47,52 @@ var data = {
 };
 
 var hero = {
-    data: data,
+    get lastFire () {
+        return this.data.lastFire;
+    },
+    get fireDelay () {
+        return this.data.fireDelay;
+    },
     shoot: function shoot (deps) {
-        var lastFire = this.lastFire();
-        var fireDelayReached = Date.now() - lastFire > FIREDELAY;
-        var withinMaxLasorRange = this.lasors().length <= 2;
+        var lastFire = this.lastFire;
+        var fireDelayReached = Date.now() - lastFire > this.fireDelay;
+        var withinMaxLasorRange = this.lasors.length <= 2;
 
         if( fireDelayReached && withinMaxLasorRange ) {
             var sounds = deps.assets.sounds;
             sounds.add('lasor');
-            this.fireLasor();
+            hero.fireLasor();
         }
     },
 
-    fireBomb: function fireBomb(deps) {
-        if(this.bombCount() > 0 && _.isEmpty( this.bombs() ) ) {
-            var firedBomb = new bomb(this, null);
-            this.addBomb(firedBomb);
+    fireBomb: function fireBomb (deps) {
+        if(hero.bombCount > 0 && _.isEmpty(hero.bombs) ) {
+            var firedBomb = bomb.create(hero, null);
+            hero.addBomb(firedBomb);
             this.data.addon.bombs.inventory--;  
             deps.assets.sounds.add('bomb');
         }
     },
 
-    fireLasor: function fireLasor() {
-        var firedLasor = new lasor(this, null, 0, -5);
-        this.addLasor(firedLasor);
-        this.setLastFire(Date.now());
+    fireLasor: function fireLasor () {
+        var firedLasor = lasor.create(hero, null, 0, -5);
+        hero.addLasor(firedLasor);
+        hero.setLastFire(Date.now());
     },
 
-    setLasors: function setLasors (lasors) {
+    get lasors () {
+        return this.data.addon.lasors;
+    },
+
+    get bombs () {
+        return this.data.addon.bombs.fired;
+    },
+
+    set lasors (lasors) {
         this.data.addon.lasors = lasors;
     },
 
-    setBombs: function setBombs (bombs) {
+    set bombs (bombs) {
         this.data.addon.bombs.fired = bombs;
     },
 
@@ -87,41 +100,49 @@ var hero = {
         var spaceship = this;
         var input = deps.input;
         var events = input.get()
-        var lasors = spaceship.lasors();
-        var bombs = spaceship.bombs();
+        var lasors = spaceship.lasors;
+        var bombs = spaceship.bombs;
 
-        _.map( events, function( event ) {
-            if(event == input.keycode.right)
+        _.map(events, function (event) {
+            if (event == input.keycode.right)
                 spaceship.move(3);
-            if(event == input.keycode.left)
+            if (event == input.keycode.left)
                 spaceship.move(-3);
-            if(event == 'B')
+            if (event == 'B')
                 spaceship.fireBomb(deps);
-            if(event == input.keycode.space) {
+            if (event == input.keycode.space) {
                 spaceship.shoot(deps);
             }
         });
 
-        lasors = _.map( lasors, function( firedLasor ) {
+        lasors = _.map(lasors, function (firedLasor) {
             firedLasor.update();
-            if( firedLasor.isDestroyed() ) { return null; }
+            if (firedLasor.isDestroyed()) {
+                return null;
+            }
             return firedLasor;
         });
 
-        bombs = _.map( bombs, function( firedBomb ) {
+        bombs = _.map(bombs, function (firedBomb) {
             firedBomb.update(deps);
-            if( firedBomb.isDestroyed() ) { return null; }
+            if (firedBomb.isDestroyed()) {
+                return null;
+            }
             return firedBomb;
         });
 
-        bombs  = _.compact( bombs );
-        lasors = _.compact( lasors );
-        spaceship.setLasors( lasors );
-        spaceship.setBombs( bombs );
+        spaceship.lasors = _.compact(lasors);
+        spaceship.bombs = _.compact(bombs);
     }
 };
 
-module.exports = Hero;
+module.exports = {
+    create: function (config) {
+        var h = ship.extend(hero);
+        h.data = data;
+        return h;
+    }
+};
 // function draw(canvas, style) {
 //     canvas.save();
 //     if(style == '2D') {

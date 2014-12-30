@@ -1,64 +1,48 @@
 var config = require('../config');
 var _ = require('lodash');
 
-var data = {
-    type: ship.type(),
-    status: 'fired',
-    angle: 0, 
-    origin: {
-        x: ship.locationX() + (ship.width()/2),
-        y: ship.locationY() + ship.height()
-    },
-    sprite: {
-        width: 10,
-        height: 10
-    },
-    x: ship.locationX() + (ship.width()/2),
-    y: ship.locationY() + ship.height()
-};
-
 var bomb = {
-    data: data,
-    status: function getStatus () {
-        return bomb.status;
+    get status () {
+        return bomb.data.status;
     },
-    setStatus: function setStatus (status) {
-        bomb.status = status;
+    set status (status) {
+        bomb.data.status = status;
     },
-    x: function getLocationX () {
-        return bomb.x;
+    get x () {
+        return bomb.data.x;
     },
-    y: function getLocationY () {
-        return bomb.y;
+    get y () {
+        return bomb.data.y;
     },
-    originX: function getOriginX () {
-        return bomb.origin.x;
+    get originX () {
+        return bomb.data.origin.x;
     },
-    originY: function getOriginY () {
-        return bomb.origin.y;
+    get originY () {
+        return bomb.data.origin.y;
     },
-    setX: function setLocationX (x) {
-        bomb.x = x;
+    set x (x) {
+        bomb.data.x = x;
     },
-    setY: function setLocationY (y) {
-        bomb.y = y;
+    set y (y) {
+        bomb.data.y = y;
     },
-    angle: function getAngle () {
-        return bomb.angle;
+    get angle () {
+        return bomb.data.angle;
     },
     update: function update (deps) {
         var events = {
             fired: function() {
-                setLocationY(getLocationY() - 10);
-                if(getLocationY() <= 50) {
-                    setStatus('detonated');
+                bomb.y = bomb.y - 10;
+                if(bomb.y <= 50) {
+                    bomb.status = 'detonated';
                     deps.assets.sounds.add('bomb');
-                    explosionFrame = 4;
+                    // explosionFrame = 4;
+                    // sprite.gotoAndPlay('explsion');
                 }
             },
             detonated: function() {
                 if(explosionFrame < 0) 
-                    return kill();
+                    return bomb.kill();
 
                 explosionFrame--;
             },
@@ -67,30 +51,30 @@ var bomb = {
             }
         };
 
-        var event = events[getStatus()] || null;
+        var event = events[bomb.status] || null;
         if (event) event();
     },
     isDestroyed: function isDestroyed () {
-        return getStatus() == 'destroyed';
+        return bomb.status == 'destroyed';
     },
     kill: function kill () {
-        setStatus('destroyed');
+        bomb.status = 'destroyed';
     },
-    getHitBox: function getHitBox () { 
+    get hitBox () { 
         function fired() {    
             return {
-                x1: getLocationX(),
-                y1: getLocationY(),
-                x2: getLocationX() + getWidth(),
-                y2: getLocationY() + getHeight()
+                x1: bomb.data.x,
+                y1: bomb.data.y,
+                x2: bomb.data.x + bomb.width,
+                y2: bomb.y + bomb.height
             };
         }
         function detonated() {    
             return {
-                x1: getLocationX() - 50 - (getWidth()/2),
-                y1: getLocationY() - 50,
-                x2: getLocationX() + 50 + (getWidth()/2),
-                y2: getLocationY() + 50
+                x1: bomb.data.x - 50 - (bomb.data.width/2),
+                y1: bomb.data.y - 50,
+                x2: bomb.data.x + 50 + (bomb.data.width/2),
+                y2: bomb.data.y + 50
             };
         }
 
@@ -99,11 +83,35 @@ var bomb = {
             detonated: detonated()
         };
 
-        return hitbox[getStatus()];
+        return hitbox[bomb.status];
     }
 };
 
-module.exports = Bomb;
+module.exports = {
+    create: function (ship) {
+
+        var data = {
+            type: ship.type,
+            status: 'fired',
+            angle: 0, 
+            origin: {
+                x: ship.x + (ship.width/2),
+                y: ship.y + ship.height
+            },
+            sprite: {
+                width: 10,
+                height: 10
+            },
+            x: ship.x + (ship.width/2),
+            y: ship.y + ship.height
+        };
+
+        var b = Object.create(bomb);
+        b.data = data;
+
+        return b;
+    }
+};
 // function drawBombFired(canvas) {
 //     canvas.save();
 //     canvas.fillStyle = "#0F0";

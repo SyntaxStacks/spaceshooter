@@ -49,7 +49,7 @@ module.exports = {
             images: [image.collection.sprites],
             frames: {
                 width: ENEMYSPRITEWIDTH,
-                height: ENEMYSPRITEHEIGHT
+                height: ENEMYSPRITEHEIGHT,
                 regX: spriteXIndex * ENEMYSPRITEWIDTH,
                 regY: spriteYIndex * ENEMYSPRITEWIDTH,
             },
@@ -58,12 +58,11 @@ module.exports = {
             }
         });
 
-        var guard = {
-            data: data
-            sprite: new createjs.sprite(spriteSheet);
+        var blockade = {
+            data: data,
+            sprite: new createjs.sprite(spriteSheet)
         };
 
-        var e = Object.create(enemy);
-        _.merge(guard, e);
+        return enemy.extend(blockade);
     }
 };
