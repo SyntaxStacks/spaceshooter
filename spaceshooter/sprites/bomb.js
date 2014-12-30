@@ -27,7 +27,7 @@ var bomb = {
     },
     x: function getLocationX () {
         return bomb.x;
-    }
+    },
     y: function getLocationY () {
         return bomb.y;
     },
@@ -69,7 +69,7 @@ var bomb = {
 
         var event = events[getStatus()] || null;
         if (event) event();
-    }
+    },
     isDestroyed: function isDestroyed () {
         return getStatus() == 'destroyed';
     },

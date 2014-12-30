@@ -19,7 +19,7 @@ var data = {
     },
     x: ship.locationX() + (ship.width()/2),
     y: ship.locationY() + ship.height(),
-    destroy: false;
+    destroy: false
 };
 
 var lasor = {

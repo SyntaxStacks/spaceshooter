@@ -9,7 +9,7 @@ function processInput (input) {
     });
 }
 
-function drawGameO:er (canvas) {
+function drawGameOver (canvas) {
     canvas.save();
     canvas.fillSytle = '#000000';
     canvas.fillRect(0,0, menu.FRAMEWIDTH, menuFRAMEHEIGHT);

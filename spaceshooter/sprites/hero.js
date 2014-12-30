@@ -83,7 +83,7 @@ var hero = {
         this.data.addon.bombs.fired = bombs;
     },
 
-    update: update (deps) {
+    update: function (deps) {
         var spaceship = this;
         var input = deps.input;
         var events = input.get()
