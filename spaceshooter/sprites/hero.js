@@ -66,10 +66,9 @@ var hero = {
     },
 
     fireBomb: function fireBomb (deps) {
-        if(hero.bombCount > 0 && _.isEmpty(hero.bombs) ) {
-            var firedBomb = bomb.create(hero, null);
-            hero.addBomb(firedBomb);
-            this.data.addon.bombs.inventory--;  
+        if(this.bombCount > 0 && _.isEmpty(this.bombs) ) {
+            var firedBomb = bomb.create(this, null);
+            this.addBomb(firedBomb);
             deps.assets.sounds.add('bomb');
         }
     },

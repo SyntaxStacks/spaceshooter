@@ -149,6 +149,7 @@ var character = {
 
     addBomb: function addBomb (bomb) {
         this.data.addon.bombs.fired.push(bomb);
+        this.data.addon.bombs.inventory--;  
     },
 
     addLasor: function addLasor (lasor) {

@@ -40,7 +40,7 @@ function checkForHit(assets) {
 
     _.map(enemies, function (enemy) {
         _.map(lasors, function (lasor) {
-            if (enemy.status() == 'alive') {
+            if (enemy.status == 'alive') {
                 if (collides(lasor, enemy)) {
                   shooter.scoreboard.addPoints(100);
                   enemy.blowUp();
@@ -50,7 +50,7 @@ function checkForHit(assets) {
         });
 
         _.map(bombs, function (bomb) {
-            if (enemy.status() == 'alive') {
+            if (enemy.status == 'alive') {
                 if (collides(enemy, bomb)) {
                     shooter.scoreboard.addPoints(100);
                     enemy.blowUp();
@@ -98,8 +98,8 @@ function createNewLevel () {
     shooter.ship.replenishBombs();
     for(var i = 0; i < shooter.scoreboard.level()*2; i++) {
         newEnemy = enemy.create();
-        newEnemy.x(-50*i);
-        shooter.enemies = shooter.enemies.push(newEnemy);
+        newEnemy.x= -50 * i;
+        shooter.addEnemy(newEnemy);
     }
 }
 
@@ -111,7 +111,7 @@ function updateSprites (deps) {
 }
 
 function removeDestroyedObjects () {
-    shooter.enemies = _compact(_.map(shooter.enemies, function (currentEnemy) {
+    shooter.enemies = _.compact(_.map(shooter.enemies, function (currentEnemy) {
         if (_.isUndefined(currentEnemy) || currentEnemy.isDestroyed()) {
             return null;
         }
@@ -134,6 +134,23 @@ function checkForRestart () {
     });
 }
 
+function setupStage (stage) {
+    stage.clear();
+    var bg = new createjs.Shape();
+    var start = new createjs.Text('mo-fukken gme stuff', ' 50px Arial', '#99CC99');
+    bg.x = 0;
+    bg.y = 0;
+    start.x = 30;
+    start.y = 80;
+
+    bg.graphics.f('#000000').drawRect(0, 0, shooter.frameWidth, shooter.frameHeight);
+
+    stage.addChild(bg);
+    stage.addChild(start);
+    stage.update();
+
+}
+
 var shooter = {
     get enemies () {
         return shooter.data.enemyList;
@@ -150,14 +167,29 @@ var shooter = {
     set status (status) {
         shooter.data.status = status;
     },
+    get scoreboard () {
+        return shooter.data.scoreboard;
+    },
+    get frameWidth () {
+        return shooter.data.frameHeight;
+    },
+    get frameHeight () {
+        return shooter.data.frameWidth;
+    },
+    get enemyScore () {
+        return shooter.data.enemyScore;
+    },
+    get stage () {
+        return shooter.data.stage;
+    },
     run: function run (deps, callback) {
         updateSprites(deps);
         checkForHit(deps.assets);
         removeDestroyedObjects();
-        shppter.scoreboard.setBombs(shooter.ship.bombCount);
+        shooter.scoreboard.setBombs(shooter.ship.bombCount);
 
-        deps.canvas.render(draw);
-        callback(status);
+        // deps.canvas.render(shooter.draw);
+        callback(shooter.status);
     },
     draw: function draw(canvas) {
         canvas.rotate(0);
@@ -167,22 +199,25 @@ var shooter = {
         drawGameScreen(canvas);
         canvas.restore();
     },
-    get scoreboard () {
-        return shooter.data.scoreboard;
+    addEnemy: function (e) {
+        shooter.data.enemyList.push(e);
+        shooter.stage.addChild(e.sprite);
     },
-    initialize: function (config) {
+    initialize: function (deps, config) {
         shooter.data = {
             scoreboard: new ui(config),
             enemyList: [],
-            FRAMEHEIGHT: config.frameHeight,
-            FRAMEWIDTH: config.frameWidth,
-            ENEMYSCOREVALUE: 100,
+            frameHeight: config.frameHeight,
+            frameWidth: config.frameWidth,
+            enemyScore: 100,
             gameover: false,
-            drawStyle: '2D',
             delay: 10,
             ship: hero.create(config),
             status: 'running',
+            stage:deps.canvas.stage
         };
+
+        setupStage(shooter.data.stage);
     }
 };
 

@@ -35,13 +35,13 @@ var data = {
 
 module.exports = {
     create:  function () {
-        var spriteSheet = new createjs.spriteSheet({
+        var spriteSheet = new createjs.SpriteSheet({
             images: [image.collection.sprites],
             frames: {
-                width: ENEMYSPRITEWIDTH,
-                height: ENEMYSPRITEHEIGHT,
-                regX: spriteXIndex * ENEMYSPRITEWIDTH,
-                regY: spriteYIndex * ENEMYSPRITEWIDTH,
+                width: 16,
+                height: 16,
+                regX: spriteXIndex * 16,
+                regY: spriteYIndex * 16,
             },
             animations: {
                 fly: 0,
@@ -50,7 +50,7 @@ module.exports = {
 
         var guard = {
             data: data,
-            sprite: new createjs.sprite(spriteSheet)
+            sprite: new createjs.Sprite(spriteSheet)
         };
 
         return enemy.extend(guard);

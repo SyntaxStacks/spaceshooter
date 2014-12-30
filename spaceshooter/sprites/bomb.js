@@ -3,38 +3,38 @@ var _ = require('lodash');
 
 var bomb = {
     get status () {
-        return bomb.data.status;
+        return this.data.status;
     },
     set status (status) {
-        bomb.data.status = status;
+        this.data.status = status;
     },
     get x () {
-        return bomb.data.x;
+        return this.data.x;
     },
     get y () {
-        return bomb.data.y;
+        return this.data.y;
     },
     get originX () {
-        return bomb.data.origin.x;
+        return this.data.origin.x;
     },
     get originY () {
-        return bomb.data.origin.y;
+        return this.data.origin.y;
     },
     set x (x) {
-        bomb.data.x = x;
+        this.data.x = x;
     },
     set y (y) {
-        bomb.data.y = y;
+        this.data.y = y;
     },
     get angle () {
-        return bomb.data.angle;
+        return this.data.angle;
     },
     update: function update (deps) {
         var events = {
             fired: function() {
-                bomb.y = bomb.y - 10;
-                if(bomb.y <= 50) {
-                    bomb.status = 'detonated';
+                this.y = this.y - 10;
+                if(this.y <= 50) {
+                    this.status = 'detonated';
                     deps.assets.sounds.add('bomb');
                     // explosionFrame = 4;
                     // sprite.gotoAndPlay('explsion');
@@ -42,7 +42,7 @@ var bomb = {
             },
             detonated: function() {
                 if(explosionFrame < 0) 
-                    return bomb.kill();
+                    return this.kill();
 
                 explosionFrame--;
             },
@@ -51,30 +51,31 @@ var bomb = {
             }
         };
 
-        var event = events[bomb.status] || null;
+        var event = events[this.status] || null;
         if (event) event();
     },
     isDestroyed: function isDestroyed () {
-        return bomb.status == 'destroyed';
+        return this.status == 'destroyed';
     },
     kill: function kill () {
-        bomb.status = 'destroyed';
+        this.status = 'destroyed';
     },
     get hitBox () { 
+        var b = this;
         function fired() {    
             return {
-                x1: bomb.data.x,
-                y1: bomb.data.y,
-                x2: bomb.data.x + bomb.width,
-                y2: bomb.y + bomb.height
+                x1: b.x,
+                y1: b.y,
+                x2: b.x + b.width,
+                y2: b.y + b.height
             };
         }
         function detonated() {    
             return {
-                x1: bomb.data.x - 50 - (bomb.data.width/2),
-                y1: bomb.data.y - 50,
-                x2: bomb.data.x + 50 + (bomb.data.width/2),
-                y2: bomb.data.y + 50
+                x1: b.x - 50 - (b.width/2),
+                y1: b.y - 50,
+                x2: b.x + 50 + (b.width/2),
+                y2: b.y + 50
             };
         }
 
@@ -83,7 +84,7 @@ var bomb = {
             detonated: detonated()
         };
 
-        return hitbox[bomb.status];
+        return hitbox[this.status];
     }
 };
 

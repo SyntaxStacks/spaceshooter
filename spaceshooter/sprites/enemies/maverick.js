@@ -4,6 +4,7 @@ var enemy = require('../enemy');
 
 var spriteXIndex: 8;
 var spriteYIndex: 3;
+
 var data = {
     type: "MAVERICK",
     angle: 0,
@@ -19,12 +20,6 @@ var data = {
     origin: {
         x: 0,
         y: 0 
-    },
-    sprite: {
-        x: spriteXIndex * ENEMYSPRITEWIDTH,
-        y: spriteYIndex * ENEMYSPRITEWIDTH,
-        width: ENEMYSPRITEWIDTH,
-        height: ENEMYSPRITEHEIGHT
     },
     className: {
         ship: 'enemy',
@@ -45,13 +40,13 @@ var data = {
 
 module.exports = {
     create:  function () {
-        var spriteSheet = new createjs.spriteSheet({
+        var spriteSheet = new createjs.SpriteSheet({
             images: [image.collection.sprites],
             frames: {
-                width: ENEMYSPRITEWIDTH,
-                height: ENEMYSPRITEHEIGHT
-                regX: spriteXIndex * ENEMYSPRITEWIDTH,
-                regY: spriteYIndex * ENEMYSPRITEWIDTH,
+                width: 16,
+                height: 16,
+                regX: spriteXIndex * 16,
+                regY: spriteYIndex * 16,
             },
             animations: {
                 fly: 0,
@@ -60,7 +55,7 @@ module.exports = {
 
         var maverick = {
             data: data,
-            sprite: new createjs.sprite(spriteSheet)
+            sprite: new createjs.Sprite(spriteSheet)
         };
 
         return enemy.extend(maverick);

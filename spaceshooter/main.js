@@ -21,12 +21,12 @@ var main = {
     },
 
     newMenuScene: function newMenuScene() {
-        menu.initialize(engine.dependencies(), config);
+        menu.initialize(engine.dependencies, config);
         engine.run(menu, main.done);
     },
 
     newShooterScene: function newShooterScene() {
-        shooter.initialize(config);
+        shooter.initialize(engine.dependencies, config);
         engine.run(shooter, main.done);
     },
 

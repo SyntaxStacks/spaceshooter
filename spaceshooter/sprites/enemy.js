@@ -25,45 +25,44 @@ var enemy = {
         var lastEnemyUpdateTime = this.lastUpdatedTime();
         var enemyUpdateDelay = this.enemyDelay();
 
-        if(this.status() == 'alive') {
+        if(this.status == 'alive') {
             var enemy = this;
-            var shipX = spaceship.locationX();
-            var enemyX = enemy.locationX();
-
-            var enemyType    = enemy.type();
-            var enemyMoveDir = enemy.dir();
+            var shipX = spaceship.x;
+            var enemyX = enemy.x;
+            var enemyType = enemy.type;
+            var enemyMoveDir = enemy.dir;
 
             if(enemyMoveDir != 1 && enemyMoveDir != -1) {
               var dir = (Math.random() <= 0.5)? -1 : 1;
-              enemy.setDir(dir);
+              enemy.dir = dir;
             }
 
             var deg = (this.angleBetweenObjects(enemy, spaceship));
-            enemy.setAngle(deg);
+            enemy.angle = deg;
 
             if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
-                var enemyXOrigin = enemy.originX();
+                var enemyXOrigin = enemy.originX;
 
-                if(enemyX < enemyXOrigin - enemy.floatXRange()) {
-                    enemy.setDir(1);
+                if(enemyX < enemyXOrigin - enemy.floatX) {
+                    enemy.dir = 1;
                 }
 
-                if(enemyX > enemyXOrigin + enemy.floatXRange()) {
-                    enemy.setDir(-1);
+                if(enemyX > enemyXOrigin + enemy.floatX) {
+                    enemy.dir = -1;
                 }
 
-                var enemyNextMove =  enemy.xSpeed() * enemyMoveDir;
+                var enemyNextMove =  enemy.xSpeed * enemyMoveDir;
                 enemy.move(enemyNextMove);
 
                 //blockade specific
-                if(enemy.type() == "BLOCKADE" || enemy.type() == "GUARD") {
-                    if(Math.abs(enemyX - enemyXOrigin) <= enemy.xSpeed() ){
-                        enemy.setLocationX(enemyXOrigin);
+                if(enemy.type == "BLOCKADE" || enemy.type == "GUARD") {
+                    if(Math.abs(enemyX - enemyXOrigin) <= enemy.xSpeed ){
+                        enemy.x = enemyXOrigin;
                     }
                 }  
             }  
 
-            if(this.type() != "BLOCKADE") {
+            if(this.type != "BLOCKADE") {
                 if(enemyType == "GUARD" && Math.abs(enemyX - shipX) < 16) {
                     this.shoot(deps, spaceship);
                 }
@@ -76,7 +75,7 @@ var enemy = {
                 lastEnemyUpdateTime = Date.now();
             }
         }
-        else if(this.status() == 'dying') {
+        else if(this.status == 'dying') {
             var explosionFrame = this.explosionFrame();
             if(currentTime - lastEnemyUpdateTime > enemyUpdateDelay ) {
                 if(explosionFrame < 0 && _.isEmpty( this.lasors() ) ) {
@@ -93,7 +92,7 @@ var enemy = {
     },
     updateEnemyLasorPosition: function updateEnemyLasorPosition() {
 
-        var lasors = this.lasors() || [];
+        var lasors = this.lasors || [];
 
         lasors = _.remove(lasors, function (lasor) {
             lasor.update();  

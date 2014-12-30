@@ -22,6 +22,7 @@ function drawGameOver (canvas) {
 }
 
 function setupStage (stage) {
+    stage.clear();
     var bg = new createjs.Shape();
     var title = new createjs.Text('Space Shooter', ' 20px Arial', '#999999');
     var start = new createjs.Text('Press Space To Start', ' 20px Arial', '#99CC99');
