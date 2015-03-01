@@ -2,8 +2,6 @@ var _ = require('lodash');
 var createjs = require('createjs');
 var enemy = require('../enemy');
 
-var spriteXIndex = 2;
-var spriteYIndex = 3;
 var data = {
     type: "GUARD",
     angle: 0,
@@ -35,14 +33,13 @@ var data = {
 
 module.exports = {
     create:  function () {
+        var spriteXIndex = 2;
+        var spriteYIndex = 3;
         var spriteSheet = new createjs.SpriteSheet({
             images: [image.collection.sprites],
-            frames: {
-                width: 16,
-                height: 16,
-                regX: spriteXIndex * 16,
-                regY: spriteYIndex * 16,
-            },
+            frames: [
+                [32, 48, 16, 16] //, 0, 32, 48] // spriteXIndex * 16, spriteYIndex * 16]
+            ],
             animations: {
                 fly: 0,
             }

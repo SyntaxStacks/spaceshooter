@@ -1,50 +1,10 @@
+var _ = require('lodash');
+var createjs = require('createjs');
 var ship = require('./ship');
 var lasor = require('./lasor');
 var bomb = require('./bomb');
-var _ = require('lodash');
 
 var FIREDELAY = 100;
-
-var ENEMYSPRITEWIDTH = 16;
-var ENEMYSPRITEHEIGHT = 16;
-
-var spriteYIndex = 3;
-var spriteXIndex = 1;
-
-var data = {
-    type: "PLAYER",
-    angle: 0,
-    lastFire: Date.now(),
-    location: {
-        x: 0,
-        y: 250
-    },
-    origin: {
-        x: 0,
-        y: 0 
-    },
-    sprite: {
-        x: spriteXIndex * ENEMYSPRITEWIDTH,
-        y: spriteYIndex * ENEMYSPRITEWIDTH,
-        width: ENEMYSPRITEWIDTH,
-        height: ENEMYSPRITEHEIGHT
-    },
-    className: {
-        ship: "class",
-        lasor: "lasorclass"
-    },
-    speed: {
-        x: 10,
-        y: 1
-    },
-    addon: {
-        lasors: [],
-        bombs: {
-            inventory: 3,
-            fired: []
-        }
-    }
-};
 
 var hero = {
     get lastFire () {
@@ -137,9 +97,55 @@ var hero = {
 
 module.exports = {
     create: function (config) {
-        var h = ship.extend(hero);
-        h.data = data;
-        return h;
+        var ENEMYSPRITEWIDTH = 16;
+        var ENEMYSPRITEHEIGHT = 16;
+
+        var spriteYIndex = 3;
+        var spriteXIndex = 1;
+
+        var spriteSheet = new createjs.SpriteSheet({
+            images: [image.collection.sprites],
+            frames: [
+                [spriteXIndex * 16, spriteYIndex * 16, 16, 16, 0, 8, 8]
+            ],
+            animations: {
+                fly: 0,
+            }
+        });
+
+        var data = {
+            type: "PLAYER",
+            angle: 0,
+            lastFire: Date.now(),
+            origin: {
+                x: 0,
+                y: 0 
+            },
+            className: {
+                ship: "class",
+                lasor: "lasorclass"
+            },
+            speed: {
+                x: 10,
+                y: 1
+            },
+            addon: {
+                lasors: [],
+                bombs: {
+                    inventory: 3,
+                    fired: []
+                }
+            }
+        };
+
+        
+        hero.data = data;
+        hero.sprite = new createjs.Sprite(spriteSheet, 'fly');
+        hero.sprite.rotation = 180;
+        hero.sprite.x = 180;
+        hero.sprite.y = 180;
+
+        return ship.extend(hero);
     }
 };
 // function draw(canvas, style) {

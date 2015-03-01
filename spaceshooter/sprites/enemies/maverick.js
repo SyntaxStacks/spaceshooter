@@ -42,12 +42,10 @@ module.exports = {
     create:  function () {
         var spriteSheet = new createjs.SpriteSheet({
             images: [image.collection.sprites],
-            frames: {
-                width: 16,
-                height: 16,
-                regX: spriteXIndex * 16,
-                regY: spriteYIndex * 16,
-            },
+            frames: [
+                // x, y, width, height, imageIndex*, regX*, regY*
+                [spriteXIndex * 16, spriteYIndex * 16, 16, 16]
+            ],
             animations: {
                 fly: 0,
             }

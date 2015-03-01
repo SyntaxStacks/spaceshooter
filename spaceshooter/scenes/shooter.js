@@ -134,8 +134,8 @@ function checkForRestart () {
     });
 }
 
-function setupStage (stage) {
-    stage.clear();
+function setupStage (sceneData) {
+    var stage = sceneData.stage;
     var bg = new createjs.Shape();
     var start = new createjs.Text('mo-fukken gme stuff', ' 50px Arial', '#99CC99');
     bg.x = 0;
@@ -145,10 +145,11 @@ function setupStage (stage) {
 
     bg.graphics.f('#000000').drawRect(0, 0, shooter.frameWidth, shooter.frameHeight);
 
+    stage.clear();
     stage.addChild(bg);
     stage.addChild(start);
+    stage.addChild(sceneData.ship.sprite);
     stage.update();
-
 }
 
 var shooter = {
@@ -202,6 +203,10 @@ var shooter = {
     addEnemy: function (e) {
         shooter.data.enemyList.push(e);
         shooter.stage.addChild(e.sprite);
+        console.log(e);
+        e.sprite.x = 100;
+        e.sprite.y = 100;
+        shooter.stage.update();
     },
     initialize: function (deps, config) {
         shooter.data = {
@@ -214,10 +219,10 @@ var shooter = {
             delay: 10,
             ship: hero.create(config),
             status: 'running',
-            stage:deps.canvas.stage
+            stage: deps.canvas.stage
         };
 
-        setupStage(shooter.data.stage);
+        setupStage(shooter.data);
     }
 };
 

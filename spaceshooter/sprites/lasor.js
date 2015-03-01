@@ -4,7 +4,7 @@ var _ = require('lodash');
 
 var lasor = {
     isDestroyed: function isDestroyed () {
-        return getStatus() == 'destroyed';
+        return lasor.status == 'destroyed';
     },
     get x () {
         return lasor.data.x;
@@ -29,10 +29,10 @@ var lasor = {
     },
     get hitBox () { 
         return {
-            x1: getLocationX(),
-            y1: getLocationY(),
-            x2: getLocationX() + getWidth(),
-            y2: getLocationY() + getHeight()
+            x1: lasor.x,
+            y1: lasor.y,
+            x2: lasor.x + lasor.width,
+            y2: lasor.y + lasor.height
         };
     },
     get velocityX () {
@@ -71,10 +71,10 @@ var lasor = {
 };
 
 function angleBetweenObjects(obj1, obj2) {
-    var e1x = parseInt( Math.abs( obj1.locationX() ));
-    var e2x = parseInt( Math.abs( obj2.locationX() ));
-    var e1y = parseInt( Math.abs( obj1.locationY() ));
-    var e2y = parseInt( Math.abs( obj2.locationY() ));
+    var e1x = parseInt( Math.abs( obj1.x ));
+    var e2x = parseInt( Math.abs( obj2.x ));
+    var e1y = parseInt( Math.abs( obj1.y ));
+    var e2y = parseInt( Math.abs( obj2.y ));
 
     var rise = e1y - e2y;
     var run = e1x - e2x;
@@ -107,8 +107,8 @@ module.exports = {
         };
         var l = Object.create(lasor);
         lasor.data = data;
-        lasor.velocityX(xVelocity);
-        lasor.velocityY(yVelocity);
+        lasor.velocityX = xVelocity;
+        lasor.velocityY = yVelocity;
 
         return l;
     }

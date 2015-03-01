@@ -30,8 +30,8 @@ var character = {
 
     get getCenter () {
         return {
-            x: character.locationX() + (character.width()/2),
-            y: character.locationY() + (character.height()/2)
+            x: this.x + (this.width/2),
+            y: this.y + (this.height/2)
         };
     },
 
@@ -64,23 +64,23 @@ var character = {
     },
 
     get x () {
-        return this.data.location.x;
+        return this.sprite.x;
     },
 
     set x (x) {
-        this.data.location.x = x;
+        this.sprite.x = x;
     },
 
     get y () {
-        return this.data.location.y;
+        return this.sprite.y;
     },
 
     set y (y) {
-        this.data.location.y = y;
+        this.sprite.y = y;
     },
 
     move: function move (moveDistance) {
-        character.setLocationX(character.locationX() + moveDistance);
+        this.x = this.x + moveDistance;
     },
 
     get originX () {
@@ -133,10 +133,10 @@ var character = {
 
     get hitBox () {
         return {
-            x1: character.locationX(),
-            y1: character.locationY(),
-            x2: character.locationX() + character.width(),
-            y2: character.locationY() + character.height()
+            x1: this.x,
+            y1: this.y,
+            x2: this.x + this.width,
+            y2: this.y + this.height
         };
     },
     get lastFire () {
@@ -157,10 +157,10 @@ var character = {
     },
 
     angleBetweenObjects: function angleBetweenObjects (obj1, obj2) {
-        var e1x = parseInt(Math.abs(obj1.locationX()));
-        var e2x = parseInt(Math.abs(obj2.locationX()));
-        var e1y = parseInt(Math.abs(obj1.locationY()));
-        var e2y = parseInt(Math.abs(obj2.locationY()));
+        var e1x = parseInt(Math.abs(obj1.x));
+        var e2x = parseInt(Math.abs(obj2.x));
+        var e1y = parseInt(Math.abs(obj1.y));
+        var e2y = parseInt(Math.abs(obj2.y));
 
         var rise = e1y - e2y;
         var run = e1x - e2x;

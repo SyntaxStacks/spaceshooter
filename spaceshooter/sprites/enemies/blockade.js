@@ -2,7 +2,7 @@ var _ = require('lodash');
 var createjs = require('createjs');
 var enemy = require('../enemy');
 
-var spriteXIndex = 5;
+var spriteXIndex = 4;
 var spriteYIndex = 3;
 var data = {
     type: "BLOCKADE",
@@ -19,12 +19,6 @@ var data = {
     origin: {
         x: 0,
         y: 0 
-    },
-    sprite: {
-        x: spriteXIndex * ENEMYSPRITEWIDTH,
-        y: spriteYIndex * ENEMYSPRITEWIDTH,
-        width: ENEMYSPRITEWIDTH,
-        height: ENEMYSPRITEHEIGHT
     },
     className: {
         ship: 'enemy',
@@ -47,12 +41,10 @@ module.exports = {
     create:  function () {
         var spriteSheet = new createjs.SpriteSheet({
             images: [image.collection.sprites],
-            frames: {
-                width: 16,
-                height: 16,
-                regX: spriteXIndex * 16,
-                regY: spriteYIndex * 16,
-            },
+            frames: [
+                // x, y, width, height, imageIndex*, regX*, regY*
+                [spriteXIndex * 16, spriteYIndex * 16, 16, 16]
+            ],
             animations: {
                 fly: 0,
             }
@@ -60,7 +52,7 @@ module.exports = {
 
         var blockade = {
             data: data,
-            sprite: new createjs.Sprite(spriteSheet)
+            sprite: new createjs.Sprite(spriteSheet, 'fly')
         };
 
         return enemy.extend(blockade);
