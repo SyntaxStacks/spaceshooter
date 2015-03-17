@@ -2,9 +2,7 @@ var engine = require('../lib/engine');
 var menu = require('./scenes/menu');
 var shooter = require('./scenes/shooter');
 var config = require('./config');
-var createjs = require('createjs');
 
-console.log(createjs);
 var main = {
     initialize: function () {
         engine.initialize(config);
@@ -22,13 +20,13 @@ var main = {
     },
 
     newMenuScene: function newMenuScene() {
-        var menuScene = new menu(config);
-        engine.run(menuScene, main.done);
+        menu.initialize(config);
+        engine.run(menu).then(main.done);
     },
 
     newShooterScene: function newShooterScene() {
-        var shooterScene = new shooter(config);
-        engine.run(shooterScene, main.done);
+        shooter.initialize(config);
+        engine.run(shooter).then(main.done);
     },
 
     done: function done(scene) {
@@ -36,8 +34,6 @@ var main = {
         nextScene = main.scenes[scene] || main.newMenuScene;
         nextScene();
     }
-
 }
 
 module.exports = main;
-

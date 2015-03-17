@@ -1,113 +1,183 @@
-var loadImage       = document.createElement('img');
-var sprites         = document.createElement('img');
+var _ = require('lodash');
+var loadImage = document.createElement('img');
+var sprites = document.createElement('img');
 
-function getAngle(ang)       { return this.data.angle; }
-function getBombCount()      { return this.data.addon.bombs.inventory; }
-function getCenter()         { return { x: this.locationX() + (this.width()/2), y: this.locationY() + (this.height()/2) }; }
-function getDirection()      { return this.data.dir; }
-function getFloatXRange()    { return this.data.range.x || 0; }
-function getFloatYRange()    { return this.data.range.y || 0; }
-function getLasors()         { return this.data.addon.lasors; }
-function getLocationX()      { return this.data.location.x; }
-function getLocationY()      { return this.data.location.y; }
-function getOriginX()        { return this.data.origin.x || 0; }
-function getOriginY()        { return this.data.origin.y || 0; }
-function getShipSprite()     { return this.data.sprite.ship; }
-function getShipType()       { return this.data.type; }
-function getShipXSpeed()     { return this.data.speed.x || 0; }
-function getShipYSpeed()     { return this.data.speed.y || 0; }
-function getSpriteOriginX()  { return this.data.sprite.x; }
-function getSpriteOriginY()  { return this.data.sprite.y; }
-function getSpriteWidth()    { return this.data.sprite.width; }
-function getSpriteHeight()   { return this.data.sprite.height; }
-function setLastFire(lastfire){ this.data.lastFire = lastfire; }
-function setAngle(ang)       { this.data.angle = ang; }
-function setDirection(dir)   { this.data.dir = dir; }
-function setFloatXRange(x)   { this.data.range.x = x; }
-function setFloatYRange(y)   { this.data.range.y = y; }
-function setLocationX(x)     { this.data.location.x = x; }
-function setLocationY(y)     { this.data.location.y = y; }
-function setOriginX(x)       { this.data.origin.x = x; }
-function setOriginY(y)       { this.data.origin.y = y; }
-function setShipSprite(ship) { this.data.sprite.ship = ship; }
-function setShipType(type)   { this.data.type = type; }
-function setShipXSpeed(x)    { this.data.speed.x = x; }
-function setShipYSpeed(y)    { this.data.speed.y = y; }
-function addLasor(lasor)     { this.data.addon.lasors.push(lasor); }
-function addBomb(bomb)       { this.data.addon.bombs.fired.push(bomb); }
-function firedBombs()        { return this.data.addon.bombs.fired; }
-function replenishBombs()    { this.data.addon.bombs.inventory = 3; }
-function lastFire()          { return this.data.lastFire; }
-function move(moveDistance)  { this.setLocationX(this.locationX() + moveDistance); }
+var character = {
 
-function getHitBox() {
-    return {
-        x1: this.locationX(),
-        y1: this.locationY(),
-        x2: this.locationX() + this.width(),
-        y2: this.locationY() + this.height()
-    };
-}
+    get status () {
+        return this.data.status;
+    },
 
-function angleBetweenObjects(obj1, obj2) {
-    var e1x = parseInt(Math.abs(obj1.locationX()));
-    var e2x = parseInt(Math.abs(obj2.locationX()));
-    var e1y = parseInt(Math.abs(obj1.locationY()));
-    var e2y = parseInt(Math.abs(obj2.locationY()));
+    set status (status) {
+        this.data.status = status;
+    },
+    
+    get width () {
+        return this.sprite.getBounds().width; 
+    },
 
-    var rise = e1y - e2y;
-    var run = e1x - e2x;
-    var angle = -Math.atan(run/rise);
-    return angle;
-}
+    get height () {
+        return this.sprite.getBounds().height; 
+    },
 
-function Ship(config) {
-    var ship = this;
-    return( this );
-}
+    get angle () {
+        return this.data.angle;
+    },
 
-Ship.prototype = {
-    angle          : getAngle,
-    dir            : getDirection,
-    getCenter      : getCenter,
-    floatXRange    : getFloatXRange,
-    floatYRange    : getFloatYRange,
-    height         : getSpriteHeight,
-    lasors         : getLasors,
-    bombs          : firedBombs, 
-    bombCount      : getBombCount,
-    locationX      : getLocationX,
-    locationY      : getLocationY,
-    move           : move,
-    originX        : getOriginX,
-    originY        : getOriginY,
-    setShipSprite  : setShipSprite,
-    setFloatXRange : setFloatXRange,
-    setFloatYRange : setFloatYRange,
-    setOriginX     : setOriginX,
-    setOriginY     : setOriginY,
-    setLocationX   : setLocationX,
-    setLocationY   : setLocationY,
-    setType        : setShipType,
-    setXSpeed      : setShipXSpeed,
-    setYSpeed      : setShipYSpeed,
-    setDir         : setDirection,
-    setAngle       : setAngle,
-    shipSprite     : getShipSprite,
-    type           : getShipType,
-    width          : getSpriteWidth,
-    xSpeed         : getShipXSpeed,
-    ySpeed         : getShipYSpeed,
-    getHitBox      : getHitBox,
-    lastFire       : lastFire,
-    setLastFire    : setLastFire,
-    spriteOriginX  : getSpriteOriginX,
-    spriteOriginY  : getSpriteOriginY,
-    addBomb        : addBomb,
-    addLasor       : addLasor,
-    angleBetweenObjects: angleBetweenObjects,
-    replenishBombs : replenishBombs
+    set angle (ang) {
+        this.data.angle = ang;
+    },
+
+    get dir () {
+        return this.data.dir;
+    },
+    
+    set dir (dir) {
+        this.data.dir = dir;
+    },
+
+    get getCenter () {
+        return {
+            x: this.x + (this.width/2),
+            y: this.y + (this.height/2)
+        };
+    },
+
+    get floatX () {
+        return this.data.range.x || 0;
+    },
+
+    set floatX (x) {
+        this.data.range.x = x;
+    },
+
+    get floatY () {
+        return this.data.range.y || 0;
+    },
+
+    set floatY (y) {
+        this.data.range.y = y;
+    },
+
+    get lasors () {
+        return this.data.addon.lasors;
+    },
+
+    get bombs () {
+        return this.data.addon.bombs.fired;
+    },
+
+    get bombCount () {
+        return this.data.addon.bombs.inventory;
+    },
+
+    get x () {
+        return this.sprite.x;
+    },
+
+    set x (x) {
+        this.sprite.x = x;
+    },
+
+    get y () {
+        return this.sprite.y;
+    },
+
+    set y (y) {
+        this.sprite.y = y;
+    },
+
+    move: function move (moveDistance) {
+        this.x = this.x + moveDistance;
+    },
+
+    get originX () {
+        return this.data.origin.x || 0;
+    },
+
+    set originX (x) {
+        this.data.origin.x = x;
+    },
+
+    get originY () {
+        return this.data.origin.y || 0;
+    },
+
+    set originY (y) {
+        this.data.origin.y = y;
+    },
+
+    set type (type) {
+        this.data.type = type;
+    },
+
+    set xSpeed (x) {
+        this.data.speed.x = x;
+    },
+
+    set ySpeed (y) {
+        this.data.speed.y = y;
+    },
+
+    get type () {
+        return this.data.type;
+    },
+
+    get xSpeed () {
+        return this.data.speed.x || 0;
+    },
+
+    get ySpeed () {
+        return this.data.speed.y || 0;
+    },
+
+    get hitBox () {
+        return {
+            x1: this.x,
+            y1: this.y,
+            x2: this.x + this.width,
+            y2: this.y + this.height
+        };
+    },
+
+    get lastFire () {
+        return this.data.lastFire;
+    },
+
+    set lastFire (lastfire) {
+        this.data.lastFire = lastfire;
+    },
+
+    addBomb: function addBomb (bomb) {
+        this.data.addon.bombs.fired.push(bomb);
+        this.data.addon.bombs.inventory--;  
+    },
+
+    addLasor: function addLasor (lasor) {
+        this.data.addon.lasors.push(lasor);
+        this.data.scene.stage.addChild(lasor.sprite);
+    },
+
+    angleBetweenObjects: function angleBetweenObjects (obj1, obj2) {
+        var e1x = parseInt(Math.abs(obj1.x));
+        var e2x = parseInt(Math.abs(obj2.x));
+        var e1y = parseInt(Math.abs(obj1.y));
+        var e2y = parseInt(Math.abs(obj2.y));
+
+        var rise = e1y - e2y;
+        var run = e1x - e2x;
+        var angle = -Math.atan(run/rise);
+        return angle;
+    },
+    
+    replenishBombs: function replenishBombs () {
+        this.data.addon.bombs.inventory = 3;
+    }
 };
 
-module.exports = Ship;
-
+module.exports = {
+    extend: function (obj) {
+        obj['__proto__'] = character;
+        return Object.create(obj);
+    }
+};

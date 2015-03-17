@@ -4,10 +4,12 @@
   "version": "0.0.1",
   "private": true,
   "browserify-shim": {
-      "createjs": "global:createjs"
+    "createjs": "global:createjs"
   },
   "browserify": {
-        "transform": [ "browserify-shim" ]
+    "transform": [
+      "browserify-shim"
+    ]
   },
   "dependencies": {
     "hammerjs": "*",
@@ -15,7 +17,8 @@
     "lodash": "*",
     "async": "*",
     "createjs": "*",
-    "browserify-shim": "~3.8.1"
+    "browserify-shim": "~3.8.1",
+    "bluebird": "~2.9.14"
   },
   "devDependencies": {
     "jshint": "",
