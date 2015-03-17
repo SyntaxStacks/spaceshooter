@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var createjs = require('createjs');
 var ship = require('./ship');
-var lasor = require('./lasor');
-var bomb = require('./bomb');
+var lasor = require('./weapons/lasor');
+var bomb = require('./weapons/bomb');
 
 var FIREDELAY = 100;
 
@@ -41,7 +41,7 @@ var hero = {
             ship: this,
             target: null,
             velocityX: 0,
-            velocityY: -2
+            velocityY: -15
         };
         var firedLasor = lasor.create(lasorOpts);
         this.addLasor(firedLasor);

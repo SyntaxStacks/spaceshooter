@@ -9,18 +9,6 @@ function processInput () {
     });
 }
 
-function drawGameOver (canvas) {
-    canvas.save();
-    canvas.fillSytle = '#000000';
-    canvas.fillRect(0,0, menu.FRAMEWIDTH, menuFRAMEHEIGHT);
-    
-    canvas.fillStyle = "#FFFFFF";
-    canvas.fillText("GAME OVER!!!!!!1", 30, 30);
-    // canvas.fillText("SCORE: " + scoreboard.score(), 30, 50);
-    canvas.fillText("Press Enter To Continue", 30, 80);
-    canvas.restore();
-}
-
 function setupStage (stage) {
     stage.clear();
     var bg = new createjs.Shape();

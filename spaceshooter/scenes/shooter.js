@@ -57,8 +57,7 @@ function checkForHit() {
         _.map(bombs, function (bomb) {
             if (enemy.status == 'alive') {
                 if (collides(enemy, bomb)) {
-                    shooter.scoreboard.addPoints(100);
-                    enemy.blowUp();
+                    killEnemy(enemy)
                 }
             }
         });
@@ -84,16 +83,12 @@ function checkForHit() {
     });
 }
 
-function startGame () {
-    shooter.scoreboard.reset();
-    status = 'running';
-}
-
 function goToMenu () {
     shooter.status = 'menu';
 }
 
 function endGame () {
+    assets.sounds.stop(shooter.soundtrack);
     engine.clearEvents();
     goToMenu();
     shooter.enemyList = [];
@@ -123,21 +118,6 @@ function removeDestroyedObjects () {
         return currentEnemy;
     }));
 }
-
-// function checkForRestart () {
-//     events = input.get();
-
-//     _.map( events, function( event ) {
-//         if(event.input == "SPACE" || (event.input == "LEFT" && event.input == "RIGHT") )
-//             startGame();
-//         if(event.input == "e") {
-//             startGame();
-//             for(var i = 0; i <100; i++)
-//                 shooter.scoreboard.addLevel();
-//             enemyList = [];
-//         }
-//     });
-// }
 
 function setupStage (sceneData) {
     var stage = sceneData.stage;
@@ -184,16 +164,16 @@ var shooter = {
     get stage () {
         return shooter.data.stage;
     },
+    get soundtrack () {
+        return shooter.data.soundtrack;
+    },
     run: function run () {
-        // shooter.scoreboard.setBombs(shooter.ship.bombCount);
-
         return promise.resolve(shooter.status);
     },
     addEnemy: function (e) {
         shooter.data.enemyList.push(e);
         shooter.stage.addChild(e.sprite);
         e.originX = _.random(100, 200);
-        // e.originY = 100;
         e.x = _.random(100, 200);
         e.y = 100;
     },
@@ -207,7 +187,8 @@ var shooter = {
             gameover: false,
             delay: 10,
             status: 'running',
-            stage: canvas.stage
+            stage: canvas.stage,
+            soundtrack: 'reformat'
         };
         shooter.data.ship = hero.create(shooter),
 
@@ -218,6 +199,8 @@ var shooter = {
 
         var remove = removeDestroyedObjects.bind(shooter);
         createjs.Ticker.addEventListener('tick', remove);
+
+        assets.sounds.play(shooter.soundtrack);
     }
 };
 

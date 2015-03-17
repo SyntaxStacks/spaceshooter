@@ -1,11 +1,16 @@
-var engine = require('../lib/engine');
+var pixeljs = require('pixeljs');
+var assetsFile = require('../assets/assets');
 var menu = require('./scenes/menu');
 var shooter = require('./scenes/shooter');
 var config = require('./config');
 
 var main = {
     initialize: function () {
-        engine.initialize(config);
+        var opts = {
+            config: config,
+            assets: assetsFile
+        };
+        pixeljs.initialize(opts);
     },
 
     get scenes () {
@@ -21,12 +26,12 @@ var main = {
 
     newMenuScene: function newMenuScene() {
         menu.initialize(config);
-        engine.run(menu).then(main.done);
+        pixeljs.run(menu).then(main.done);
     },
 
     newShooterScene: function newShooterScene() {
         shooter.initialize(config);
-        engine.run(shooter).then(main.done);
+        pixeljs.run(shooter).then(main.done);
     },
 
     done: function done(scene) {

@@ -1,6 +1,7 @@
-var config =  require('../config');
+var config =  require('../../config');
 var _ = require('lodash');
 
+LASOR_SND = 'lasor';
 
 var lasor = {
     isDestroyed: function isDestroyed () {
@@ -57,13 +58,14 @@ var lasor = {
         return this.data.status;
     },
     update: function update () {
-        // debugger
         var withinXBounds = this.x > 0 && this.x < this.data.scene.frameWidth; 
         var withinYBounds = this.y > 0 && this.y < this.data.scene.frameHeight; 
         if(!withinXBounds || !withinYBounds)
             this.kill();
 
-        this.sprite.setTransform(this.x + this.velocityX, this.y + this.velocityY);
+        var xDelta = this.velocityX * createjs.Ticker.framerate/60;
+        var yDelta = this.velocityY * createjs.Ticker.framerate/60;
+        this.sprite.setTransform(this.x + xDelta, this.y + yDelta);
     },
     kill: function kill () {
         this.data.status = 'destroyed';
@@ -115,7 +117,9 @@ module.exports = {
         createjs.Ticker.addEventListener('tick', update);
         // lasor.velocityX = opts.velocityX;
         // lasor.velocityY = opts.velocityY;
-
+        var lasorSnd = opts.snd || LASOR_SND
+        assets.sounds.play(lasorSnd);
+        // assets.sounds.play(opts.sound || LASOR_SND);
         return l;
     }
 };

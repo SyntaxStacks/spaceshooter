@@ -1,5 +1,5 @@
-var fs = require('fs');
-var async = require('async');
+var promise = require('bluebird');
+var fs = promise.promisifyAll(require('fs'));
 var _ = require('lodash');
 
 module.exports = function (grunt) {
@@ -22,10 +22,6 @@ module.exports = function (grunt) {
                 dest: './libs.js'
             },
             game: {
-                options: {
-                    alias: [ './vendor/soundjs.min.js:soundjs' ],
-                    external: [ './vendor/soundjs.min.js' ]
-                },
                 src: ['./spaceshooter/game.js'],
                 dest: './bundle.js'
             }
@@ -46,17 +42,14 @@ module.exports = function (grunt) {
         var fileList = {};
         var done = this.async();
 
-        function parseDir (dir, callback) {
-            fs.readdir(dir, function (err, files) {
-                if (err) {
-                    callback(err);
-                }
+        function parseDir (dir) {
+            return fs.readdirAsync(dir).then(function (files) {
                 var pattern = /\w+(?=\/$)/;
                 var assetKey = dir.match(pattern)[0];
                 var assets = {};
                 assets[assetKey] = {};
 
-                _(files).forEach (function (file) {
+                _.each(files, function (file) {
                     file = file.split('.');
                     var fileName = file[0];
                     var fileType = file[1];
@@ -67,16 +60,16 @@ module.exports = function (grunt) {
                       return;
                     }
 
-                        assets[assetKey][file[0]] = [file[1]];
-                    });
+                    assets[assetKey][file[0]] = [file[1]];
+                });
 
-                callback(null, assets);
+                return assets;
             });
         }
 
         var opts = ['./assets/snd/', './assets/img/'];
 
-        async.map(opts, parseDir, function(err, results) {
+        promise.map(opts, parseDir).then(function(results) {
             _.map(results, function (asset) {
                 var key = Object.keys(asset)[0];
                 fileList[key] = asset[key];
@@ -86,10 +79,10 @@ module.exports = function (grunt) {
             "var assets = " + JSON.stringify(fileList) + "\n" +
             "module.exports = { snd: assets.snd, img: assets.img }";
 
-            fs.writeFile('./assets/assets.js', assetsFile, function (err) {
-                if (err) throw err;
-                console.log("success!");
-                done();
+            fs.writeFileAsync('./assets/assets.js', assetsFile)
+                .then(function () {
+                    console.log("success!");
+                    done();
             });
         });
     });

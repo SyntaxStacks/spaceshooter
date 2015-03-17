@@ -13,10 +13,6 @@ var data = {
     delay: 30,
     destroy: false,
     explosionFrame: 0,
-    location: {
-        x: 0,
-        y: 40
-    },
     origin: {
         x: 0,
         y: 0 

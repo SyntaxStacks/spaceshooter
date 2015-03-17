@@ -2,7 +2,8 @@ var config = {
     id: 'frame',
     frameHeight: getHeight(),
     frameWidth: getWidth(),
-    imgdir: './assets/img/sprites.png'
+    imageDir: './assets/img/',
+    soundDir: './assets/snd/'
 }
 
 function getWidth () {

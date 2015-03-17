@@ -1,7 +1,8 @@
 var _ = require('lodash');
-var lasor = require('./lasor');
+var lasor = require('./weapons/lasor');
 var ship = require('./ship');
 
+var DEATH_SND = 'enemyExplode';
 var enemy = {
     get target () {
         return this.data.target;
@@ -11,11 +12,11 @@ var enemy = {
     },
     blowUp: function () {
         this.sprite.gotoAndPlay('explode');    
+        assets.sounds.play(DEATH_SND);
         this.status = 'dying'
     },
     shoot: function shoot (target) {
-        var originY = this.originY;
-        var originX = this.originX;
+        var originY = 0;
         var angle = this.angleBetweenObjects(this, target);
         var velocityY = 1;
         var velocityX = ((originY - 1)*Math.tan(angle));

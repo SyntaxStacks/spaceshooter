@@ -1,5 +1,7 @@
-var config = require('../config');
+var config = require('../../config');
 var _ = require('lodash');
+
+BOMB_SND = 'bomb';
 
 var bomb = {
     get status () {
@@ -110,51 +112,7 @@ module.exports = {
         var b = Object.create(bomb);
         b.data = data;
 
+        assets.sounds.play(BOMB_SND);
         return b;
     }
 };
-// function drawBombFired(canvas) {
-//     canvas.save();
-//     canvas.fillStyle = "#0F0";
-//     var x1 = getLocationX();
-//     var y1 = getLocationY();
-//     var width = getWidth();
-//     var height = getHeight();
-//     if( !_.isNull( bomb ) ) { canvas.fillRect(x1, y1, width, height); }
-//     canvas.restore();
-// }
-
-// function drawBombDetonated(canvas) {
-//     var exp = explosion();
-//     canvas.save();
-//     canvas.fillStyle = "#0F0";
-//     if( !_.isNull( bomb ) ) { 
-//         canvas.drawImage(canvas.sprites.sprites, exp.sprite.x, exp.sprite.y, exp.sprite.width, exp.sprite.height,
-//         (getLocationX()-50) + (getWidth()/2), (getLocationY()-50) - (getHeight()/2), 100, 100); 
-//     }
-//     canvas.restore();
-// }
-
-
-// function explosion(frame) {
-//     var spriteXIndex = explosionFrame;
-//     var spriteYIndex = 0;
-//     var EXPLOSIONSPRITEWIDTH = 32;
-//     var EXPLOSIONSPRITEHEIGHT = 32;
-//     return {
-//         sprite: {
-//             x: spriteXIndex * EXPLOSIONSPRITEWIDTH,
-//             y: spriteYIndex * EXPLOSIONSPRITEWIDTH,
-//             width: EXPLOSIONSPRITEWIDTH,
-//             height: EXPLOSIONSPRITEHEIGHT,
-//         },
-//     };
-// }
-// draw: function drawBomb (canvas) {
-//     var events = {
-//         fired: drawBombFired,
-//         detonated: drawBombDetonated,
-//     };
-
-//     events[getStatus()](canvas);
-// },

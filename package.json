@@ -15,10 +15,10 @@
     "hammerjs": "*",
     "node-buzz": "*",
     "lodash": "*",
-    "async": "*",
     "createjs": "*",
     "browserify-shim": "~3.8.1",
-    "bluebird": "~2.9.14"
+    "bluebird": "~2.9.14",
+    "pixeljs": ""
   },
   "devDependencies": {
     "jshint": "",
