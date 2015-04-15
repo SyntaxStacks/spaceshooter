@@ -1,35 +1,36 @@
 var _ = require('lodash');
-var createjs = require('createjs');
 var enemy = require('../enemy');
 
-var data = {
-    type: "GUARD",
-    angle: 0,
-    status: 'alive',
-    delay: 30,
-    destroy: false,
-    lastUpdate: Date.now(),
-    explosionFrame: 0,
-    location: {
-        x: 0,
-        y: 60
-    },
-    origin: {
-        x: 0,
-        y: 0 
-    },
-    range: {
-        x: 0,
-        y: 5 
-    },
-    speed: {
-        x: 10,
-        y: 1
-    },
-    addon: {
-        lasors: []
-    },
-};
+function generateGuard () {
+    return {
+        type: "GUARD",
+        angle: 0,
+        status: 'alive',
+        delay: 30,
+        destroy: false,
+        lastUpdate: Date.now(),
+        explosionFrame: 0,
+        location: {
+            x: 0,
+            y: 60
+        },
+        origin: {
+            x: 0,
+            y: 0 
+        },
+        range: {
+            x: 0,
+            y: 5 
+        },
+        speed: {
+            x: 10,
+            y: 1
+        },
+        addon: {
+            lasors: []
+        },
+    };
+}
 
 module.exports = {
     create:  function (opts) {
@@ -51,7 +52,7 @@ module.exports = {
         });
 
         var guard = {
-            data: data,
+            data: generateGuard(),
             sprite: new createjs.Sprite(spriteSheet),
             scene: opts.scene
         };

@@ -1,12 +1,11 @@
 var _ = require('lodash');
-var createjs = require('createjs');
 var ship = require('./ship');
 var lasor = require('./weapons/lasor');
 var bomb = require('./weapons/bomb');
 
 var FIREDELAY = 100;
 
-var hero = {
+function generateHero () {
     get scene () {
         return this.data.scene;
     },

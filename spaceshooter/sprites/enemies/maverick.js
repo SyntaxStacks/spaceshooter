@@ -1,42 +1,43 @@
 var _ = require('lodash');
-var createjs = require('createjs');
 var enemy = require('../enemy');
 
 var spriteXIndex = 8;
 var spriteYIndex = 3;
 
-var data = {
-    type: "MAVERICK",
-    angle: 0,
-    lastUpdate: Date.now(),
-    status: 'alive',
-    delay: 30,
-    destroy: false,
-    explosionFrame: 0,
-    origin: {
-        x: 0,
-        y: 0 
-    },
-    className: {
-        ship: 'enemy',
-        lasor: 'enemyLasor'
-    },
-    range: {
-        x: 50,
-        y: 50
-    },
-    speed: {
-        x: 3,
-        y: 0
-    },
-    addon: {
-        lasors: []
-    }
-};
+function generateMaverick () {
+    return {
+        type: "MAVERICK",
+        angle: 0,
+        lastUpdate: Date.now(),
+        status: 'alive',
+        delay: 30,
+        destroy: false,
+        explosionFrame: 0,
+        origin: {
+            x: 0,
+            y: 0 
+        },
+        className: {
+            ship: 'enemy',
+            lasor: 'enemyLasor'
+        },
+        range: {
+            x: 50,
+            y: 50
+        },
+        speed: {
+            x: 3,
+            y: 0
+        },
+        addon: {
+            lasors: []
+        }
+    };
+}
 
 module.exports = {
     create:  function (opts) {
-        var d = _.clone(data);
+        var d = generateMaverick();
         var spriteSheet = new createjs.SpriteSheet({
             images: [image.collection.sprites],
             frames: [

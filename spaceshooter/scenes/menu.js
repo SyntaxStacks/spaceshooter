@@ -30,25 +30,29 @@ function setupStage (stage) {
 }
 
 var menu = {
+    run: function run () {
+        processInput();
+        var opts = {
+            status: menu.status,
+            nextScene: menu.nextScene
+        };
+        return promise.resolve(opts);
+    },
+
+    startNewGame: function startNewGame () {
+        menu.status = 'exit';
+    }
+}
+
+module.exports = {
     initialize: function (config) {
-        menu.MENUSCREEN  = 'MENUSCREEN';
-        menu.GAMESCREEN  = 'GAMESCREEN';
-        menu.GAMEOVER    = 'GAMEOVER';
         menu.FRAMEHEIGHT = config.frameHeight;
         menu.FRAMEWIDTH  = config.frameWidth;
         menu.status = 'running';
         menu.stage = canvas.stage;
+        menu.nextScene = 'game';
         setupStage(menu.stage);
-    },
 
-    run: function run () {
-        processInput();
-        return promise.resolve(menu.status);
-    },
-
-    startNewGame: function startNewGame () {
-        menu.status = 'game';
+        return menu;
     }
-}
-
-module.exports = menu;
+};
