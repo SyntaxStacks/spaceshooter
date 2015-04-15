@@ -1,3 +1,1 @@
-var main = require('./main');
-main.initialize();
-main.play();
+require('./main').initialize().play();

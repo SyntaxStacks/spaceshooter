@@ -1,40 +1,55 @@
-function UI(config) {
-    var FRAMEHEIGHT = config.frameHeight;
-    var FRAMEWIDTH  = config.frameWidth;
-    var level       = 0;
-    var score       = 0;
-    var bombs       = 0;
-
-    this.addLevel   = addLevel;
-    this.addPoints  = addPoints;
-    this.setBombs   = setBombs;
-    this.draw       = draw;
-    this.level      = getLevel;
-    this.score      = getScore;
-    this.reset      = reset;
-
-    function addLevel()        { level++; }
-    function addPoints(points) { score += Number(points); }
-    function setBombs(amount)  { bombs = amount; }
-    function getLevel()        { return level; }
-    function getScore()        { return score; }
-    function getBombCount()    { return bombs; }
-
-    function draw(canvas) {
-        canvas.save();
-        canvas.fillStyle = "#ccc";
-        canvas.fillRect(0,290,FRAMEWIDTH, 60);
-        canvas.fillStyle = "#000";
-        canvas.fillText("SCORE: " + score, 50, 300);
-        canvas.fillText("LEVEL: " + level, FRAMEWIDTH-100, 300);
-        canvas.fillText("BOMBS: " + bombs, FRAMEWIDTH-100, 320);
-        canvas.restore();
-    }
-
-    function reset() {
-        level = 0;
-        score = 0;
-    }
+function draw(canvas) {
+    canvas.save();
+    canvas.fillStyle = "#ccc";
+    canvas.fillRect(0,290,FRAMEWIDTH, 60);
+    canvas.fillStyle = "#000";
+    canvas.fillText("SCORE: " + score, 50, 300);
+    canvas.fillText("LEVEL: " + level, FRAMEWIDTH-100, 300);
+    canvas.fillText("BOMBS: " + bombs, FRAMEWIDTH-100, 320);
+    canvas.restore();
 }
 
-module.exports = UI;
+var ui = { 
+    get frameHeight () {
+        return ui.data.frameHeight
+    }, 
+    get frameWidth() {
+        return ui.data.frameWidth
+    }, 
+    addLevel: function () {
+        ui.data.level++; 
+    },
+    addPoints: function (points) {
+        ui.data.score += Number(points);
+    },
+    setBombs: function (amount) {
+        ui.data.bombs = amount;
+    },
+    get level () {
+        return ui.data.level;
+    },
+    get score () {
+        return ui.data.score;
+    },
+    getBombCount: function () {
+        return ui.data.bombs
+    },
+    reset: function () {
+        ui.data.level = 0;
+        ui.data.score = 0;
+    }
+};
+
+module.exports = {
+    initialize: function (config) {
+        ui.data = {
+            frameHeight: config.frameHeight,
+            frameWidth: config.frameWidth,
+            level: 0,
+            score: 0,
+            bombs: 0
+        }
+
+        return ui;
+    }
+};
