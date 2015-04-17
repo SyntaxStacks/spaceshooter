@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var createjs = require('createjs');
 var enemy = require('../enemy');
 
 var data = {

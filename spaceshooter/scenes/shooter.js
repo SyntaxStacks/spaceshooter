@@ -24,10 +24,10 @@ function createShooter () {
             return this.data.scoreboard;
         },
         get frameWidth () {
-            return this.data.frameHeight;
+            return this.data.frameWidth;
         },
         get frameHeight () {
-            return this.data.frameWidth;
+            return this.data.frameHeight;
         },
         get enemyScore () {
             return this.data.enemyScore;
@@ -41,8 +41,8 @@ function createShooter () {
         getEnemyLasors: function () {
             var lasors = [];
             var enemies = this.enemies;
-            _.forEach (enemies, function (enemy) {
-                var enemyLasors = enemy.lasors;
+            _.forEach (enemies, function (e) {
+                var enemyLasors = e.lasors;
                 if (_.isEmpty(enemyLasors)) {
                     return;
                 }
@@ -101,6 +101,7 @@ function createShooter () {
                 s.status = 'next'
             }  
 
+            debugger;
             _.map(enemyLasors, function (lasor) {
                 var ship = s.ship;
                 var lasorX = lasor.x || 0;
@@ -110,6 +111,7 @@ function createShooter () {
                     var lasorY = lasor.y || 0;
                     var shipY = ship.y || 0;
                     if (lasorY > shipY && lasorY < shipY + 10) {
+            debugger;
                         s.endGame();
                         console.log("dedz");
                     }
@@ -122,7 +124,7 @@ function createShooter () {
         },
         endGame: function () {
             assets.sounds.stop(this.soundtrack);
-            this.enemyList = [];
+            this.data.enemyList = undefined;
             this.goToMenu();
         },
         createNewLevel: function () {
@@ -133,11 +135,8 @@ function createShooter () {
             target.replenishBombs();
 
             // TODO: add sprite class to game engine
-            levelIntro().
-                then(setupLevel);
 
-
-            function levelIntro () {
+            var levelIntro = function levelIntro () {
                 
                 var width = s.stage.canvas.width;
                 var height = s.stage.canvas.height;
@@ -149,7 +148,7 @@ function createShooter () {
                         x: (width / 2) - (level.getMeasuredWidth() / 2),
                         y: 0
                     }
-                    var levelTwn = createjs.Tween.get(level, {override:true, pasued: false})
+                    createjs.Tween.get(level)
                         .set(origin) 
                         .to({ y: (height / 2) - level.getMeasuredHeight() }, 500, createjs.Ease.getPowInOut(2))
                         .wait(750)
@@ -169,7 +168,7 @@ function createShooter () {
                         y: height - levelNum.getMeasuredHeight()
                     };
 
-                    var levelNumTwn = createjs.Tween.get(levelNum, {override:true, paused: false})
+                    createjs.Tween.get(levelNum)
                         .set(origin)
                         .to({ y: (height / 2) + levelNum.getMeasuredHeight() / 2 }, 500, createjs.Ease.getPowInOut(2))
                         .wait(750)
@@ -183,9 +182,9 @@ function createShooter () {
 
                 // debugger
                 return promise.all([levelAni, levelNumAni]);
-            }
+            };
 
-            function setupLevel () {
+            var setupLevel = function setupLevel () {
               console.log('setup')
                 var enemyOpts = {
                     target: target,
@@ -199,7 +198,10 @@ function createShooter () {
                 }
 
                 s.status = 'running';
-            }
+            };
+
+            levelIntro().
+                then(setupLevel);
         },
           removeDestroyedObjects: function () {
             this.enemies = _.compact(_.map(this.enemies, function (currentEnemy) {
@@ -209,8 +211,8 @@ function createShooter () {
                 return currentEnemy;
             }));
         },
-        setupStage: function (sceneData) {
-            var stage = sceneData.stage;
+        setupStage: function () {
+            var stage = this.stage;
             var bg = new createjs.Shape();
             bg.x = 0;
             bg.y = 0;
@@ -219,16 +221,18 @@ function createShooter () {
 
             stage.clear();
             stage.addChild(bg);
-            stage.addChild(sceneData.ship.sprite);
+            stage.addChild(this.ship.sprite);
         },
         run: function run () {
             var s  = this;
-            s.checkForHit();
-            s.removeDestroyedObjects();
 
             var statuses = {
                 next: function () {
                     s.createNewLevel();
+                },
+                running: function () {
+                    s.checkForHit();
+                    s.removeDestroyedObjects();
                 }
             };
 
@@ -254,6 +258,7 @@ function createShooter () {
 
 module.exports = {
     initialize: function (config) {
+        console.log(config)
         var shooter = createShooter();
         shooter.data = {
             scoreboard: ui.initialize(config),
@@ -261,7 +266,6 @@ module.exports = {
             frameHeight: config.frameHeight,
             frameWidth: config.frameWidth,
             enemyScore: 100,
-            gameover: false,
             delay: 10,
             status: 'next',
             stage: canvas.stage,
@@ -269,7 +273,7 @@ module.exports = {
         };
         shooter.data.ship = hero.create(shooter),
 
-        shooter.setupStage(shooter.data);
+        shooter.setupStage();
 
         assets.sounds.play(shooter.soundtrack);
 

@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var createjs = require('createjs');
 var ship = require('./ship');
 var lasor = require('./weapons/lasor');
 var bomb = require('./weapons/bomb');
