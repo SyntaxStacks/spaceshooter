@@ -4,38 +4,7 @@ var _ = require('lodash');
 
 module.exports = function (grunt) {
 
-    grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-
     grunt.initConfig({
-        browserify: {
-            libs: {
-                options: {
-                    shim: {
-                        createjs: {
-                            path: 'global:createjs',
-                            exports: 'createjs'
-                        }
-                    }
-                },
-                src: './vendor/*.js',
-                dest: './libs.js'
-            },
-            game: {
-                src: ['./spaceshooter/game.js'],
-                dest: './bundle.js'
-            }
-        },
-        watch: {
-            scripts: {
-                files: [
-                    './lib/**/*.js', 
-                    './spaceshooter/**/*.js'
-                ],
-                tasks: ['browserify'],
-                options: { interupt: true },
-            }
-        }
     });
 
     grunt.registerTask('assets', 'Configure Asset Files', function () {

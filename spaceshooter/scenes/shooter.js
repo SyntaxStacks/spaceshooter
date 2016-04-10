@@ -61,7 +61,7 @@ function createShooter () {
                 if(obj1Hitbox.x1 > obj2Hitbox.x1 && obj1Hitbox.x1 < obj2Hitbox.x2) {
                   return true;
                 }
-            }  
+            }
 
             return false;
         },
@@ -79,7 +79,6 @@ function createShooter () {
             var enemyLasors = s.getEnemyLasors();
             var enemies = s.enemies;
 
-            console.log(enemyLasors);
             _.map(enemies, function (enemy) {
                 _.map(lasors, function (lasor) {
                     if (enemy.status == 'alive') {
@@ -100,7 +99,7 @@ function createShooter () {
 
             if (_.isEmpty(enemies) && s.status == 'running') {
                 s.status = 'next'
-            }  
+            }
 
             _.map(enemyLasors, function (lasor) {
                 var ship = s.ship;
@@ -112,9 +111,8 @@ function createShooter () {
                     var shipY = ship.y || 0;
                     if (lasorY > shipY && lasorY < shipY + 10) {
                         s.endGame();
-                        console.log("dedz");
                     }
-                }  
+                }
             });
         },
         goToMenu: function () {
@@ -136,7 +134,7 @@ function createShooter () {
             // TODO: add sprite class to game engine
 
             var levelIntro = function levelIntro () {
-                
+
                 var width = s.stage.canvas.width;
                 var height = s.stage.canvas.height;
 
@@ -148,12 +146,11 @@ function createShooter () {
                         y: 0
                     }
                     createjs.Tween.get(level)
-                        .set(origin) 
+                        .set(origin)
                         .to({ y: (height / 2) - level.getMeasuredHeight() }, 500, createjs.Ease.getPowInOut(2))
                         .wait(750)
                         .to({ y: 0 }, 500, createjs.Ease.getPowInOut(2))
                         .call(function () {
-                          console.log('done1');
                           s.stage.removeChild(level);
                           resolve()
                         });
@@ -173,7 +170,6 @@ function createShooter () {
                         .wait(750)
                         .to({ y: height + levelNum.getMeasuredHeight() }, 500, createjs.Ease.getPowInOut(2))
                         .call(function () {
-                            console.log('done2');
                             s.stage.removeChild(levelNum);
                             resolve();
                         });
@@ -184,13 +180,12 @@ function createShooter () {
             };
 
             var setupLevel = function setupLevel () {
-              console.log('setup')
                 var enemyOpts = {
                     target: target,
                     scene: s
                 };
                 for(var i = 0; i < s.scoreboard.level*2; i++) {
-                    
+
                     newEnemy = enemy.create(enemyOpts);
                     newEnemy.x= -50 * i;
                     s.addEnemy(newEnemy);
@@ -257,7 +252,6 @@ function createShooter () {
 
 module.exports = {
     initialize: function (config) {
-        console.log(config)
         var shooter = createShooter();
         shooter.data = {
             scoreboard: ui.initialize(config),

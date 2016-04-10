@@ -6,7 +6,7 @@ var config = require('./config');
 
 var main = {
     get scenes () {
-        return { 
+        return {
             menu: main.newMenuScene,
             game: main.newShooterScene
         }

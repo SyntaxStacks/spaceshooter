@@ -12,13 +12,13 @@ function generateCharacter () {
         set status (status) {
             this.data.status = status;
         },
-        
+
         get width () {
-            return this.sprite.getBounds().width; 
+            return this.sprite.getBounds().width;
         },
 
         get height () {
-            return this.sprite.getBounds().height; 
+            return this.sprite.getBounds().height;
         },
 
         get angle () {
@@ -32,7 +32,7 @@ function generateCharacter () {
         get dir () {
             return this.data.dir;
         },
-        
+
         set dir (dir) {
             this.data.dir = dir;
         },
@@ -151,7 +151,7 @@ function generateCharacter () {
 
         addBomb: function addBomb (bomb) {
             this.data.addon.bombs.fired.push(bomb);
-            this.data.addon.bombs.inventory--;  
+            this.data.addon.bombs.inventory--;
         },
 
         addLasor: function addLasor (lasor) {
@@ -170,7 +170,7 @@ function generateCharacter () {
             var angle = -Math.atan(run/rise);
             return angle;
         },
-        
+
         replenishBombs: function replenishBombs () {
             this.data.addon.bombs.inventory = 3;
         }
@@ -179,7 +179,7 @@ function generateCharacter () {
 
 module.exports = {
     extend: function (obj) {
-        obj['__proto__'] = character;
+        obj['__proto__'] = generateCharacter;
         return Object.create(obj);
     }
 };

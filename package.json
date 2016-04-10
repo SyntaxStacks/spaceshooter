@@ -3,6 +3,9 @@
   "description": "A Simple Space Shooter",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
   "browserify-shim": {
     "createjs": "global:createjs"
   },
@@ -12,19 +15,18 @@
     ]
   },
   "dependencies": {
-    "hammerjs": "*",
-    "node-buzz": "*",
-    "lodash": "*",
-    "createjs": "*",
-    "browserify-shim": "~3.8.1",
     "bluebird": "~2.9.14",
-    "pixeljs": ""
+    "browserify-shim": "~3.8.1",
+    "createjs": "*",
+    "hammerjs": "*",
+    "lodash": "*",
+    "node-buzz": "*",
+    "pixeljs": "git+ssh://git@github.com/SyntaxStacks/pixeljs.git"
   },
   "devDependencies": {
-    "jshint": "",
-    "grunt": "0.4.4",
     "browserify": "~3.44",
-    "grunt-browserify": "~2.0.3",
-    "grunt-contrib-watch": "~0.6.1"
+    "grunt": "0.4.4",
+    "jshint": "",
+    "webpack": "^1.12.14"
   }
 }
